@@ -1,0 +1,53 @@
+---
+import { Image } from "astro:assets";
+import { format } from "date-fns";
+
+import { HStack, Link, Section, Text, VStack } from "~/components/ui";
+import { type FullArticle } from "~/lib/articles";
+import { readingTime } from "~/lib/articles/reading-time";
+
+export type Props = {
+	article: FullArticle;
+};
+
+const { article } = Astro.props;
+
+const time = readingTime({ body: article.body, description: "" });
+---
+
+<Section className="mx-8 my-10 h-auto gap-8 lg:h-auto">
+	<Image src={article.image} alt="" class="my-8 rounded-sm xl:max-w-6xl" />
+
+	<VStack className="max-w-[90ch] gap-4" alignment="start/between">
+		<HStack className="gap-4">
+			<time datetime={article.date.toISOString()}>
+				<Text.Small>
+					{format(article.date, "MMM d, yyyy")}
+				</Text.Small>
+			</time>
+
+			<Text.Small>-</Text.Small>
+
+			<Text.Small>
+				Scris de <Link.Nav
+					href={`/authors/${article.author.id}`}
+					className="font-semibold underline"
+				>
+					{article.author.data.name}
+				</Link.Nav>
+			</Text.Small>
+
+			<Text.Small>-</Text.Small>
+
+			<Text.Small>
+				aprox. {time === 1 ? "un minut" : `${time} minute`}
+			</Text.Small>
+		</HStack>
+
+		<Text.H1>{article.title}</Text.H1>
+
+		<Text.P className="text-base">
+			{article.description}
+		</Text.P>
+	</VStack>
+</Section>

@@ -1,0 +1,126 @@
+---
+import { Image } from "astro:assets";
+import { Star } from "lucide-react";
+
+import { Section, VStack, Article, Separator, Grid, Badge } from "~/components/ui";
+import { cn } from "~/lib";
+import type { HeroArticles } from "~/lib/articles";
+
+export type Props = {
+	articles: HeroArticles;
+};
+
+const { articles } = Astro.props;
+
+const {
+	firstCol: [hero, ...first],
+	secondCol,
+	thirdCol,
+} = articles;
+---
+
+<Section className="mx-8 mb-4 h-auto lg:h-auto">
+	<Grid stretch="all" className="grid-cols-1 gap-8 lg:grid-cols-2 lg:p-4">
+		<VStack stretch="width">
+			<Article.Root href={hero.href}>
+				<Article.Image>
+					<Image src={hero.image} alt="" class="rounded-md" />
+				</Article.Image>
+
+				<Article.Content.Hero
+					title={hero.title}
+					author={hero.author.data.name}
+					publishedAt={hero.date}
+				>
+					<Badge color={hero.category.data.color}>{hero.category.data.name}</Badge>
+					<Badge color="#22c55e">
+						Latest
+						<Star className="h-4 w-4 fill-current" />
+					</Badge>
+				</Article.Content.Hero>
+			</Article.Root>
+
+			<Separator className="mt-8 lg:hidden" />
+
+			<div class={cn("filler-article-container", "w-full")}>
+				<VStack className={cn("filler-article", "gap-4")}>
+					{
+						first.map((article) => (
+							<>
+								<Separator />
+
+								<Article.Root href={article.href}>
+									<Article.Content.Small
+										title={article.title}
+										author={article.author.data.name}
+										publishedAt={article.date}
+									/>
+								</Article.Root>
+							</>
+						))
+					}
+				</VStack>
+			</div>
+		</VStack>
+
+		<Grid stretch="all" className="grid-cols-1 gap-8 xl:grid-cols-2">
+			<VStack className="gap-4">
+				{
+					secondCol.map((article) => (
+						<Article.Root href={article.href}>
+							<Article.Image>
+								<Image src={article.image} alt="plm" class="aspect-[3/2] rounded-md" />
+							</Article.Image>
+
+							<Article.Content.Normal
+								title={article.title}
+								author={article.author.data.name}
+								publishedAt={article.date}
+							>
+								<Badge color={article.category.data.color}>
+									{article.category.data.name}
+								</Badge>
+							</Article.Content.Normal>
+						</Article.Root>
+					))
+				}
+			</VStack>
+
+			<VStack className="hidden gap-4 pt-2 xl:flex">
+				{
+					thirdCol.map((article, idx) => (
+						<>
+							<Separator />
+
+							{idx === 2 ? (
+								<Article.Root href={article.href}>
+									<Article.Image>
+										<Image src={article.image} alt="" class="aspect-[3/2] rounded-md" />
+									</Article.Image>
+
+									<Article.Content.Normal
+										title={article.title}
+										author={article.author.data.name}
+										publishedAt={article.date}
+									>
+										<Badge color={article.category.data.color}>
+											{article.category.data.name}
+										</Badge>
+									</Article.Content.Normal>
+								</Article.Root>
+							) : (
+								<Article.Root href={article.href}>
+									<Article.Content.Small
+										title={article.title}
+										author={article.author.data.name}
+										publishedAt={article.date}
+									/>
+								</Article.Root>
+							)}
+						</>
+					))
+				}
+			</VStack>
+		</Grid>
+	</Grid>
+</Section>

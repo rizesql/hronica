@@ -1,0 +1,42 @@
+---
+import { getCollection } from "astro:content";
+import { FileSearch } from "lucide-react";
+
+import { Flex, Link, Text } from "~/components/ui";
+
+export type Props = {
+	bgColor: string;
+};
+
+const { bgColor } = Astro.props;
+
+const categories = await getCollection("categories");
+---
+
+<header class:list={["category-bg", "sticky inset-0 z-20"]}>
+	<Flex
+		alignment="center/between"
+		className="border-b border-foreground px-6 pb-4 pt-6 lg:px-16 lg:pt-8"
+	>
+		<FileSearch />
+
+		<Link.Nav href="/" className="flex items-baseline gap-1">
+			<Text.H2 className="font-semibold italic tracking-tight">Revista</Text.H2>
+			<Text.H1>Hronica</Text.H1>
+		</Link.Nav>
+
+		{
+			categories.map((category) => (
+				<Text.Small className="text-foreground">
+					<Link.Nav href={`/${category.id}`}>{category.data.name}</Link.Nav>
+				</Text.Small>
+			))
+		}
+	</Flex>
+</header>
+
+<style define:vars={{ bgColor }}>
+	.category-bg {
+		background-color: var(--bgColor);
+	}
+</style>

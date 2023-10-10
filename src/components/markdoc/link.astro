@@ -1,0 +1,13 @@
+---
+import { Link as LinkBase } from "../ui";
+
+export type Props = {
+	href: string;
+};
+
+const { href, ...props } = Astro.props;
+---
+
+<LinkBase.Social className="underline" href={href} {...props}>
+	<slot />
+</LinkBase.Social>

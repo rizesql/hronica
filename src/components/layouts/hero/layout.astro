@@ -1,0 +1,20 @@
+---
+import Basic from "./basic.astro";
+import Columns from "./columns.astro";
+
+import type { FullArticle } from "~/lib/articles";
+
+export type Props = {
+	layout: "basic" | "columns";
+	article: FullArticle;
+};
+
+const { layout, article } = Astro.props;
+
+const Elem = {
+	basic: Basic,
+	columns: Columns,
+}[layout];
+---
+
+<Elem article={article} />

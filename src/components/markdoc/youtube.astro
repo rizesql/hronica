@@ -1,0 +1,11 @@
+---
+import { YouTube } from "astro-embed";
+
+export type Props = {
+	id: string;
+};
+
+const { id } = Astro.props;
+---
+
+<YouTube id={id} class="mx-auto mb-3 mt-7" />

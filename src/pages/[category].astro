@@ -1,0 +1,35 @@
+---
+import { getCollection } from "astro:content";
+
+import { CategoryFeed } from "~/components/feed";
+import Layout from "~/components/layouts/article/layout.astro";
+import { articlesApi } from "~/lib/articles";
+import { filterByCategory } from "~/lib/articles/helpers";
+
+export const getStaticPaths = async () => {
+	const categories = await getCollection("categories");
+	return categories.map((category) => ({
+		params: { category: category.id },
+	}));
+};
+
+const { category } = Astro.params;
+
+const filter = filterByCategory(category);
+
+const feedParams = {
+	articlesCount: await articlesApi.pagesCount(filter),
+	category,
+};
+
+const firstPage = await articlesApi.loadNext(feedParams, filter)({ pageParam: 0 });
+
+const initialData = {
+	pageParams: [0],
+	pages: [firstPage],
+};
+---
+
+<Layout category={category}>
+	<CategoryFeed client:load feedParams={feedParams} initialData={initialData} />
+</Layout>

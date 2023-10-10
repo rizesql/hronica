@@ -1,0 +1,19 @@
+---
+const { ...props } = Astro.props;
+
+console.log({ props });
+---
+
+<!-- {
+	type === "ordered" ? (
+		<ol {...props}>
+			<div>plm</div>
+			<slot />
+		</ol>
+	) : ( -->
+<ul {...props}>
+	<div>plm</div>
+	<slot />
+</ul>
+<!-- )
+} -->

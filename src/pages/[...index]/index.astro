@@ -1,0 +1,47 @@
+---
+import { getCollection } from "astro:content";
+
+import CategorySection from "./_sections/category-section.astro";
+
+import Hero from "~/components/layouts/hero.astro";
+import Layout from "~/components/layouts/home/layout.astro";
+import { Section, Center } from "~/components/ui";
+import { articlesApi } from "~/lib/articles";
+
+export const getStaticPaths = () => [{ params: { route: "index" } }];
+
+const articles = await articlesApi.getHeroes();
+
+const categories = await getCollection("categories");
+---
+
+<Layout>
+	<Hero articles={articles} />
+
+	<Section className="border-y border-border bg-[#DDEFD5]">
+		<Center stretch="all">2</Center>
+	</Section>
+
+	{
+		categories.map((category, idx) => (
+			<CategorySection category={category} layout={idx % categories.length} />
+		))
+	}
+</Layout>
+
+<style>
+	.filler-article-container {
+		container-type: inline-size;
+		container-name: filler-article-container;
+	}
+
+	.filler-article {
+		display: none;
+	}
+
+	@container filler-article-container (height >= 250px) {
+		.filler-article {
+			display: flex;
+		}
+	}
+</style>

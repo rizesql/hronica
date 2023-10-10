@@ -1,0 +1,58 @@
+---
+import { Image } from "astro:assets";
+import { format } from "date-fns";
+
+import { Grid, HStack, Link, Section, Text, VStack } from "~/components/ui";
+import { type FullArticle } from "~/lib/articles";
+
+export type Props = {
+	article: FullArticle;
+};
+
+const { article } = Astro.props;
+---
+
+<Section className="mb-10 h-auto gap-8 lg:h-auto">
+	<Grid className="grid-cols-1 gap-8 lg:grid-cols-2">
+		<div class="grid place-content-center">
+			<VStack className="mx-8 max-w-[90ch] gap-4" alignment="start/between">
+				<HStack className="gap-4">
+					<time datetime={article.date.toISOString()}>
+						<Text.Small>
+							{format(article.date, "MMM d, yyyy")}
+						</Text.Small>
+					</time>
+
+					<Text.Small>-</Text.Small>
+
+					<Text.Small>
+						Scris de <Link.Nav
+							href={`/authors/${article.author.id}`}
+							className="font-semibold underline"
+						>
+							{article.author.data.name}
+						</Link.Nav>
+					</Text.Small>
+
+					<Text.Small>-</Text.Small>
+
+					<Text.Small>aprox. 5 minute</Text.Small>
+				</HStack>
+
+				<Text.H1>{article.title}</Text.H1>
+
+				<Text.P className="text-base">
+					{article.description}
+				</Text.P>
+			</VStack>
+		</div>
+
+		<div class="">
+			<Image
+				src={article.image}
+				alt=""
+				class="pointer-events-none inset-0 max-h-screen w-full select-none bg-background bg-cover bg-center bg-no-repeat"
+			/>
+		</div>
+	</Grid>
+</Section>

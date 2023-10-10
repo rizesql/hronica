@@ -1,0 +1,15 @@
+---
+import { Text } from "../ui";
+
+import { withTextAlign, type TextAlign } from "./text-align";
+
+import { cn } from "~/lib";
+
+export type Props = {
+	textAlign: TextAlign;
+};
+
+const { textAlign } = Astro.props;
+---
+
+<Text.P className={cn(withTextAlign(textAlign), "mt-8")}><slot /></Text.P>

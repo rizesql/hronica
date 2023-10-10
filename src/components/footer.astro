@@ -1,0 +1,45 @@
+---
+import { getCollection } from "astro:content";
+
+import { FooterCol } from "./footer-col";
+import Logo from "./logo.astro";
+
+import { Center, Flex, HStack, Link, VStack, Text } from "~/components/ui";
+import { navLinks, siteInfo } from "~/lib";
+
+// const navigationLinks = navLinks.map((link) => ({
+// 	href: `/${link.href}`,
+// 	label: t(link.label),
+// }));
+
+const _categories = await getCollection("categories");
+const categories = _categories.map((category) => ({
+	label: category.data.name,
+	href: category.id,
+}));
+---
+
+<Center stretch="all" className="px-4 pb-4 pt-12">
+	<VStack stretch="all" alignment="center/between" className="gap-4">
+		<Flex grow stretch="width" alignment="center/start">
+			<HStack stretch="all" className="gap-8">
+				<FooterCol title="Social" links={siteInfo.socialLinks} />
+
+				<FooterCol title="Categorii" links={categories} />
+
+				<HStack alignment="center/between" stretch="width">
+					<Flex className="flex-col items-start gap-4 lg:flex-row lg:items-center">
+						<Logo variant="small" />
+						<Text.Tiny>{siteInfo.trademark}</Text.Tiny>
+					</Flex>
+
+					<Text.Tiny className="self-end lg:self-center">
+						<Link.Social href={siteInfo.rizesqlLink.href}>
+							Creat de {siteInfo.rizesqlLink.platform}
+						</Link.Social>
+					</Text.Tiny>
+				</HStack>
+			</HStack>
+		</Flex>
+	</VStack>
+</Center>

@@ -1,0 +1,46 @@
+---
+import { withTextAlign, type TextAlign } from "./text-align";
+
+import { cn } from "~/lib";
+
+export type Props = {
+	level: number;
+	id: string;
+	textAlign: TextAlign;
+};
+
+const { level, textAlign, ...props } = Astro.props;
+// scroll-m-28
+const baseStyle = cn(
+	"font-redaction [text-wrap:balance] scroll-m-28",
+	withTextAlign(textAlign),
+);
+---
+
+{
+	level === 1 ? (
+		<h1 class={cn(baseStyle, "text-6xl font-bold")} {...props}>
+			<slot />
+		</h1>
+	) : level === 2 ? (
+		<h2 class={cn(baseStyle, "text-5xl font-bold")} {...props}>
+			<slot />
+		</h2>
+	) : level === 3 ? (
+		<h3 class={cn(baseStyle, "text-4xl")} {...props}>
+			<slot />
+		</h3>
+	) : level === 4 ? (
+		<h4 class={cn(baseStyle, "text-2xl")} {...props}>
+			<slot />
+		</h4>
+	) : level === 5 ? (
+		<h5 class={cn(baseStyle, "text-xl")} {...props}>
+			<slot />
+		</h5>
+	) : (
+		<h6 class={cn(baseStyle, "text-lg")} {...props}>
+			<slot />
+		</h6>
+	)
+}

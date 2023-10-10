@@ -1,0 +1,27 @@
+---
+import { type CollectionEntry } from "astro:content";
+
+import Category from "./category.astro";
+
+import { Grid as GridLayout } from "~/components/layouts/grid";
+import { Section as SectionLayout, Separator } from "~/components/ui";
+import { articlesApi } from "~/lib/articles";
+
+export type Props = {
+	category: CollectionEntry<"categories">;
+	layout: number;
+};
+
+const { category, layout } = Astro.props;
+
+const articles = await articlesApi.getHeroesByCategory(category.id);
+---
+
+<SectionLayout
+	className="h-auto border-t border-border py-8 lg:h-auto"
+	style={{ backgroundColor: category.data.color }}
+>
+	<Category category={category} />
+	<Separator />
+	<GridLayout layout={layout} articles={articles} />
+</SectionLayout>

@@ -1,0 +1,15 @@
+---
+import { Keystatic } from "../../lib/keystatic/page";
+
+export const prerender = false;
+---
+
+<Keystatic client:only />
+
+<style is:inline>
+	* > .ksv-theme {
+		--ksv-color-scale-indigo9: rgb(22 163 74) !important;
+		--ksv-color-alias-foreground-selected: #74a68c !important;
+		--ksv-color-foreground-accent: #74a68c !important;
+	}
+</style>

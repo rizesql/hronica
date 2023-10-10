@@ -1,0 +1,12 @@
+---
+import { Grid } from "../ui";
+export type Props = {
+	layout: number[];
+};
+
+const { layout } = Astro.props;
+---
+
+<Grid cols={layout.join(",")} className="gap-4 mt-8">
+	<slot />
+</Grid>

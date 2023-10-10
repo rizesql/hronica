@@ -1,0 +1,73 @@
+---
+import "~/styles/globals.css";
+
+// Font imports
+import "~/styles/pp-neue-montreal.css";
+import "~/styles/redaction.css";
+import "~/styles/libre-caslon-condensed.css";
+
+import { type CollectionEntry, getEntry } from "astro:content";
+
+import Header from "./header.astro";
+
+import Footer from "~/components/footer.astro";
+import Head, { type Props as HeadProps } from "~/components/head.astro";
+import { cn } from "~/lib";
+
+export type Props = HeadProps & {
+	category: string | undefined;
+};
+
+const { category, ...head } = Astro.props;
+const bgColor = (
+	await getEntry("categories", category as CollectionEntry<"categories">["id"])
+).data.color;
+
+// const categoriesBgs: Record<Category, string> = {
+// 	category1: "#FAEBD2",
+// 	// category1: "#EBD783",
+// 	category2: "#d6eae9",
+// 	// category2: "#bbdddb",
+// 	// category2: "#9DCFCC",
+// 	// category2: "#4C6ABC",
+// 	// category2: "#CAD2DB",
+// 	// category2: "#EFF0FF",
+// 	category3: "#F8E5E3",
+// 	// category3: "#E47976",
+// 	// category3: "#DF9278",
+// 	category4: "#DDEFD5",
+// 	// category4: "#74A68C",
+// 	category5: "#D1CDF4",
+// 	// category5: "#978FE6",
+// };
+
+// const bgColor = categoriesBgs[category];
+---
+
+<!doctype html>
+<html
+	lang="ro"
+	dir="auto"
+	class={cn(
+		"category-bg",
+		"font-pp-neue-montreal text-foreground [word-break:break-word]",
+	)}
+>
+	<Head {...head} />
+
+	<body class={cn("category-bg", "relative")}>
+		<Header bgColor={bgColor} />
+
+		<main class="mb-8 border-b border-b-foreground">
+			<slot />
+		</main>
+
+		<Footer />
+
+		<style define:vars={{ bgColor }}>
+			.category-bg {
+				background-color: var(--bgColor);
+			}
+		</style>
+	</body>
+</html>
