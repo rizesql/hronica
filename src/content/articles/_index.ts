@@ -5,7 +5,6 @@ export const articles = defineCollection({
 	schema: ({ image }) =>
 		z.object({
 			title: z.string(),
-			description: z.string(),
 			category: reference("categories"),
 			date: z.date({ coerce: true }),
 			author: reference("authors"),

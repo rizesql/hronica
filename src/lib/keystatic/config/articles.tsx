@@ -18,23 +18,41 @@ export const articles = collection({
 					"This field is auto-generated. Please don't change by hand. If you change the title field, but this field is not changed, press the 'Regenerate' button",
 			},
 		}),
+
 		category: fields.relationship({
 			label: "Category",
 			collection: "categories",
 			validation: { isRequired: true },
 		}),
+
 		author: fields.relationship({
 			label: "Author",
 			collection: "authors",
 			validation: { isRequired: true },
 		}),
+		editors: fields.array(
+			fields.relationship({
+				label: "Corectori",
+				collection: "authors",
+				validation: { isRequired: false },
+			}),
+			{
+				label: "Corectori",
+				itemLabel: (a) => a.value ?? "",
+			},
+		),
+		grafician: fields.text({ label: "Grafician" }),
+
 		image: fields.image({
 			label: "Image",
 			description: "Cover image for the article",
 			directory: "src/assets/images/articles",
 			publicPath: "../../assets/images/articles/",
 		}),
+		imageSubtitle: fields.text({ label: "Image subtitle", description: "(optional)" }),
+
 		date: fields.date({ label: "Published date", defaultValue: { kind: "today" } }),
+
 		layout: fields.select({
 			label: "Hero layout",
 			options: [
@@ -43,7 +61,7 @@ export const articles = collection({
 			],
 			defaultValue: "basic",
 		}),
-		description: fields.text({ multiline: true, label: "Description" }),
+
 		content: fields.document({
 			label: "Article",
 			formatting: {
