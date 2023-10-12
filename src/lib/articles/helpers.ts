@@ -1,8 +1,14 @@
-import { getEntry, type CollectionEntry } from "astro:content";
+export * as helpers from "./helpers";
 
+import { getEntry, type CollectionEntry, getCollection } from "astro:content";
+
+import { members } from "../members/api";
 import type { Tuple10 } from "../types";
 
-import type { FullArticle, HeroArticles } from "./types";
+import type { ArticleData, ArrangedArticles } from "./types";
+
+export const getByCategory = async (category: string | undefined) =>
+	await getCollection("articles", filterByCategory(category));
 
 export const sortByDate = (articles: Array<CollectionEntry<"articles">>) =>
 	articles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
@@ -19,12 +25,12 @@ export const getWhithinRange =
 	(left: number, right: number) => (articles: Array<CollectionEntry<"articles">>) =>
 		articles.filter((_, idx) => idx >= left && idx <= right);
 
-export const toFullArticle = async (
+export const getArticleData = async (
 	article: CollectionEntry<"articles">,
-): Promise<FullArticle> => {
+): Promise<ArticleData> => {
 	const [category, author] = await Promise.all([
 		getEntry(article.data.category),
-		getEntry(article.data.author),
+		members.getMember(article.data.author),
 	]);
 	return {
 		...article.data,
@@ -33,12 +39,13 @@ export const toFullArticle = async (
 		category,
 		author,
 		body: article.body,
-	} satisfies FullArticle;
+	} satisfies ArticleData;
 };
 
-export const intoHeroArticles = async (articles: Array<CollectionEntry<"articles">>) => {
-	const _heroArticles = await Promise.all(articles.slice(0, 10).map(toFullArticle));
-	const heroArticles = _heroArticles as Tuple10<FullArticle>;
+export const arrangeArticles = async (articles: Array<CollectionEntry<"articles">>) => {
+	const heroArticles = (await Promise.all(
+		articles.slice(0, 10).map(getArticleData),
+	)) as Tuple10<ArticleData>;
 
 	const [first, second, third, fourth, fifth, ...rest] = heroArticles;
 
@@ -46,5 +53,13 @@ export const intoHeroArticles = async (articles: Array<CollectionEntry<"articles
 		firstCol: [first, second, third],
 		secondCol: [fourth, fifth],
 		thirdCol: rest,
-	} satisfies HeroArticles;
+	} satisfies ArrangedArticles;
+};
+
+export const normalizeLastPage = (articles: ArrangedArticles) => {
+	return [
+		...articles.firstCol.filter(Boolean),
+		...articles.secondCol.filter(Boolean),
+		...articles.thirdCol.filter(Boolean),
+	];
 };

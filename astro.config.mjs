@@ -4,6 +4,7 @@ import node from "@astrojs/node";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
+import keystatic from "@keystatic/astro";
 import { defineConfig } from "astro/config";
 
 // https://astro.build/config
@@ -24,5 +25,5 @@ export default defineConfig({
 	redirects: {
 		"/admin": "/keystatic",
 	},
-	integrations: [tailwind(), react(), sitemap(), markdoc()],
+	integrations: [tailwind(), react(), sitemap(), markdoc(), keystatic()],
 });

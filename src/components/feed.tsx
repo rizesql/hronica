@@ -1,41 +1,34 @@
 import React from "react";
 
-import { type InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
+import { type InfiniteData } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
 
 import { Grid } from "./layouts/grid";
 import { Article, Badge, Section, Grid as GridLayout } from "./ui";
 
-import {
-	type FeedData,
-	articlesApi,
-	type FullArticle,
-	type FilterFn,
-	type FeedParams,
-} from "~/lib/articles";
+import { api } from "~/lib/api";
+import type { FeedData, FilterFn, FeedParams, ArrangedArticles } from "~/lib/articles";
 import { filterByAuthor, filterByCategory } from "~/lib/articles/helpers";
-import queryClient from "~/lib/query-client";
+import { useInfiniteQuery } from "~/lib/query";
 
-const Feed = ({
-	feedParams,
-	initialData,
-	filter,
-}: {
+type FeedProps = {
 	feedParams: FeedParams;
 	filter: FilterFn;
 	initialData: InfiniteData<FeedData, number>;
-}) => {
+};
+
+const useFeedData = ({ feedParams, initialData, filter }: FeedProps) =>
+	useInfiniteQuery({
+		queryKey: [feedParams, "feed"],
+		queryFn: api.articles.loadNext(feedParams, filter),
+		getNextPageParam: (lastPage) => lastPage.nextPage,
+		initialPageParam: api.articles.PAGE_SIZE,
+		initialData,
+	});
+
+const Feed = (props: FeedProps) => {
 	const observerTarget = React.useRef(null);
-	const { data: sections, ...feed } = useInfiniteQuery(
-		{
-			queryKey: [feedParams, "feed"],
-			queryFn: articlesApi.loadNext(feedParams, filter),
-			getNextPageParam: (lastPage) => lastPage.nextPage,
-			initialPageParam: articlesApi.PAGE_SIZE,
-			initialData,
-		},
-		queryClient,
-	);
+	const { data: sections, ...feed } = useFeedData(props);
 
 	React.useEffect(() => {
 		const target = observerTarget.current;
@@ -60,7 +53,7 @@ const Feed = ({
 			{sections?.pages.map(({ articles, nextPage }, idx) => (
 				<Section key={idx} className="h-auto border-b border-border py-8 lg:h-auto">
 					{!nextPage ? (
-						<LastFeedSection articles={articlesApi.normalizeLastPage(articles)} />
+						<LastFeedSection rawArticles={articles} />
 					) : (
 						<Grid articles={articles} layout={idx} />
 					)}
@@ -78,7 +71,9 @@ const Feed = ({
 	);
 };
 
-const LastFeedSection = ({ articles }: { articles: FullArticle[] }) => {
+const LastFeedSection = ({ rawArticles }: { rawArticles: ArrangedArticles }) => {
+	const articles = api.articles.helpers.normalizeLastPage(rawArticles);
+
 	return (
 		<GridLayout className="grid-cols-1 lg:grid-cols-3">
 			{articles.map((article) => (
@@ -95,7 +90,7 @@ const LastFeedSection = ({ articles }: { articles: FullArticle[] }) => {
 
 					<Article.Content.Normal
 						title={article.title}
-						author={article.author.data.name}
+						author={article.author.name}
 						publishedAt={article.date}
 					>
 						<Badge color={article.category.data.color}>

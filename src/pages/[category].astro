@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 
 import { CategoryFeed } from "~/components/feed";
 import Layout from "~/components/layouts/article/layout.astro";
-import { articlesApi } from "~/lib/articles";
+import { api } from "~/lib/api";
 import { filterByCategory } from "~/lib/articles/helpers";
 
 export const getStaticPaths = async () => {
@@ -18,11 +18,11 @@ const { category } = Astro.params;
 const filter = filterByCategory(category);
 
 const feedParams = {
-	articlesCount: await articlesApi.pagesCount(filter),
+	articlesCount: await api.articles.pagesCount(filter),
 	category,
 };
 
-const firstPage = await articlesApi.loadNext(feedParams, filter)({ pageParam: 0 });
+const firstPage = await api.articles.loadNext(feedParams, filter)({ pageParam: 0 });
 
 const initialData = {
 	pageParams: [0],

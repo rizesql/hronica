@@ -2,10 +2,11 @@
 import Layout from "~/components/layouts/article/layout.astro";
 import HeroLayout from "~/components/layouts/hero/layout.astro";
 import { Section } from "~/components/ui";
-import { articlesApi, type FullArticle } from "~/lib/articles";
+import { api } from "~/lib/api";
+import type { ArticleData } from "~/lib/articles";
 
 export const getStaticPaths = async () => {
-	const articles = await articlesApi.getFullArticles();
+	const articles = await api.articles.getArticlesData();
 
 	return articles.map((article) => ({
 		params: { slug: article.href },
@@ -14,7 +15,7 @@ export const getStaticPaths = async () => {
 };
 
 export type Props = {
-	article: FullArticle;
+	article: ArticleData;
 };
 
 const { article } = Astro.props;
@@ -24,7 +25,7 @@ const { Content } = await article.render();
 <Layout category={article.category.id}>
 	<HeroLayout article={article} layout={article.layout} />
 	<Section className="h-auto lg:h-auto">
-		<div class="prose-quoteless prose mx-8 max-w-[90ch]">
+		<div class="prose prose-quoteless mx-8 max-w-[90ch]">
 			<Content />
 		</div>
 	</Section>

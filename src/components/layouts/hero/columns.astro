@@ -3,10 +3,10 @@ import { Image } from "astro:assets";
 import { format } from "date-fns";
 
 import { Grid, HStack, Link, Section, Text, VStack } from "~/components/ui";
-import { type FullArticle } from "~/lib/articles";
+import { type ArticleData } from "~/lib/articles";
 
 export type Props = {
-	article: FullArticle;
+	article: ArticleData;
 };
 
 const { article } = Astro.props;
@@ -27,10 +27,10 @@ const { article } = Astro.props;
 
 					<Text.Small>
 						Scris de <Link.Nav
-							href={`/authors/${article.author.id}`}
+							href={`/authors/${article.author.slug}`}
 							className="font-semibold underline"
 						>
-							{article.author.data.name}
+							{article.author.name}
 						</Link.Nav>
 					</Text.Small>
 
@@ -41,9 +41,9 @@ const { article } = Astro.props;
 
 				<Text.H1>{article.title}</Text.H1>
 
-				<Text.P className="text-base">
+				<!-- <Text.P className="text-base">
 					{article.description}
-				</Text.P>
+				</Text.P> -->
 			</VStack>
 		</div>
 

@@ -2,11 +2,11 @@
 import Basic from "./basic.astro";
 import Columns from "./columns.astro";
 
-import type { FullArticle } from "~/lib/articles";
+import type { ArticleData } from "~/lib/articles";
 
 export type Props = {
 	layout: "basic" | "columns";
-	article: FullArticle;
+	article: ArticleData;
 };
 
 const { layout, article } = Astro.props;

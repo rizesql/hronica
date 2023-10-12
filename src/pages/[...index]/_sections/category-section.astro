@@ -5,7 +5,7 @@ import Category from "./category.astro";
 
 import { Grid as GridLayout } from "~/components/layouts/grid";
 import { Section as SectionLayout, Separator } from "~/components/ui";
-import { articlesApi } from "~/lib/articles";
+import { api } from "~/lib/api";
 
 export type Props = {
 	category: CollectionEntry<"categories">;
@@ -14,7 +14,7 @@ export type Props = {
 
 const { category, layout } = Astro.props;
 
-const articles = await articlesApi.getHeroesByCategory(category.id);
+const articles = await api.articles.getArrangedByCategory(category.id);
 ---
 
 <SectionLayout

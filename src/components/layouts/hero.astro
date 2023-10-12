@@ -4,13 +4,9 @@ import { Star } from "lucide-react";
 
 import { Section, VStack, Article, Separator, Grid, Badge } from "~/components/ui";
 import { cn } from "~/lib";
-import type { HeroArticles } from "~/lib/articles";
+import { api } from "~/lib/api";
 
-export type Props = {
-	articles: HeroArticles;
-};
-
-const { articles } = Astro.props;
+const articles = await api.articles.getArranged();
 
 const {
 	firstCol: [hero, ...first],
@@ -29,7 +25,7 @@ const {
 
 				<Article.Content.Hero
 					title={hero.title}
-					author={hero.author.data.name}
+					author={hero.author.name}
 					publishedAt={hero.date}
 				>
 					<Badge color={hero.category.data.color}>{hero.category.data.name}</Badge>
@@ -52,7 +48,7 @@ const {
 								<Article.Root href={article.href}>
 									<Article.Content.Small
 										title={article.title}
-										author={article.author.data.name}
+										author={article.author.name}
 										publishedAt={article.date}
 									/>
 								</Article.Root>
@@ -74,7 +70,7 @@ const {
 
 							<Article.Content.Normal
 								title={article.title}
-								author={article.author.data.name}
+								author={article.author.name}
 								publishedAt={article.date}
 							>
 								<Badge color={article.category.data.color}>
@@ -100,7 +96,7 @@ const {
 
 									<Article.Content.Normal
 										title={article.title}
-										author={article.author.data.name}
+										author={article.author.name}
 										publishedAt={article.date}
 									>
 										<Badge color={article.category.data.color}>
@@ -112,7 +108,7 @@ const {
 								<Article.Root href={article.href}>
 									<Article.Content.Small
 										title={article.title}
-										author={article.author.data.name}
+										author={article.author.name}
 										publishedAt={article.date}
 									/>
 								</Article.Root>

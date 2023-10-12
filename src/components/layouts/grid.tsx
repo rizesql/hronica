@@ -4,7 +4,7 @@ import { Star } from "lucide-react";
 
 import { Grid as GridLayout, VStack, Article, Separator, Badge } from "~/components/ui";
 import { cn } from "~/lib";
-import type { HeroArticles } from "~/lib/articles";
+import type { ArrangedArticles } from "~/lib/articles";
 
 const layouts = [
 	["lg:col-[2/4]", "lg:col-[1/2]", "lg:col-[4/5]"],
@@ -20,7 +20,7 @@ export const Grid = ({
 	layout,
 	withBadges = false,
 }: {
-	articles: HeroArticles;
+	articles: ArrangedArticles;
 	layout: number;
 	withBadges?: boolean;
 }) => {
@@ -52,7 +52,7 @@ export const Grid = ({
 
 					<Article.Content.Hero
 						title={hero.title}
-						author={hero.author.data.name}
+						author={hero.author.name}
 						publishedAt={hero.date}
 					>
 						{withBadges ? (
@@ -78,7 +78,7 @@ export const Grid = ({
 								<Article.Root href={`/${article.href}`}>
 									<Article.Content.Small
 										title={article.title}
-										author={article.author.data.name}
+										author={article.author.name}
 										publishedAt={article.date}
 									/>
 								</Article.Root>
@@ -103,7 +103,7 @@ export const Grid = ({
 
 						<Article.Content.Normal
 							title={article.title}
-							author={article.author.data.name}
+							author={article.author.name}
 							publishedAt={article.date}
 						>
 							{withBadges ? (
@@ -135,7 +135,7 @@ export const Grid = ({
 
 								<Article.Content.Normal
 									title={article.title}
-									author={article.author.data.name}
+									author={article.author.name}
 									publishedAt={article.date}
 								>
 									{withBadges ? (
@@ -149,7 +149,7 @@ export const Grid = ({
 							<Article.Root href={`/${article.href}`}>
 								<Article.Content.Small
 									title={article.title}
-									author={article.author.data.name}
+									author={article.author.name}
 									publishedAt={article.date}
 								/>
 							</Article.Root>
