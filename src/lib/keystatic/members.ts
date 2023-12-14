@@ -1,5 +1,10 @@
 import { collection, fields } from "@keystatic/core";
 
+const images = {
+	directory: "src/assets/images/members",
+	publicPath: "../../assets/images/members/",
+} as const;
+
 export const members = collection({
 	label: "Members",
 	slugField: "name",
@@ -58,6 +63,11 @@ export const members = collection({
 				end: fields.integer({
 					label: "Anul incheierii",
 					description: "Daca inca esti activ(ă) in echipa, lasa acest camp gol",
+					validation: {
+						isRequired: false,
+						min: 1980,
+						max: new Date(Date.now()).getFullYear() + 1,
+					},
 				}),
 			},
 			{ label: "Vechimea in echipa Hronicii" },
@@ -66,6 +76,7 @@ export const members = collection({
 		photo: fields.image({
 			label: "Poza de profil",
 			description: "(optional)",
+			...images,
 		}),
 
 		social: fields.array(

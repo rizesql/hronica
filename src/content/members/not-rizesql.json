@@ -1,0 +1,11 @@
+{
+  "name": "not-rizesql",
+  "occupation": "author-and-editor",
+  "class": "b",
+  "promotion": 2019,
+  "seniority": {
+    "begin": 2023,
+    "end": 2023
+  },
+  "social": []
+}

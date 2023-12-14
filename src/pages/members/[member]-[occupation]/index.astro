@@ -1,0 +1,73 @@
+---
+import Author from "../_components/author.astro";
+import OccupationTabs from "../_components/occupation-tabs.astro";
+
+import { AuthorFeed } from "~/components/feed";
+import Layout from "~/components/layouts/home/layout.astro";
+import { Flex, Grid } from "~/components/ui";
+import { api } from "~/lib/api";
+
+export const getStaticPaths = async () => {
+	const members = await api.members.getMembersData();
+
+	return members
+		.map((member) => {
+			const occupations =
+				member.occupation === "author-and-editor"
+					? (["author", "editor"] as const)
+					: [member.occupation];
+
+			return occupations.map((occupation) => ({
+				params: { member: member.id, occupation },
+				props: { member, occupation },
+			}));
+		})
+		.flat();
+};
+
+export type Props = Awaited<ReturnType<typeof getStaticPaths>>[number]["props"];
+
+const { member, occupation } = Astro.props;
+
+const filter = api.articles.helpers.filterByOccupation(occupation, member.id);
+
+const feedParams = {
+	articlesCount: await api.articles.pagesCount(filter),
+	author: member.id,
+};
+
+const firstPage = await api.articles.loadNext(feedParams, filter)({ pageParam: 0 });
+
+const initialData = {
+	pageParams: [0],
+	pages: [firstPage],
+};
+---
+
+<Layout>
+	<Grid stretch="width" className="grid-cols-1 place-content-center lg:grid-cols-7">
+		<Flex alignment="start/center" stretch="width" className="lg:col-span-2">
+			<div class="sticky top-[12rem] mx-8 py-8">
+				<Author member={member} />
+			</div>
+		</Flex>
+
+		<div class="relative col-span-5">
+			<OccupationTabs member={member} />
+			<!-- {
+				member.occupation === "author-and-editor" && (
+					<HStack stretch="width">
+						<Link.Nav href={`/members/${member.id}-author`}>
+							Activitatea de autor
+						</Link.Nav>
+						<Link.Nav href={`/members/${member.id}-editor`}>
+							Activitatea de editor
+						</Link.Nav>
+					</HStack>
+				)
+			} -->
+
+			<AuthorFeed client:load feedParams={feedParams} initialData={initialData} />
+		</div>
+	</Grid>
+</Layout>

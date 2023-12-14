@@ -1,25 +1,26 @@
 ---
-import { getCollection } from "astro:content";
-
 import { CategoryFeed } from "~/components/feed";
 import Layout from "~/components/layouts/article/layout.astro";
 import { api } from "~/lib/api";
-import { filterByCategory } from "~/lib/articles/helpers";
 
 export const getStaticPaths = async () => {
-	const categories = await getCollection("categories");
+	const categories = await api.categories.getCategories();
+
 	return categories.map((category) => ({
 		params: { category: category.id },
+		props: { category },
 	}));
 };
 
-const { category } = Astro.params;
+export type Props = Awaited<ReturnType<typeof getStaticPaths>>[number]["props"];
 
-const filter = filterByCategory(category);
+const { category } = Astro.props;
+
+const filter = api.articles.helpers.filterByCategory(category.id);
 
 const feedParams = {
 	articlesCount: await api.articles.pagesCount(filter),
-	category,
+	category: category.id,
 };
 
 const firstPage = await api.articles.loadNext(feedParams, filter)({ pageParam: 0 });

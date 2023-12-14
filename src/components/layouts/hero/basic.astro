@@ -3,11 +3,11 @@ import { Image } from "astro:assets";
 import { format } from "date-fns";
 
 import { HStack, Link, Section, Text, VStack } from "~/components/ui";
-import { type ArticleData } from "~/lib/articles";
-import { readingTime } from "~/lib/articles/reading-time";
+import { type Article } from "~/lib/api/articles";
+import { readingTime } from "~/lib/reading-time";
 
 export type Props = {
-	article: ArticleData;
+	article: Article;
 };
 
 const { article } = Astro.props;
@@ -30,7 +30,7 @@ const time = readingTime({ body: article.body, description: "" });
 
 			<Text.Small>
 				Scris de <Link.Nav
-					href={`/authors/${article.author.slug}`}
+					href={`/members/${article.author.id}-author`}
 					className="font-semibold underline"
 				>
 					{article.author.name}
@@ -44,10 +44,11 @@ const time = readingTime({ body: article.body, description: "" });
 			</Text.Small>
 		</HStack>
 
+		{
+			article.editors.length !== 0 && (
+				<Text.Small>Editat de {article.editors.map((x) => x.id).join(", ")}</Text.Small>
+			)
+		}
 		<Text.H1>{article.title}</Text.H1>
-
-		<!-- <Text.P className="text-base">
-			{article.description}
-		</Text.P> -->
 	</VStack>
 </Section>

@@ -6,22 +6,20 @@ import "~/styles/pp-neue-montreal.css";
 import "~/styles/redaction.css";
 import "~/styles/libre-caslon-condensed.css";
 
-import { type CollectionEntry, getEntry } from "astro:content";
-
 import Header from "./header.astro";
 
 import Footer from "~/components/footer.astro";
 import Head, { type Props as HeadProps } from "~/components/head.astro";
 import { cn } from "~/lib";
+import type { Category } from "~/lib/api/categories";
 
 export type Props = HeadProps & {
-	category: string | undefined;
+	category: Category;
 };
 
 const { category, ...head } = Astro.props;
-const bgColor = (
-	await getEntry("categories", category as CollectionEntry<"categories">["id"])
-).data.color;
+
+const bgColor = category.color;
 
 // const categoriesBgs: Record<Category, string> = {
 // 	category1: "#FAEBD2",

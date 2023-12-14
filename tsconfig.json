@@ -5,17 +5,10 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": [
-        "src/*"
-      ]
+      "~/*": ["src/*"]
     },
     "jsxImportSource": "react"
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "**/*",
-    ".eslintrc.cjs"
-  ]
+  "exclude": ["node_modules"],
+  "include": ["**/*", ".eslintrc.cjs"]
 }

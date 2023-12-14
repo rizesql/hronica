@@ -1,0 +1,58 @@
+<!-- ---
+import Author from "./pages/members/_components/author.astro";
+
+import { AuthorFeed } from "~/components/feed";
+import Layout from "~/components/layouts/home/layout.astro";
+import { Flex, Grid, HStack } from "~/components/ui";
+import { api } from "~/lib/api";
+
+export const getStaticPaths = async () => {
+	const members = await api.members.getMembersData();
+
+	return members.map((member) => ({
+		params: { slug: member.id },
+		props: { member },
+	}));
+};
+
+export type Props = Awaited<ReturnType<typeof getStaticPaths>>[number]["props"];
+
+const { member } = Astro.props;
+
+const filter = api.articles.helpers.filterByAuthor(member.id);
+
+const feedParams = {
+	articlesCount: await api.articles.pagesCount(filter),
+	author: member.id,
+};
+
+const firstPage = await api.articles.loadNext(feedParams, filter)({ pageParam: 0 });
+
+const initialData = {
+	pageParams: [0],
+	pages: [firstPage],
+};
+---
+
+<Layout>
+	<Grid stretch="width" className="grid-cols-1 place-content-center lg:grid-cols-7">
+		<Flex alignment="start/center" stretch="width" className="lg:col-span-2">
+			<div class="sticky top-[12rem] mx-8 py-8">
+				<Author member={member} />
+			</div>
+		</Flex>
+
+		<div class="col-span-5">
+			{
+				member.occupation === "author-and-editor" && (
+					<HStack stretch="width">
+						<div>Activitatea de autor</div>
+						<div>Activitatea de redactor</div>
+					</HStack>
+				)
+			}
+
+			<AuthorFeed client:load feedParams={feedParams} initialData={initialData} />
+		</div>
+	</Grid>
+</Layout> -->

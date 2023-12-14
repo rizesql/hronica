@@ -1,11 +1,17 @@
 {
-  "name": "rizesql",
-  "occupation": "editor",
+  "name": "Rizescu Iulian-Stefan",
+  "occupation": "author-and-editor",
   "class": "b",
   "promotion": 2019,
   "seniority": {
-    "begin": 2023,
+    "begin": 2022,
     "end": 2023
   },
-  "social": []
+  "photo": "../../assets/images/members/rizesql/photo.png",
+  "social": [
+    {
+      "platform": "github",
+      "url": "https://www.github.com/rizesql"
+    }
+  ]
 }

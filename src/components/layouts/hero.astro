@@ -18,7 +18,7 @@ const {
 <Section className="mx-8 mb-4 h-auto lg:h-auto">
 	<Grid stretch="all" className="grid-cols-1 gap-8 lg:grid-cols-2 lg:p-4">
 		<VStack stretch="width">
-			<Article.Root href={hero.href}>
+			<Article.Root href={`/articles/${hero.href}`}>
 				<Article.Image>
 					<Image src={hero.image} alt="" class="rounded-md" />
 				</Article.Image>
@@ -28,7 +28,7 @@ const {
 					author={hero.author.name}
 					publishedAt={hero.date}
 				>
-					<Badge color={hero.category.data.color}>{hero.category.data.name}</Badge>
+					<Badge color={hero.category.color}>{hero.category.name}</Badge>
 					<Badge color="#22c55e">
 						Latest
 						<Star className="h-4 w-4 fill-current" />
@@ -45,7 +45,7 @@ const {
 							<>
 								<Separator />
 
-								<Article.Root href={article.href}>
+								<Article.Root href={`/articles/${article.href}`}>
 									<Article.Content.Small
 										title={article.title}
 										author={article.author.name}
@@ -63,7 +63,7 @@ const {
 			<VStack className="gap-4">
 				{
 					secondCol.map((article) => (
-						<Article.Root href={article.href}>
+						<Article.Root href={`/articles/${article.href}`}>
 							<Article.Image>
 								<Image src={article.image} alt="plm" class="aspect-[3/2] rounded-md" />
 							</Article.Image>
@@ -73,9 +73,7 @@ const {
 								author={article.author.name}
 								publishedAt={article.date}
 							>
-								<Badge color={article.category.data.color}>
-									{article.category.data.name}
-								</Badge>
+								<Badge color={article.category.color}>{article.category.name}</Badge>
 							</Article.Content.Normal>
 						</Article.Root>
 					))
@@ -89,7 +87,7 @@ const {
 							<Separator />
 
 							{idx === 2 ? (
-								<Article.Root href={article.href}>
+								<Article.Root href={`/articles/${article.href}`}>
 									<Article.Image>
 										<Image src={article.image} alt="" class="aspect-[3/2] rounded-md" />
 									</Article.Image>
@@ -99,13 +97,11 @@ const {
 										author={article.author.name}
 										publishedAt={article.date}
 									>
-										<Badge color={article.category.data.color}>
-											{article.category.data.name}
-										</Badge>
+										<Badge color={article.category.color}>{article.category.name}</Badge>
 									</Article.Content.Normal>
 								</Article.Root>
 							) : (
-								<Article.Root href={article.href}>
+								<Article.Root href={`/articles/${article.href}`}>
 									<Article.Content.Small
 										title={article.title}
 										author={article.author.name}

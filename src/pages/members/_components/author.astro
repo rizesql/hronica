@@ -1,0 +1,33 @@
+---
+import { Image } from "astro:assets";
+
+import { Center, VStack, Text } from "~/components/ui";
+import { members, type Member } from "~/lib/api/members";
+
+export type Props = { member: Member };
+
+const { member } = Astro.props;
+---
+
+<VStack stretch="all" className="gap-6 lg:max-w-xs" alignment="center/center">
+	<Center>
+		{
+			member.photo && (
+				<Image
+					src={member.photo}
+					alt={member.name}
+					class="aspect-square rounded-md bg-red-100"
+				/>
+			)
+		}
+	</Center>
+
+	<VStack className="gap-2">
+		<Text.H1>{member.name}</Text.H1>
+		<Text.Small className="text-base">Promotia {member.promotion}</Text.Small>
+
+		<Text.Small>
+			{members.helpers.formatActivity(member.activity)}
+		</Text.Small>
+	</VStack>
+</VStack>

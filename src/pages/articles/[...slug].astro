@@ -3,26 +3,26 @@ import Layout from "~/components/layouts/article/layout.astro";
 import HeroLayout from "~/components/layouts/hero/layout.astro";
 import { Section } from "~/components/ui";
 import { api } from "~/lib/api";
-import type { ArticleData } from "~/lib/articles";
 
 export const getStaticPaths = async () => {
 	const articles = await api.articles.getArticlesData();
 
-	return articles.map((article) => ({
-		params: { slug: article.href },
-		props: { article },
-	}));
+	return articles.map(
+		(article) =>
+			({
+				params: { slug: article.href },
+				props: { article },
+			}) as const,
+	);
 };
 
-export type Props = {
-	article: ArticleData;
-};
+export type Props = Awaited<ReturnType<typeof getStaticPaths>>[number]["props"];
 
 const { article } = Astro.props;
 const { Content } = await article.render();
 ---
 
-<Layout category={article.category.id}>
+<Layout category={article.category}>
 	<HeroLayout article={article} layout={article.layout} />
 	<Section className="h-auto lg:h-auto">
 		<div class="prose prose-quoteless mx-8 max-w-[90ch]">

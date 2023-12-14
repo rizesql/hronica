@@ -4,7 +4,7 @@ import { Star } from "lucide-react";
 
 import { Grid as GridLayout, VStack, Article, Separator, Badge } from "~/components/ui";
 import { cn } from "~/lib";
-import type { ArrangedArticles } from "~/lib/articles";
+import type { ArrangedArticles } from "~/lib/api/articles";
 
 const layouts = [
 	["lg:col-[2/4]", "lg:col-[1/2]", "lg:col-[4/5]"],
@@ -33,13 +33,10 @@ export const Grid = ({
 	return (
 		<GridLayout
 			stretch="all"
-			className={cn(
-				"grid-layout",
-				"mb-4 grid-cols-1 gap-8 px-8 lg:grid-flow-col lg:grid-cols-4 lg:p-4",
-			)}
+			className="mb-4 grid-cols-1 gap-8 px-8 lg:grid-flow-col lg:grid-cols-4 lg:p-4"
 		>
 			<VStack stretch="width" className={cn(layouts[layout]?.[0])}>
-				<Article.Root href={`/${hero.href}`}>
+				<Article.Root href={`/articles/${hero.href}`}>
 					<Article.Image>
 						<img
 							src={hero.image.src}
@@ -57,7 +54,7 @@ export const Grid = ({
 					>
 						{withBadges ? (
 							<>
-								<Badge color={hero.category.data.color}>{hero.category.data.name}</Badge>
+								<Badge color={hero.category.color}>{hero.category.name}</Badge>
 								<Badge color="#22c55e">
 									Latest
 									<Star className="h-4 w-4 fill-current" />
@@ -75,7 +72,7 @@ export const Grid = ({
 							<React.Fragment key={`articles.${article.href}`}>
 								<Separator />
 
-								<Article.Root href={`/${article.href}`}>
+								<Article.Root href={`/articles/${article.href}`}>
 									<Article.Content.Small
 										title={article.title}
 										author={article.author.name}
@@ -90,7 +87,10 @@ export const Grid = ({
 
 			<VStack className={cn(layouts[layout]?.[1], "gap-4")}>
 				{secondCol.map((article) => (
-					<Article.Root href={`/${article.href}`} key={`articles.${article.href}`}>
+					<Article.Root
+						href={`/articles/${article.href}`}
+						key={`articles.${article.href}`}
+					>
 						<Article.Image>
 							<img
 								src={article.image.src}
@@ -107,9 +107,7 @@ export const Grid = ({
 							publishedAt={article.date}
 						>
 							{withBadges ? (
-								<Badge color={article.category.data.color}>
-									{article.category.data.name}
-								</Badge>
+								<Badge color={article.category.color}>{article.category.name}</Badge>
 							) : null}
 						</Article.Content.Normal>
 					</Article.Root>
@@ -122,16 +120,18 @@ export const Grid = ({
 						<Separator />
 
 						{idx === 2 ? (
-							<Article.Root href={`/${article.href}`}>
-								<Article.Image>
-									<img
-										src={article.image.src}
-										width={article.image.width}
-										height={article.image.height}
-										alt=""
-										className="aspect-[3/2] rounded-md"
-									/>
-								</Article.Image>
+							<Article.Root href={`/articles/${article.href}`}>
+								<div className="hidden">
+									<Article.Image>
+										<img
+											src={article.image.src}
+											width={article.image.width}
+											height={article.image.height}
+											alt=""
+											className="aspect-[3/2] rounded-md"
+										/>
+									</Article.Image>
+								</div>
 
 								<Article.Content.Normal
 									title={article.title}
@@ -139,14 +139,12 @@ export const Grid = ({
 									publishedAt={article.date}
 								>
 									{withBadges ? (
-										<Badge color={article.category.data.color}>
-											{article.category.data.name}
-										</Badge>
+										<Badge color={article.category.color}>{article.category.name}</Badge>
 									) : null}
 								</Article.Content.Normal>
 							</Article.Root>
 						) : (
-							<Article.Root href={`/${article.href}`}>
+							<Article.Root href={`/articles/${article.href}`}>
 								<Article.Content.Small
 									title={article.title}
 									author={article.author.name}

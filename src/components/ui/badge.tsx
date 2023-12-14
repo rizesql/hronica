@@ -4,7 +4,7 @@ import type {
 	PolymorphicComponentPropsWithRef,
 	PolymorphicRef,
 } from "./polymorphic-component";
-import { HStack, type StackProps } from "./stack";
+import { HStack } from "./stack";
 
 import { cn } from "~/lib";
 

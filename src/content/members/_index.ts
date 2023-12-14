@@ -19,7 +19,7 @@ export const members = defineCollection({
 
 			seniority: z.object({
 				begin: year,
-				end: year.nullable(),
+				end: year.optional(),
 			}),
 
 			photo: image().optional(),

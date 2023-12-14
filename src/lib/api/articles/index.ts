@@ -1,11 +1,11 @@
 export * as articles from ".";
-export * from "./types";
-export { helpers } from "./helpers";
+export * from "../articles/types";
+export * from "./helpers";
 
 import { getCollection, type CollectionEntry } from "astro:content";
 
 import { helpers as h } from "./helpers";
-import type { ArrangedArticles } from "./types";
+import type { ArrangedArticles } from "../articles/types";
 
 export const PAGE_SIZE = 10;
 

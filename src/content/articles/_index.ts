@@ -8,7 +8,7 @@ export const articles = defineCollection({
 			category: reference("categories"),
 			author: reference("members"),
 			// todo remove optional
-			editors: z.array(reference("members")).optional(),
+			editors: z.array(reference("members")).default([]),
 			// todo remove optional
 			grafician: z.string().optional(),
 			image: image(),

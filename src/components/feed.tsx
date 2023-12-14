@@ -7,8 +7,13 @@ import { Grid } from "./layouts/grid";
 import { Article, Badge, Section, Grid as GridLayout } from "./ui";
 
 import { api } from "~/lib/api";
-import type { FeedData, FilterFn, FeedParams, ArrangedArticles } from "~/lib/articles";
-import { filterByAuthor, filterByCategory } from "~/lib/articles/helpers";
+import type {
+	FeedData,
+	FilterFn,
+	FeedParams,
+	ArrangedArticles,
+} from "~/lib/api/articles";
+import { filterByAuthor, filterByCategory } from "~/lib/api/articles/helpers";
 import { useInfiniteQuery } from "~/lib/query";
 
 type FeedProps = {
@@ -50,15 +55,17 @@ const Feed = (props: FeedProps) => {
 
 	return (
 		<>
-			{sections?.pages.map(({ articles, nextPage }, idx) => (
-				<Section key={idx} className="h-auto border-b border-border py-8 lg:h-auto">
-					{!nextPage ? (
+			{sections?.pages.map(({ articles, nextPage }, idx) =>
+				!nextPage ? (
+					<Section key={idx} className="h-auto py-8 lg:h-auto">
 						<LastFeedSection rawArticles={articles} />
-					) : (
+					</Section>
+				) : (
+					<Section key={idx} className="h-auto border-b border-border py-8 lg:h-auto">
 						<Grid articles={articles} layout={idx} />
-					)}
-				</Section>
-			))}
+					</Section>
+				),
+			)}
 
 			{feed.isFetchingNextPage && (
 				<Section>
@@ -77,7 +84,7 @@ const LastFeedSection = ({ rawArticles }: { rawArticles: ArrangedArticles }) => 
 	return (
 		<GridLayout className="grid-cols-1 lg:grid-cols-3">
 			{articles.map((article) => (
-				<Article.Root href={`/${article.href}`} key={`articles.${article.href}`}>
+				<Article.Root href={`/articles/${article.href}`} key={`articles.${article.href}`}>
 					<Article.Image>
 						<img
 							src={article.image.src}
@@ -93,9 +100,7 @@ const LastFeedSection = ({ rawArticles }: { rawArticles: ArrangedArticles }) => 
 						author={article.author.name}
 						publishedAt={article.date}
 					>
-						<Badge color={article.category.data.color}>
-							{article.category.data.name}
-						</Badge>
+						<Badge color={article.category.color}>{article.category.name}</Badge>
 					</Article.Content.Normal>
 				</Article.Root>
 			))}
