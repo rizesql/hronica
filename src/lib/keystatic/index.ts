@@ -5,7 +5,12 @@ import { categories } from "./categories";
 import { members } from "./members";
 
 export const config = keystaticConfig({
-	storage: { kind: "local" },
+	ui: {
+		brand: {
+			name: "Hronica Sincai",
+		},
+	},
+	storage: { kind: "github", repo: `rizesql/hronica` },
 	singletons: {},
 	collections: {
 		categories,
