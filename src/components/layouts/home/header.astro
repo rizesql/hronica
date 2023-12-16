@@ -1,92 +1,47 @@
 ---
-import { getCollection } from "astro:content";
-import { FileSearch } from "lucide-react";
-
+import { MobileNav } from "~/components/mobile-nav";
 import { Flex, HStack, Link, Text } from "~/components/ui";
+import { api } from "~/lib/api";
 
-const categories = await getCollection("categories");
+const categories = await api.categories.getCategories();
+const socialLinks = await api.social.getLinks();
 ---
 
 <header class="sticky inset-0 z-20 bg-background">
-	<Flex alignment="center/between" className="px-6 pb-4 pt-6 lg:px-16 lg:pt-8">
-		<HStack alignment="center/between" className="gap-x-8">
-			<FileSearch />
+	<Flex
+		stretch="width"
+		className="items-center justify-between border-b border-foreground px-6 pb-4 pt-6 lg:justify-center lg:border-0 lg:px-16 lg:pt-8"
+	>
+		<MobileNav
+			client:idle
+			categories={categories}
+			social={socialLinks}
+			background="hsl(0 0% 98%)"
+		/>
 
-			<Text.Small className="text-foreground">
-				<Link.Nav href="/latest">Latest</Link.Nav>
-			</Text.Small>
-
-			<Text.Small className="text-foreground">
-				<Link.Nav href="/trending">Trending</Link.Nav>
-			</Text.Small>
-		</HStack>
-
-		<Link.Nav href="/" className="flex items-baseline gap-1">
+		<Link.Nav
+			href="/"
+			className="flex items-baseline gap-1"
+			transition:persist="header__logo"
+		>
 			<Text.H2 className="font-semibold italic tracking-tight">Revista</Text.H2>
 			<Text.H1>Hronica</Text.H1>
 		</Link.Nav>
-
-		<Text.P>Some Lorem ipsum dolor sit.</Text.P>
 	</Flex>
 
 	<HStack
+		as="nav"
 		stretch="width"
 		alignment="center/around"
-		className="border-b border-foreground pb-2 pt-4"
+		className="hidden border-b border-foreground pb-2 pt-4 lg:flex"
+		transition:persist="header__nav"
 	>
 		{
 			categories.map((category) => (
 				<Text.Small className="text-foreground">
-					<Link.Nav href={`/${category.id}`}>{category.data.name}</Link.Nav>
+					<Link.Nav href={`/${category.id}`}>{category.name}</Link.Nav>
 				</Text.Small>
 			))
 		}
 	</HStack>
 </header>
-
-<!-- <header class="sticky inset-0 z-20">
-	<Flex
-		alignment="center/between"
-		className="bg-gradient-to-b from-background to-transparent px-6 pb-4 pt-6 lg:px-16 lg:pt-8 lg:backdrop-blur-md"
-	>
-		<HStack alignment="center/center" className="gap-12">
-			<Flex
-				as={Link.Nav}
-				href="/"
-				inline
-				alignment="center/between"
-				className="max-w-fit gap-x-3 text-center"
-			>
-				<div class="h-6 w-6 rounded-md bg-green-500"></div>
-				<span class="font-redaction text-2xl">Hronica Sincai</span>
-			</Flex>
-
-			<HStack className="gap-12">
-				<Link.Nav href="/posts" className="font-pp-neue-montreal text-sm uppercase">
-					Postari
-				</Link.Nav>
-				<Link.Nav href="/about-us" className="font-pp-neue-montreal text-sm uppercase">
-					Echipa
-				</Link.Nav>
-			</HStack>
-		</HStack>
-
-		<Link.Nav href="/contact" className="font-pp-neue-montreal text-sm uppercase">
-			Contact
-		</Link.Nav>
-		<DesktopNav />
-
-		<Flex alignment="center/between" className="lg:hidden">
-			<Logo />
-
-			<MobileNav
-				client:idle
-				labels={{
-					navLinks: navLinkslabels,
-					translate: translateLabel,
-					madeBy: madeByLabel,
-				}}
-			/>
-		</Flex>
-	</Flex>
-</header> -->

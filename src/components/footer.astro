@@ -5,25 +5,23 @@ import { FooterCol } from "./footer-col";
 import Logo from "./logo.astro";
 
 import { Center, Flex, HStack, Link, VStack, Text } from "~/components/ui";
-import { navLinks, siteInfo } from "~/lib";
-
-// const navigationLinks = navLinks.map((link) => ({
-// 	href: `/${link.href}`,
-// 	label: t(link.label),
-// }));
+import { siteInfo } from "~/lib";
+import { api } from "~/lib/api";
 
 const _categories = await getCollection("categories");
 const categories = _categories.map((category) => ({
 	label: category.data.name,
 	href: category.id,
 }));
+
+const socialLinks = await api.social.getLinks();
 ---
 
 <Center stretch="all" className="px-4 pb-4 pt-12">
 	<VStack stretch="all" alignment="center/between" className="gap-4">
 		<Flex grow stretch="width" alignment="center/start">
 			<HStack stretch="all" className="gap-8">
-				<FooterCol title="Social" links={siteInfo.socialLinks} />
+				<FooterCol title="Social" links={socialLinks} />
 
 				<FooterCol title="Categorii" links={categories} />
 

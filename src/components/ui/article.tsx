@@ -38,7 +38,7 @@ const HeroContent = ({
 
 			<HStack stretch="width" alignment="baseline/between">
 				<VStack>
-					<Text.Small>by @{author}</Text.Small>
+					<Text.Small>Scris de {author}</Text.Small>
 					<time dateTime={publishedAt.toUTCString()}>
 						<Text.Small>{format(publishedAt, "MMM d, yyyy")}</Text.Small>
 					</time>
@@ -77,7 +77,7 @@ const NormalContent = ({
 
 			<Text.H3>{title}</Text.H3>
 
-			<Text.Small>By @{author}</Text.Small>
+			<Text.Small>Scris de {author}</Text.Small>
 
 			<HStack alignment="center/between" className="gap-2 lg:flex">
 				<Text.Small className="text-foreground underline underline-offset-4">
@@ -107,7 +107,7 @@ const SmallContent = ({
 					<Text.Small>{format(publishedAt, "MMM d, yyyy")}</Text.Small>
 				</time>
 
-				<Text.Small>By @{author}</Text.Small>
+				<Text.Small>Scris de {author}</Text.Small>
 
 				<HStack alignment="center/between" className="gap-2 lg:flex">
 					<Text.Small className="text-foreground underline underline-offset-4">

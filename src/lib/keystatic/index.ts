@@ -3,6 +3,7 @@ import { config as keystaticConfig } from "@keystatic/core";
 import { articles } from "./articles";
 import { categories } from "./categories";
 import { members } from "./members";
+import { social } from "./social";
 
 export const config = keystaticConfig({
 	ui: {
@@ -11,7 +12,7 @@ export const config = keystaticConfig({
 		},
 	},
 	storage: { kind: "github", repo: `rizesql/hronica` },
-	singletons: {},
+	singletons: { social },
 	collections: {
 		categories,
 		articles,

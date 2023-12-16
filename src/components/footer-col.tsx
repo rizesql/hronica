@@ -20,7 +20,7 @@ export const FooterCol = ({ title, links }: Props) => {
 								{link.label}
 							</Link.Nav>
 						) : (
-							<Link.Social href={link.href} className={linkStyles}>
+							<Link.Social href={link.url} className={linkStyles}>
 								{link.platform}
 							</Link.Social>
 						)}

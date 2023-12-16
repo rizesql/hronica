@@ -1,8 +1,8 @@
 ---
-import { getCollection } from "astro:content";
-import { FileSearch } from "lucide-react";
+import { MobileNav } from "../../mobile-nav";
 
-import { Flex, Link, Text } from "~/components/ui";
+import { HStack, Link, Text } from "~/components/ui";
+import { api } from "~/lib/api";
 
 export type Props = {
 	bgColor: string;
@@ -10,29 +10,46 @@ export type Props = {
 
 const { bgColor } = Astro.props;
 
-const categories = await getCollection("categories");
+const categories = await api.categories.getCategories();
+const socialLinks = await api.social.getLinks();
 ---
 
 <header class:list={["category-bg", "sticky inset-0 z-20"]}>
-	<Flex
+	<HStack
+		as="nav"
+		stretch="width"
 		alignment="center/between"
-		className="border-b border-foreground px-6 pb-4 pt-6 lg:px-16 lg:pt-8"
+		className="justify-between border-b border-foreground px-6 pb-4 pt-6 lg:flex lg:justify-center lg:gap-12 lg:px-16 lg:pt-8"
 	>
-		<FileSearch />
+		<MobileNav
+			client:idle
+			categories={categories}
+			social={socialLinks}
+			background={bgColor}
+		/>
 
-		<Link.Nav href="/" className="flex items-baseline gap-1">
+		<Link.Nav
+			href="/"
+			className="flex items-baseline gap-1"
+			transition:persist="header__logo"
+		>
 			<Text.H2 className="font-semibold italic tracking-tight">Revista</Text.H2>
 			<Text.H1>Hronica</Text.H1>
 		</Link.Nav>
 
-		{
-			categories.map((category) => (
-				<Text.Small className="text-foreground">
-					<Link.Nav href={`/${category.id}`}>{category.data.name}</Link.Nav>
-				</Text.Small>
-			))
-		}
-	</Flex>
+		<nav
+			class="hidden grow items-baseline justify-between lg:flex"
+			transition:persist="header__nav"
+		>
+			{
+				categories.map((category) => (
+					<Text.Small className="text-foreground">
+						<Link.Nav href={`/${category.id}`}>{category.name}</Link.Nav>
+					</Text.Small>
+				))
+			}
+		</nav>
+	</HStack>
 </header>
 
 <style define:vars={{ bgColor }}>

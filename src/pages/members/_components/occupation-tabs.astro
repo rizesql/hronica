@@ -13,7 +13,7 @@ const { member } = Astro.props;
 	member.occupation === "author-and-editor" && (
 		<VStack className="sticky top-[10rem] bg-background pt-8 lg:top-[8rem] lg:pl-8 lg:pr-4">
 			<HStack stretch="width" className="gap-x-8 px-4 pb-2" alignment="baseline/start">
-				<Text.P className="text-lg font-semibold">Activitate: </Text.P>
+				<Text.P className="font-redaction text-xl font-bold italic">Activitate:</Text.P>
 
 				<Link.Nav
 					href={`/members/${member.id}-author`}
