@@ -13,7 +13,7 @@ import {
 	useLoaderData,
 } from "@remix-run/react";
 
-import { isStegaEnabled } from "./lib/sanity/config";
+import { stegaEnabled } from "./lib/sanity/config";
 
 import { env } from "~/lib/env";
 import { useNonce } from "~/lib/nonce";
@@ -30,7 +30,7 @@ export const loader = ({ request }: LoaderFunctionArgs) => {
 	return json({
 		sanity: {
 			isStudioRoute: new URL(request.url).pathname.startsWith("/studio"),
-			stegaEnabled: isStegaEnabled(request.url),
+			stegaEnabled: stegaEnabled(request.url),
 		},
 	});
 };
@@ -79,12 +79,20 @@ function Document({
 				<Scripts nonce={nonce} />
 				<LiveReload nonce={nonce} />
 
-				{!sanity.isStudioRoute && sanity.stegaEnabled ? (
-					<React.Suspense>
-						<VisualEditing studioUrl={env.SANITY_STUDIO_URL} />
-					</React.Suspense>
-				) : null}
+				<SanityScripts sanity={sanity} />
 			</body>
 		</html>
+	);
+}
+
+function SanityScripts({ sanity }: { sanity: Sanity }) {
+	if (sanity.isStudioRoute || !sanity.stegaEnabled) {
+		return null;
+	}
+
+	return (
+		<React.Suspense>
+			<VisualEditing studioUrl={env.SANITY_STUDIO_URL} />
+		</React.Suspense>
 	);
 }

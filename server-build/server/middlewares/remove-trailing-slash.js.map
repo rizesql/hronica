@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../server/middlewares/remove-trailing-slash.ts"],
-  "sourcesContent": ["import { MiddlewareHandler } from \"hono\";\n\nexport const removeTrailingSlash: MiddlewareHandler = async (c, next) => {\n\tif (c.req.path.endsWith(\"/\") && c.req.path.length > 1) {\n\t\tconst query = c.req.url.slice(c.req.path.length);\n\t\tconst safepath = c.req.path.slice(0, -1).replace(/\\/+/g, \"/\");\n\n\t\treturn c.redirect(safepath + query, 301);\n\t}\n\n\treturn await next();\n};\n"],
-  "mappings": "AAEO,MAAM,sBAAyC,OAAO,GAAG,SAAS;AACxE,MAAI,EAAE,IAAI,KAAK,SAAS,GAAG,KAAK,EAAE,IAAI,KAAK,SAAS,GAAG;AACtD,UAAM,QAAQ,EAAE,IAAI,IAAI,MAAM,EAAE,IAAI,KAAK,MAAM;AAC/C,UAAM,WAAW,EAAE,IAAI,KAAK,MAAM,GAAG,EAAE,EAAE,QAAQ,QAAQ,GAAG;AAE5D,WAAO,EAAE,SAAS,WAAW,OAAO,GAAG;AAAA,EACxC;AAEA,SAAO,MAAM,KAAK;AACnB;",
-  "names": []
-}

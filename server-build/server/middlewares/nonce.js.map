@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../server/middlewares/nonce.ts"],
-  "sourcesContent": ["import { createId } from \"@paralleldrive/cuid2\";\nimport { MiddlewareHandler } from \"hono\";\n\nexport const setNonce: MiddlewareHandler<{ Variables: { nonce: string } }> = async (\n\tc,\n\tnext,\n) => {\n\tc.set(\"nonce\", createId());\n\treturn await next();\n};\n"],
-  "mappings": "AAAA,SAAS,gBAAgB;AAGlB,MAAM,WAAgE,OAC5E,GACA,SACI;AACJ,IAAE,IAAI,SAAS,SAAS,CAAC;AACzB,SAAO,MAAM,KAAK;AACnB;",
-  "names": []
-}

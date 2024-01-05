@@ -5,7 +5,7 @@ import { useLoaderData } from "@remix-run/react";
 import groq from "groq";
 import { z } from "zod";
 
-import { isStegaEnabled } from "~/lib/sanity/config";
+import { stegaEnabled } from "~/lib/sanity/config";
 import { useQuery } from "~/lib/sanity/loader";
 import { loadQuery } from "~/lib/sanity/loader.server";
 
@@ -39,7 +39,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 		CATEGORIES_QUERY,
 		{},
 		{
-			perspective: isStegaEnabled(request.url) ? "previewDrafts" : "published",
+			perspective: stegaEnabled(request.url) ? "previewDrafts" : "published",
 		},
 	).then((res) => {
 		return {
@@ -64,7 +64,7 @@ export default function Index() {
 
 	const { initial, query, params } = useLoaderData<typeof loader>();
 	const { data, loading } = useQuery<typeof initial.data>(query, params, {
-		// @ts-expect-error
+		// @ts-expect-error plm
 		initial,
 	});
 

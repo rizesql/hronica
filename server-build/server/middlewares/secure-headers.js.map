@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../server/middlewares/secure-headers.ts"],
-  "sourcesContent": ["import { type MiddlewareHandler } from \"hono\";\nimport { secureHeaders as _secureHeaders } from \"hono/secure-headers\";\n\nexport const secureHeaders: MiddlewareHandler = async (c, next) => {\n\tconst nonce = `'nonce-${c.var.nonce}'`;\n\n\treturn _secureHeaders({\n\t\treferrerPolicy: \"same-origin\",\n\t\tcrossOriginEmbedderPolicy: false,\n\t\tcontentSecurityPolicy: {\n\t\t\t// connectSrc: [\"self\", process.env.NODE_ENV === \"development\" ? \"ws:\" : null].filter(\n\t\t\t// \tBoolean,\n\t\t\t// ) as string[],\n\t\t\tfontSrc: [\"self\"],\n\t\t\t// frameSrc: [\"self\"],\n\t\t\tscriptSrcAttr: [nonce],\n\t\t\tupgradeInsecureRequests: [],\n\t\t},\n\t})(c, next);\n};\n"],
-  "mappings": "AACA,SAAS,iBAAiB,sBAAsB;AAEzC,MAAM,gBAAmC,OAAO,GAAG,SAAS;AAClE,QAAM,QAAQ,UAAU,EAAE,IAAI,KAAK;AAEnC,SAAO,eAAe;AAAA,IACrB,gBAAgB;AAAA,IAChB,2BAA2B;AAAA,IAC3B,uBAAuB;AAAA;AAAA;AAAA;AAAA,MAItB,SAAS,CAAC,MAAM;AAAA;AAAA,MAEhB,eAAe,CAAC,KAAK;AAAA,MACrB,yBAAyB,CAAC;AAAA,IAC3B;AAAA,EACD,CAAC,EAAE,GAAG,IAAI;AACX;",
-  "names": []
-}

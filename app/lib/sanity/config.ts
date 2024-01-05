@@ -10,10 +10,23 @@ export const sanityConfig = {
 
 export const PRODUCTION_URL = "https://hronica-demo.sanity.studio";
 
-export const frontendUrl = env.SANITY_FRONTEND_URL;
-export const studioUrl = env.SANITY_STUDIO_URL;
+// prettier-ignore
+export const frontendUrl = typeof document === "undefined" ?
+	env.VERCEL ?
+		`https://${env.VERCEL_BRANCH_URL}` :
+		env.SANITY_FRONTEND_URL :
+	window.env.SANITY_FRONTEND_URL;
 
-export function isStegaEnabled(url: string) {
+// prettier-ignore
+export const studioUrl = typeof document === "undefined" ?
+	env.VERCEL ?
+		env.VERCEL_ENV !== "production" ?
+			`https://${process.env.VERCEL_URL}` :
+			PRODUCTION_URL :
+		env.SANITY_STUDIO_URL :
+	window.env.SANITY_STUDIO_URL;
+
+export function stegaEnabled(url: string) {
 	const { hostname } = new URL(url);
 	return hostname !== new URL(PRODUCTION_URL).hostname;
 }
