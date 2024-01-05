@@ -75,7 +75,7 @@ export default function Index() {
 				<div>{count}</div>
 				<button onClick={() => setCount((c) => c + 1)}>+</button>
 				{loading ? (
-					<div>loading...</div>
+					<div>loading 2...</div>
 				) : (
 					<div>
 						{data?.map((x, idx) => (
