@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../server/middlewares/https-only.ts"],
+  "sourcesContent": ["import type { MiddlewareHandler } from \"hono\";\n\nexport const httpsOnly: MiddlewareHandler = async (c, next) => {\n\tconst proto = c.req.header(\"X-Forwarded-Proto\");\n\tconst host = c.req.header(\"X-Forwarded-Host\") ?? c.req.header(\"host\") ?? \"\";\n\n\tif (proto === \"http\") {\n\t\tc.res.headers.set(\"X-Forwarded-Proto\", \"https\");\n\t\tc.redirect(`https://${host}${c.req.path}`);\n\t\treturn;\n\t}\n\n\treturn await next();\n};\n"],
+  "mappings": "AAEO,MAAM,YAA+B,OAAO,GAAG,SAAS;AAC9D,QAAM,QAAQ,EAAE,IAAI,OAAO,mBAAmB;AAC9C,QAAM,OAAO,EAAE,IAAI,OAAO,kBAAkB,KAAK,EAAE,IAAI,OAAO,MAAM,KAAK;AAEzE,MAAI,UAAU,QAAQ;AACrB,MAAE,IAAI,QAAQ,IAAI,qBAAqB,OAAO;AAC9C,MAAE,SAAS,WAAW,IAAI,GAAG,EAAE,IAAI,IAAI,EAAE;AACzC;AAAA,EACD;AAEA,SAAO,MAAM,KAAK;AACnB;",
+  "names": []
+}

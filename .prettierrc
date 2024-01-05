@@ -1,0 +1,18 @@
+{
+  "arrowParens": "always",
+  "bracketSameLine": false,
+  "bracketSpacing": true,
+  "semi": true,
+  "printWidth": 90,
+  "trailingComma": "all",
+  "useTabs": true,
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "overrides": [
+    {
+      "files": [".*", "*.json", "*.md", "*.toml", "*.yml"],
+      "options": {
+        "useTabs": false
+      }
+    }
+  ]
+}
