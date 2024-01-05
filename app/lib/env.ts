@@ -12,6 +12,7 @@ export const env = createEnv({
 		SANITY_READ_TOKEN: z.string(),
 		SANITY_WRITE_TOKEN: z.string(),
 		VERCEL: z.string().optional(),
+		VERCEL_URL: z.string().optional(),
 		VERCEL_BRANCH_URL: z.string().optional(),
 		VERCEL_ENV: z.enum(["production", "preview", "development"]).optional(),
 	},

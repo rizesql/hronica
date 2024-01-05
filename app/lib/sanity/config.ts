@@ -21,7 +21,7 @@ export const frontendUrl = typeof document === "undefined" ?
 export const studioUrl = typeof document === "undefined" ?
 	env.VERCEL ?
 		env.VERCEL_ENV !== "production" ?
-			`https://${process.env.VERCEL_URL}` :
+			`https://${env.VERCEL_URL}` :
 			PRODUCTION_URL :
 		env.SANITY_STUDIO_URL :
 	window.env.SANITY_STUDIO_URL;
