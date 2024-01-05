@@ -25,10 +25,11 @@ export default async function handleRequest(...args: DocRequestArgs) {
 		: "onShellReady";
 
 	// prettier-ignore
-	const nonce = process.env.NODE_ENV === "production" ?
-		// @ts-expect-error the value is there 100%
-		loadContext._var.nonce as string :
-		"";
+	const nonce = "";
+	// process.env.NODE_ENV === "production" ?
+	// // @ts-expect-error the value is there 100%
+	// loadContext._var.nonce as string :
+	// "";
 
 	return new Promise((resolve, reject) => {
 		let didError = false;
