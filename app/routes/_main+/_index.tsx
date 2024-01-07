@@ -35,21 +35,21 @@ export const CATEGORIES_QUERY = groq`*[_type == "category"] {
 }`;
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-	const initial = await loadQuery<Category>(
-		CATEGORIES_QUERY,
-		{},
-		{
-			perspective: stegaEnabled(request.url) ? "previewDrafts" : "published",
-		},
-	).then((res) => {
-		return {
-			...res,
-			data: res.data ? categories.parse(res.data) : undefined,
-		};
-	});
+	// const initial = await loadQuery<Category>(
+	// 	CATEGORIES_QUERY,
+	// 	{},
+	// 	{
+	// 		perspective: stegaEnabled(request.url) ? "previewDrafts" : "published",
+	// 	},
+	// ).then((res) => {
+	// 	return {
+	// 		...res,
+	// 		data: res.data ? categories.parse(res.data) : undefined,
+	// 	};
+	// });
 
 	return json(
-		{ initial, query: CATEGORIES_QUERY, params: {} },
+		// { initial, query: CATEGORIES_QUERY, params: {} },
 		{
 			headers: {
 				"Cache-Control": CACHE_CONTROL.doc,
@@ -62,11 +62,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function Index() {
 	const [count, setCount] = React.useState(0);
 
-	const { initial, query, params } = useLoaderData<typeof loader>();
-	const { data, loading } = useQuery<typeof initial.data>(query, params, {
-		// @ts-expect-error plm
-		initial,
-	});
+	// const { initial, query, params } = useLoaderData<typeof loader>();
+	// const { data, loading } = useQuery<typeof initial.data>(query, params, {
+	// 	// @ts-expect-error plm
+	// 	initial,
+	// });
 
 	return (
 		<div>
@@ -74,8 +74,8 @@ export default function Index() {
 				<button onClick={() => setCount((c) => c - 1)}>-</button>
 				<div>{count}</div>
 				<button onClick={() => setCount((c) => c + 1)}>+</button>
-				{loading ? (
-					<div>loading 2...</div>
+				{/* {loading ? (
+					<div>loading...</div>
 				) : (
 					<div>
 						{data?.map((x, idx) => (
@@ -84,7 +84,7 @@ export default function Index() {
 							</pre>
 						))}
 					</div>
-				)}
+				)} */}
 			</div>
 		</div>
 	);

@@ -3,9 +3,7 @@ import React from "react";
 import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import {
-	Links,
 	LiveReload,
-	Meta,
 	Outlet,
 	Scripts,
 	ScrollRestoration,
@@ -13,15 +11,24 @@ import {
 	useLoaderData,
 } from "@remix-run/react";
 
-import { stegaEnabled } from "./lib/sanity/config";
-
+import { Footer } from "~/components/root/footer";
+import { Head } from "~/components/root/head";
 import { env } from "~/lib/env";
 import { useNonce } from "~/lib/nonce";
+import { stegaEnabled } from "~/lib/sanity/config";
+import libreCaslonCondensed from "~/styles/libre-caslon-condensed.css";
+import ppNeueMontreal from "~/styles/pp-neue-montreal.css";
+import redaction from "~/styles/redaction.css";
+import stylesheet from "~/styles/tailwind.css";
 
 const VisualEditing = React.lazy(() => import("~/lib/sanity/visual-editing"));
 
 export const links: LinksFunction = () => [
 	...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
+	{ rel: "stylesheet", href: stylesheet },
+	{ rel: "stylesheet", href: ppNeueMontreal },
+	{ rel: "stylesheet", href: redaction },
+	{ rel: "stylesheet", href: libreCaslonCondensed },
 	{ rel: "icon", type: "image/svg+xml", href: "/public/favicon.ico" },
 	{ rel: "preconnect", href: "https://cdn.sanity.io" },
 ];
@@ -60,15 +67,12 @@ function Document({
 	sanity: Sanity;
 }>) {
 	return (
-		<html lang="en">
-			<head>
-				<meta charSet="utf-8" />
-				<meta name="viewport" content="width=device-width, initial-scale=1" />
-				<Meta />
-				<Links />
-			</head>
+		<html lang="ro">
+			<Head />
 			<body>
 				{children}
+
+				<Footer />
 
 				<ScrollRestoration nonce={nonce} />
 				<script
