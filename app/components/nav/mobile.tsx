@@ -1,6 +1,7 @@
 import { MenuSquare, X } from "lucide-react";
 
 import { Flex, Sheet, Link, VStack, HStack, Text } from "~/components/ui";
+import { type Category } from "~/lib/api/categories";
 // import type { Category } from "~/lib/api/categories";
 import { type SocialLink } from "~/lib/links";
 import { seo } from "~/lib/seo";
@@ -10,7 +11,7 @@ export const MobileNav = ({
 	background,
 	social,
 }: {
-	categories: readonly any[];
+	categories: readonly Category[];
 	social: readonly SocialLink[];
 	background: string;
 }) => {
@@ -35,7 +36,7 @@ export const MobileNav = ({
 					<VStack as="nav" className="gap-y-4">
 						{categories.map((c, i) => (
 							<Link.Nav
-								href={`/${c.id}`}
+								href={`/${c._slug}`}
 								className="font-pp-neue-montreal text-2xl font-semibold uppercase"
 								key={`mobile-nav.nav-links.${i}`}
 							>

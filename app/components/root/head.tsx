@@ -32,7 +32,7 @@ export function Head({
 			<meta charSet="utf-8" />
 			<meta name="viewport" content="width=device-width" />
 			<title>{title}</title>
-			<meta name="theme-color" content="#0C0C0E" />
+			<meta name="theme-color" content="hsl(0 0% 98%)" />
 			<Meta />
 			<Links />
 

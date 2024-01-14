@@ -12,3 +12,8 @@ export function ensureDefined<Value>(value: Value | undefined | null) {
 
 	return value;
 }
+
+export type Prettify<T> = {
+	[K in keyof T]: T[K];
+	// eslint-disable-next-line @typescript-eslint/ban-types
+} & {};

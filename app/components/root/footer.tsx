@@ -1,27 +1,34 @@
-// import { getCollection } from "astro:content";
-
 import { Logo } from "~/components/logo";
 import { Center, Flex, HStack, Link, VStack, Text } from "~/components/ui";
-// import { api } from "~/lib/api";
 import { type NavLink, type SocialLink, isNavLink } from "~/lib/links";
+import { useQuery } from "~/lib/sanity/loader";
 import { seo } from "~/lib/seo";
+import { useRootData } from "~/root";
 
 export function Footer() {
-	// const _categories = await getCollection("categories");
-	// const categories = _categories.map((category) => ({
-	// 	label: category.data.name,
-	// 	href: category.id,
-	// }));
+	// 	{
+	// 	social,
+	// 	categories,
+	// }: {
+	// 	social: readonly SocialLink[];
+	// 	categories: Categories;
+	// 	}
+	const { categoriesQuery, socialQuery } = useRootData();
+	const categories = useQuery(categoriesQuery);
+	const social = useQuery(socialQuery);
 
-	// const socialLinks = await api.social.getLinks();
+	const categoriesLinks = categories.data.map(
+		(c) => ({ label: c.name, href: c._slug }) satisfies NavLink,
+	);
+
 	return (
 		<Center stretch="all" className="px-4 pb-4 pt-12">
 			<VStack stretch="all" alignment="center/between" className="gap-4">
 				<Flex grow stretch="width" alignment="center/start">
 					<HStack stretch="all" className="gap-8">
-						<FooterCol title="Social" links={[]} />
+						<FooterCol title="Social" links={social.data} />
 
-						<FooterCol title="Categorii" links={[]} />
+						<FooterCol title="Categorii" links={categoriesLinks} />
 
 						<HStack alignment="center/between" stretch="width">
 							<Flex className="flex-col items-start gap-4 lg:flex-row lg:items-center">

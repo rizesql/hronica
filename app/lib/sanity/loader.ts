@@ -1,4 +1,8 @@
+import urlBuilder from "@sanity/image-url";
 import { type QueryParams, createQueryStore } from "@sanity/react-loader";
+import sanityConfig from "sanity.config";
+
+import { type Prettify } from "../types";
 
 const store = createQueryStore({ client: false, ssr: true });
 
@@ -25,3 +29,11 @@ export const useQuery = <
 
 	return { data: data as QueryResponseResult["data"], ...state };
 };
+
+export type Query<T> = Prettify<{
+	initial: { data: T };
+	params: { url: string } & (QueryParams | undefined);
+	query: string;
+}>;
+
+export const image = (asset: { _ref: string }) => urlBuilder(sanityConfig).image(asset);

@@ -5,6 +5,7 @@ export default {
 	assetsBuildDirectory: "assets",
 	publicPath: "/assets/",
 	serverMinify: true,
+	serverModuleFormat: "esm",
 
 	ignoredRouteFiles: ["**/*"],
 	routes: async (defineRoutes) => {

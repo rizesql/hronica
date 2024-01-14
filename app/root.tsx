@@ -9,9 +9,12 @@ import {
 	ScrollRestoration,
 	json,
 	useLoaderData,
+	useRouteLoaderData,
 } from "@remix-run/react";
+import { promiseHash } from "remix-utils/promise";
 
-import { Footer } from "~/components/root/footer";
+import { api } from "./lib/api";
+
 import { Head } from "~/components/root/head";
 import { env } from "~/lib/env";
 import { useNonce } from "~/lib/nonce";
@@ -33,13 +36,26 @@ export const links: LinksFunction = () => [
 	{ rel: "preconnect", href: "https://cdn.sanity.io" },
 ];
 
-export const loader = ({ request }: LoaderFunctionArgs) => {
+export async function loader({ request }: LoaderFunctionArgs) {
+	const queries = await promiseHash({
+		socialQuery: api.social.getLinks(request.url),
+		categoriesQuery: api.categories.getCategories(request.url),
+	});
+
 	return json({
 		sanity: {
 			isStudioRoute: new URL(request.url).pathname.startsWith("/studio"),
 			stegaEnabled: stegaEnabled(request.url),
 		},
+		...queries,
 	});
+}
+
+export const useRootData = () => {
+	const data = useRouteLoaderData<Awaited<typeof loader>>("root");
+
+	if (!data) throw new Error("Cannot use `useRootData` outside `root/*`");
+	return data;
 };
 
 type Sanity = {
@@ -71,8 +87,6 @@ function Document({
 			<Head />
 			<body>
 				{children}
-
-				<Footer />
 
 				<ScrollRestoration nonce={nonce} />
 				<script

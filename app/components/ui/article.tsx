@@ -28,7 +28,7 @@ const HeroContent = ({
 }: React.PropsWithChildren<{
 	title: string;
 	author: string;
-	publishedAt: Date;
+	publishedAt: string;
 }>) => {
 	return (
 		<Card.Header as={VStack} stretch="width" className="gap-8">
@@ -39,7 +39,7 @@ const HeroContent = ({
 			<HStack stretch="width" alignment="baseline/between">
 				<VStack>
 					<Text.Small>Scris de {author}</Text.Small>
-					<time dateTime={publishedAt.toUTCString()}>
+					<time dateTime={publishedAt}>
 						<Text.Small>{format(publishedAt, "MMM d, yyyy")}</Text.Small>
 					</time>
 				</VStack>
@@ -63,14 +63,14 @@ const NormalContent = ({
 }: React.PropsWithChildren<{
 	title: string;
 	author: string;
-	publishedAt: Date;
+	publishedAt: string;
 }>) => {
 	return (
 		<Card.Header as={VStack} className="gap-4" stretch="width">
 			<HStack stretch="width" alignment="center/between">
 				{children}
 
-				<time dateTime={publishedAt.toISOString()}>
+				<time dateTime={publishedAt}>
 					<Text.Small>{format(publishedAt, "MMM d, yyyy")}</Text.Small>
 				</time>
 			</HStack>
@@ -96,14 +96,14 @@ const SmallContent = ({
 }: {
 	title: string;
 	author: string;
-	publishedAt: Date;
+	publishedAt: string;
 }) => {
 	return (
 		<Card.Content>
 			<Text.H3>{title}</Text.H3>
 
 			<HStack alignment="baseline/between" stretch="width" className="gap-4">
-				<time dateTime={publishedAt.toISOString()}>
+				<time dateTime={publishedAt}>
 					<Text.Small>{format(publishedAt, "MMM d, yyyy")}</Text.Small>
 				</time>
 

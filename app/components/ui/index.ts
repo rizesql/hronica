@@ -7,9 +7,10 @@ export * from "./cta-button";
 export * from "./dropdown-menu";
 export * from "./flex";
 export * from "./grid";
+export * from "./image";
 export * from "./link";
 export * from "./polymorphic-component";
-export * from "./scroll-area"
+export * from "./scroll-area";
 export * from "./section";
 export * from "./separator";
 export * from "./sheet";
