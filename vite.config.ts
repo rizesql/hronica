@@ -13,7 +13,6 @@ export default defineConfig({
 		remix({
 			assetsBuildDirectory: "assets",
 			publicPath: "/assets/",
-			// // serverMinify: true,
 			serverModuleFormat: "esm",
 
 			ignoredRouteFiles: ["**/*"],
@@ -22,4 +21,5 @@ export default defineConfig({
 		}),
 		tsconfigPaths(),
 	],
+	envPrefix: "S",
 });

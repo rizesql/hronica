@@ -16,7 +16,7 @@ export const env = createEnv({
 		VERCEL_BRANCH_URL: z.string().optional(),
 		VERCEL_ENV: z.enum(["production", "preview", "development"]).optional(),
 	},
-	runtimeEnv: typeof window === "undefined" ? process.env : window.env,
+	runtimeEnv: typeof window === "undefined" ? import.meta.env : window.env,
 	isServer: typeof window === "undefined",
 });
 
