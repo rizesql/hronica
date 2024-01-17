@@ -26,6 +26,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 			? { cursor: null, lastId: null, count: null }
 			: { cursor, lastId, count: +rawCount };
 
+	console.log("MERGI!");
+
 	const pageQuery = await loadNext(filter, { url: request.url, ...queryParams });
 	return json({ pageQuery });
 }
