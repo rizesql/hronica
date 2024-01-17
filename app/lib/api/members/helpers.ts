@@ -1,3 +1,4 @@
+import groq from "groq";
 import { z } from "zod";
 
 import { type Prettify } from "~/lib/types";
@@ -52,6 +53,17 @@ type Activity = { isActive: true; since: number } | { isActive: false; between: 
 
 export type Member = Prettify<Data & { activity: Activity }>;
 
+export const queries = {
+	all: (url: string) => ({
+		params: { url },
+		query: GET_MEMBERS,
+	}),
+	byId: (id: string, url: string) => ({
+		params: { id, url },
+		query: GET_MEMBER,
+	}),
+} as const;
+
 export const formatPromotion = (startYear: number) =>
 	`${startYear} - ${startYear + 4}` as const;
 
@@ -93,3 +105,19 @@ export const formatActivity = (activity: Activity) => {
 
 	return `A facut parte din echipa din ${activity.between.start} pana in ${activity.between.end}` as const;
 };
+
+export const MEMBER_DATA = groq`
+	_id,
+	'_slug': slug.current,
+	name,
+	occupation,
+	class,
+	promotion,
+	seniority,
+	social,
+	'photo': photo.asset
+`;
+
+const GET_MEMBERS = groq`*[_type == "member"] {${MEMBER_DATA}}`;
+
+const GET_MEMBER = groq`*[_type == "member" && _id == $id] {${MEMBER_DATA}}`;

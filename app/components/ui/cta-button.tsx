@@ -11,7 +11,7 @@ export const CTAButton = ({
 		<Button
 			variant="alternative"
 			as={Link.Nav}
-			href={href}
+			to={href}
 			className="group mx-auto scale-95 rounded-xl transition-transform hover:scale-100 lg:mx-0"
 		>
 			{children}

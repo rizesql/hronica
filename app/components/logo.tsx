@@ -3,7 +3,7 @@ import { seo } from "~/lib/seo";
 
 export function Logo() {
 	return (
-		<Flex as={Link.Nav} href="/" inline alignment="center/between">
+		<Flex as={Link.Nav} to="/" inline alignment="center/between">
 			<Text.H3 className="font-redaction">{seo.name}</Text.H3>
 		</Flex>
 	);

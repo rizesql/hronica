@@ -8,7 +8,7 @@ import { Text } from "./text";
 
 const Root = ({ children, href }: React.PropsWithChildren<{ href: string }>) => {
 	return (
-		<Link.Nav href={href}>
+		<Link.Nav to={href}>
 			<Card.Root as={VStack} stretch="width">
 				{children}
 			</Card.Root>
@@ -34,7 +34,7 @@ const HeroContent = ({
 		<Card.Header as={VStack} stretch="width" className="gap-8">
 			<HStack className="gap-4">{children}</HStack>
 
-			<Text.H2 className="text-xl lg:text-4xl">{title}</Text.H2>
+			<Text.H2 className="text-3xl lg:text-4xl">{title}</Text.H2>
 
 			<HStack stretch="width" alignment="baseline/between">
 				<VStack>

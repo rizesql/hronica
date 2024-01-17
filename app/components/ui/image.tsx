@@ -6,10 +6,12 @@ export const Image = ({
 	asset,
 	isInline = false,
 	alt,
+	className,
 }: {
 	asset: { _ref: string };
 	alt: string;
 	isInline?: boolean | undefined;
+	className?: string | undefined;
 }) => {
 	const { width, height } = getImageDimensions(asset);
 
@@ -22,6 +24,7 @@ export const Image = ({
 				display: isInline ? "inline-block" : "block",
 				aspectRatio: width / height,
 			}}
+			className={className}
 		/>
 	);
 };

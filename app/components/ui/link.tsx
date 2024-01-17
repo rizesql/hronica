@@ -1,14 +1,15 @@
 import React from "react";
 
 import { Link as Link_ } from "@remix-run/react";
+import { type RemixLinkProps } from "@remix-run/react/dist/components";
 import { ArrowUpRight } from "lucide-react";
 
 import { cn } from "~/lib/cn";
 
 type NavLinkProps = {
 	disabled?: boolean;
-	href: string;
-} & React.ComponentPropsWithRef<"a">;
+} & React.ComponentPropsWithRef<"a"> &
+	RemixLinkProps;
 
 const NavLink = React.forwardRef<HTMLAnchorElement, NavLinkProps>(function NavLink(
 	{ disabled, className, ...props },
@@ -16,17 +17,14 @@ const NavLink = React.forwardRef<HTMLAnchorElement, NavLinkProps>(function NavLi
 ) {
 	if (disabled) return <span ref={ref} {...props} />;
 
-	const { href, ...other } = props;
-
 	return (
 		<Link_
-			to={href}
 			rel="prefetch"
 			className={cn(
 				disabled && "pointer-events-none text-off-white-100",
 				className ?? "",
 			)}
-			{...other}
+			{...props}
 		/>
 	);
 });

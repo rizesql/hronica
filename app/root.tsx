@@ -1,6 +1,5 @@
 import React from "react";
 
-import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import {
 	LiveReload,
@@ -9,7 +8,6 @@ import {
 	ScrollRestoration,
 	json,
 	useLoaderData,
-	useRouteLoaderData,
 } from "@remix-run/react";
 import { promiseHash } from "remix-utils/promise";
 
@@ -19,20 +17,15 @@ import { Head } from "~/components/root/head";
 import { env } from "~/lib/env";
 import { useNonce } from "~/lib/nonce";
 import { stegaEnabled } from "~/lib/sanity/config";
-import libreCaslonCondensed from "~/styles/libre-caslon-condensed.css";
-import ppNeueMontreal from "~/styles/pp-neue-montreal.css";
-import redaction from "~/styles/redaction.css";
-import stylesheet from "~/styles/tailwind.css";
+import "~/styles/libre-caslon-condensed.css";
+import "~/styles/pp-neue-montreal.css";
+import "~/styles/redaction.css";
+import "~/styles/tailwind.css";
 
 const VisualEditing = React.lazy(() => import("~/lib/sanity/visual-editing"));
 
 export const links: LinksFunction = () => [
-	...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
-	{ rel: "stylesheet", href: stylesheet },
-	{ rel: "stylesheet", href: ppNeueMontreal },
-	{ rel: "stylesheet", href: redaction },
-	{ rel: "stylesheet", href: libreCaslonCondensed },
-	{ rel: "icon", type: "image/svg+xml", href: "/public/favicon.ico" },
+	{ rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
 	{ rel: "preconnect", href: "https://cdn.sanity.io" },
 ];
 
@@ -50,13 +43,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		...queries,
 	});
 }
-
-export const useRootData = () => {
-	const data = useRouteLoaderData<Awaited<typeof loader>>("root");
-
-	if (!data) throw new Error("Cannot use `useRootData` outside `root/*`");
-	return data;
-};
 
 type Sanity = {
 	isStudioRoute: boolean;
@@ -83,7 +69,10 @@ function Document({
 	sanity: Sanity;
 }>) {
 	return (
-		<html lang="ro">
+		<html
+			lang="ro"
+			className="font-pp-neue-montreal text-foreground [word-break:break-word]"
+		>
 			<Head />
 			<body>
 				{children}

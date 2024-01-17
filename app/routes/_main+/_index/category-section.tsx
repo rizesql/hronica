@@ -9,8 +9,8 @@ import {
 	Separator,
 	Text,
 } from "~/components/ui";
-import { type ArrangedArticles } from "~/lib/api/articles";
-import { type Category } from "~/lib/api/categories";
+import { type ArrangedArticles } from "~/lib/api/articles/helpers";
+import { type Category } from "~/lib/api/categories/helpers";
 import { type Query, useQuery } from "~/lib/sanity/loader";
 
 type Props = {
@@ -31,7 +31,7 @@ export function CategorySection({ articlesQuery, layout, category }: Props) {
 				<HStack stretch="width" className="gap-8 px-8 pb-4">
 					<Text.H1>{category.name}</Text.H1>
 					<Link.Nav
-						href={`/${category._slug}`}
+						to={`/${category._slug}`}
 						className="group scale-95 rounded-md bg-foreground px-3 py-2 transition-all hover:scale-100 hover:bg-transparent hover:!text-foreground"
 						style={{ color: category.color }}
 					>

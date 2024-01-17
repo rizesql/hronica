@@ -19,10 +19,10 @@ export function Hero() {
 	} = query.data;
 
 	return (
-		<Section className="mx-8 mb-4 h-auto lg:h-auto">
-			<Grid stretch="all" className="grid-cols-1 gap-8 lg:grid-cols-2 lg:p-4">
+		<Section className="mb-4 h-auto lg:mx-8 lg:h-auto">
+			<Grid stretch="all" className="grid-cols-1 gap-8 lg:grid-cols-2 lg:p-4 lg:px-8">
 				<VStack stretch="width">
-					<Article.Root href={`/articles/${hero._slug}`}>
+					<Article.Root href={`/${hero.category._slug}/articles/${hero._slug}`}>
 						<Article.Image>
 							<img
 								className="aspect-[3/2] rounded-md"
@@ -52,7 +52,9 @@ export function Hero() {
 								<React.Fragment key={`hero.first-col-${article._id}`}>
 									<Separator />
 
-									<Article.Root href={`/articles/${article._slug}`}>
+									<Article.Root
+										href={`/${article.category._slug}/articles/${article._slug}`}
+									>
 										<Article.Content.Small
 											title={article.title}
 											author={article.author.name}
@@ -69,7 +71,7 @@ export function Hero() {
 					<VStack className="gap-4">
 						{secondCol.map((article) => (
 							<Article.Root
-								href={`/articles/${article._slug}`}
+								href={`/${article.category._slug}/articles/${article._slug}`}
 								key={`hero.second-col-${article._id}`}
 							>
 								<Article.Image>
@@ -97,7 +99,9 @@ export function Hero() {
 								<Separator />
 
 								{idx === 2 ? (
-									<Article.Root href={`/articles/${article._slug}`}>
+									<Article.Root
+										href={`/${article.category._slug}/articles/${article._slug}`}
+									>
 										<Article.Image>
 											<img
 												className="aspect-[3/2] rounded-md"
@@ -120,7 +124,9 @@ export function Hero() {
 										</Article.Content.Normal>
 									</Article.Root>
 								) : (
-									<Article.Root href={`/articles/${article._slug}`}>
+									<Article.Root
+										href={`/${article.category._slug}/articles/${article._slug}`}
+									>
 										<Article.Content.Small
 											title={article.title}
 											author={article.author.name}

@@ -3,12 +3,12 @@ import { Outlet } from "@remix-run/react";
 import { MobileNav } from "~/components/nav/mobile";
 import { Footer } from "~/components/root/footer";
 import { Flex, HStack, Link, Text } from "~/components/ui";
+import { useRootData } from "~/lib/root-data";
 import { useQuery } from "~/lib/sanity/loader";
-import { useRootData } from "~/root";
 
 export default function MainLayout() {
 	return (
-		<div className="bg-background font-pp-neue-montreal text-foreground [word-break:break-word]">
+		<div className="bg-background ">
 			<div className="relative">
 				<Header />
 
@@ -39,7 +39,7 @@ function Header() {
 					background="hsl(0 0% 98%)"
 				/>
 
-				<Link.Nav href="/" className="flex items-baseline gap-1">
+				<Link.Nav to="/" className="flex items-baseline gap-1">
 					<Text.H2 className="font-semibold italic tracking-tight">Revista</Text.H2>
 					<Text.H1>Hronica</Text.H1>
 				</Link.Nav>
@@ -53,7 +53,7 @@ function Header() {
 			>
 				{categories.data.map((category) => (
 					<Text.Small key={category._id} className="text-foreground">
-						<Link.Nav href={`/${category._slug}`}>{category.name}</Link.Nav>
+						<Link.Nav to={`/${category._slug}`}>{category.name}</Link.Nav>
 					</Text.Small>
 				))}
 			</HStack>

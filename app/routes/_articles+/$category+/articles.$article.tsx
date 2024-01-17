@@ -7,7 +7,6 @@ import { useLoaderData } from "@remix-run/react";
 
 import { Link, Section, Image } from "~/components/ui";
 import { api } from "~/lib/api";
-import { CATEGORY_QUERY } from "~/lib/api/categories";
 import { cn } from "~/lib/cn";
 import { useQuery } from "~/lib/sanity/loader";
 
@@ -18,12 +17,9 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 	const articleQuery = await api.articles.getArticle(articleSlug, request.url);
 	if (!articleQuery) throw redirect("/404");
 
-	const categoryQuery = {
-		initial: { data: articleQuery.initial.data.category },
-		params: { url: request.url, category: articleQuery.initial.data.category._slug },
-		query: CATEGORY_QUERY,
-	};
-	return json({ articleQuery, categoryQuery });
+	return json({
+		articleQuery,
+	});
 }
 
 const baseStyle = cn("font-redaction [text-wrap:balance] scroll-m-28");
@@ -36,8 +32,8 @@ export default function Article() {
 		<Section className="h-auto font-pp-neue-montreal lg:h-auto">
 			<div className="prose prose-quoteless mx-8 max-w-[90ch]">
 				<PortableText
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-					value={article.data.article}
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+					value={article.data.content}
 					components={{
 						block: ({ isInline, renderNode, children, ...props }) =>
 							// prettier-ignore

@@ -1,9 +1,9 @@
 import { Logo } from "~/components/logo";
 import { Center, Flex, HStack, Link, VStack, Text } from "~/components/ui";
 import { type NavLink, type SocialLink, isNavLink } from "~/lib/links";
+import { useRootData } from "~/lib/root-data";
 import { useQuery } from "~/lib/sanity/loader";
 import { seo } from "~/lib/seo";
-import { useRootData } from "~/root";
 
 export function Footer() {
 	// 	{
@@ -64,7 +64,7 @@ const FooterCol = ({ title, links }: Props) => {
 				{links.map((link, i) => (
 					<li key={`footer-col.${title}.${i}`}>
 						{isNavLink(link) ? (
-							<Link.Nav href={link.href} className={linkStyles}>
+							<Link.Nav to={link.href} className={linkStyles}>
 								{link.label}
 							</Link.Nav>
 						) : (

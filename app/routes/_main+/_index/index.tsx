@@ -9,12 +9,12 @@ import { Hero } from "./hero";
 
 import { Center, Section } from "~/components/ui";
 import { api } from "~/lib/api";
+import { useRootData } from "~/lib/root-data";
 import { useQuery } from "~/lib/sanity/loader";
-import { useRootData } from "~/root";
 
-export const CACHE_CONTROL = {
-	doc: "max-age=300, stale-while-revalidate=604800",
-};
+// export const CACHE_CONTROL = {
+// 	doc: "max-age=300, stale-while-revalidate=604800",
+// };
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	const categoriesArticlesQuery = promiseHash({

@@ -1,25 +1,25 @@
-import { Outlet, useMatches } from "@remix-run/react";
+import { redirect, type LoaderFunctionArgs, json } from "@remix-run/node";
+import { Outlet, useLoaderData } from "@remix-run/react";
 
 import { MobileNav } from "~/components/nav/mobile";
 import { Footer } from "~/components/root/footer";
 import { HStack, Link, Text } from "~/components/ui";
-import { type Category } from "~/lib/api/categories";
-import { type Query, useQuery } from "~/lib/sanity/loader";
-import { useRootData } from "~/root";
+import { api } from "~/lib/api";
+import { useRootData } from "~/lib/root-data";
+import { useQuery } from "~/lib/sanity/loader";
 
-const useCategoryQuery = () => {
-	const child = useMatches().at(-1);
-	if (!child) throw new Error("No matching child route found");
+export async function loader({ request, params }: LoaderFunctionArgs) {
+	const category = params.category;
+	if (!category) throw redirect("/404");
 
-	const data = child.data as { categoryQuery: Query<Category> };
-	if (!data.categoryQuery)
-		throw new Error("Not all children return from a loader `categoryQuery`");
+	const categoryQuery = await api.categories.getCategory(category, request.url);
+	if (!categoryQuery.initial.data) throw redirect("/404");
 
-	return data;
-};
+	return json({ categoryQuery });
+}
 
 export default function ArticlesLayout() {
-	const { categoryQuery } = useCategoryQuery();
+	const { categoryQuery } = useLoaderData<typeof loader>();
 	const category = useQuery(categoryQuery);
 
 	const backgroundColor = category.data.color;
@@ -56,7 +56,7 @@ function Header({ backgroundColor }: { backgroundColor: string }) {
 					background={backgroundColor}
 				/>
 
-				<Link.Nav href="/" className="flex items-baseline gap-1">
+				<Link.Nav to="/" className="flex items-baseline gap-1">
 					<Text.H2 className="font-semibold italic tracking-tight">Revista</Text.H2>
 					<Text.H1>Hronica</Text.H1>
 				</Link.Nav>
@@ -67,7 +67,9 @@ function Header({ backgroundColor }: { backgroundColor: string }) {
 							className="font-pp-neue-montreal text-foreground"
 							key={category._id}
 						>
-							<Link.Nav href={`/${category._slug}`}>{category.name}</Link.Nav>
+							<Link.Nav reloadDocument prefetch="intent" to={`/${category._slug}`}>
+								{category.name}
+							</Link.Nav>
 						</Text.Small>
 					))}
 				</nav>

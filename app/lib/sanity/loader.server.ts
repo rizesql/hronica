@@ -13,10 +13,18 @@ const clientWithToken = client.withConfig({
 // We need to set the client used by `loadQuery` here, it only affects the server and ensures the browser bundle isn't bloated
 queryStore.setServerClient(clientWithToken);
 
-export const loadQuery = <QueryResponseResult>(
-	query: string,
-	params: { url: string } & (QueryParams | undefined),
-) =>
-	queryStore.loadQuery<QueryResponseResult>(query, params, {
-		perspective: stegaEnabled(params.url) ? "previewDrafts" : "published",
+// export const loadQuery = <QueryResponseResult>(
+// 	query: string,
+// 	params: { url: string } & (QueryParams | undefined),
+// ) =>
+// 	queryStore.loadQuery<QueryResponseResult>(query, params, {
+// 		perspective: stegaEnabled(params.url) ? "previewDrafts" : "published",
+// 	});
+
+export const loadQuery = <QueryResponseResult>(options: {
+	query: string;
+	params: { url: string } & (QueryParams | undefined);
+}) =>
+	queryStore.loadQuery<QueryResponseResult>(options.query, options.params, {
+		perspective: stegaEnabled(options.params.url) ? "previewDrafts" : "published",
 	});
