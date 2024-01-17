@@ -1,7 +1,7 @@
 import { defineField, defineType } from "sanity";
 
 export const articles = defineType({
-	name: "articles",
+	name: "article",
 	title: "Articles",
 	type: "document",
 
@@ -37,6 +37,87 @@ export const articles = defineType({
 				},
 				{ type: "image" },
 			],
+		}),
+
+		defineField({
+			name: "title",
+			title: "Title",
+			type: "string",
+			validation: (r) => r.required(),
+		}),
+		defineField({
+			name: "slug",
+			type: "slug",
+			title: "Slug",
+			options: { source: "title" },
+			validation: (r) => r.required(),
+		}),
+
+		defineField({
+			name: "category",
+			title: "Category",
+			type: "reference",
+			to: [{ type: "category" }],
+			validation: (r) => r.required(),
+		}),
+
+		defineField({
+			name: "author",
+			title: "Author",
+			type: "reference",
+			to: [{ type: "member" }],
+			options: {
+				filter: "occupation in $occupation",
+				filterParams: { occupation: ["author", "author-and-editor"] },
+			},
+			validation: (r) => r.required(),
+		}),
+
+		defineField({
+			name: "editors",
+			title: "Corectori",
+			type: "array",
+
+			of: [
+				{
+					type: "reference",
+					to: [{ type: "member" }],
+					options: {
+						filter: "occupation in $occupation",
+						filterParams: { occupation: ["editor", "author-and-editor"] },
+					},
+				},
+			],
+		}),
+
+		defineField({
+			name: "grafician",
+			title: "Grafician",
+			type: "string",
+		}),
+
+		defineField({
+			name: "image",
+			title: "Image",
+			description: "Cover image for the article",
+			type: "image",
+			options: {
+				hotspot: true,
+			},
+			fields: [
+				{
+					name: "subtitle",
+					title: "Image subtitle",
+					description: "(optional)",
+					type: "string",
+				},
+			],
+		}),
+
+		defineField({
+			name: "date",
+			title: "Published date",
+			type: "date",
 		}),
 	],
 });
