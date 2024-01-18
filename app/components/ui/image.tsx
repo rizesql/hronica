@@ -24,6 +24,8 @@ export const Image = ({
 				display: isInline ? "inline-block" : "block",
 				aspectRatio: width / height,
 			}}
+			width={width}
+			height={height}
 			className={className}
 		/>
 	);

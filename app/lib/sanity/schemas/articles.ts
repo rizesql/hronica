@@ -1,12 +1,16 @@
-import { defineField, defineType } from "sanity";
+// import { defineField, defineType } from "sanity";
 
-export const articles = defineType({
+import { type Rule } from "sanity";
+
+// export const articles = defineType(
+export const articles = {
 	name: "article",
 	title: "Articles",
 	type: "document",
 
 	fields: [
-		defineField({
+		// defineField(
+		{
 			name: "article",
 			title: "Article",
 			type: "array",
@@ -37,31 +41,39 @@ export const articles = defineType({
 				},
 				{ type: "image" },
 			],
-		}),
+		},
+		// ),
 
-		defineField({
+		// defineField(
+		{
 			name: "title",
 			title: "Title",
 			type: "string",
-			validation: (r) => r.required(),
-		}),
-		defineField({
+			validation: (r: Rule) => r.required(),
+		},
+		// ),
+		// defineField(
+		{
 			name: "slug",
 			type: "slug",
 			title: "Slug",
 			options: { source: "title" },
-			validation: (r) => r.required(),
-		}),
+			validation: (r: Rule) => r.required(),
+		},
+		// ),
 
-		defineField({
+		// defineField(
+		{
 			name: "category",
 			title: "Category",
 			type: "reference",
 			to: [{ type: "category" }],
-			validation: (r) => r.required(),
-		}),
+			validation: (r: Rule) => r.required(),
+		},
+		// ),
 
-		defineField({
+		// defineField(
+		{
 			name: "author",
 			title: "Author",
 			type: "reference",
@@ -70,10 +82,12 @@ export const articles = defineType({
 				filter: "occupation in $occupation",
 				filterParams: { occupation: ["author", "author-and-editor"] },
 			},
-			validation: (r) => r.required(),
-		}),
+			validation: (r: Rule) => r.required(),
+		},
+		// ),
 
-		defineField({
+		// defineField(
+		{
 			name: "editors",
 			title: "Corectori",
 			type: "array",
@@ -88,15 +102,19 @@ export const articles = defineType({
 					},
 				},
 			],
-		}),
+		},
+		// ),
 
-		defineField({
+		// defineField(
+		{
 			name: "grafician",
 			title: "Grafician",
 			type: "string",
-		}),
+		},
+		// ),
 
-		defineField({
+		// defineField(
+		{
 			name: "image",
 			title: "Image",
 			description: "Cover image for the article",
@@ -112,12 +130,16 @@ export const articles = defineType({
 					type: "string",
 				},
 			],
-		}),
+		},
+		// ),
 
-		defineField({
+		// defineField(
+		{
 			name: "date",
 			title: "Published date",
 			type: "date",
-		}),
+		},
+		// ),
 	],
-});
+};
+// );

@@ -1,8 +1,9 @@
 import urlBuilder from "@sanity/image-url";
 import { type QueryParams, createQueryStore } from "@sanity/react-loader";
-import sanityConfig from "sanity.config";
 
 import { type Prettify } from "../types";
+
+import { sanityConfig } from "~/lib/sanity/config";
 
 const store = createQueryStore({ client: false, ssr: true });
 

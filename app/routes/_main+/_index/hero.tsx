@@ -4,9 +4,9 @@ import { Star } from "lucide-react";
 
 import { useIndexRouteData } from "./helpers";
 
-import { Section, VStack, Article, Separator, Grid, Badge } from "~/components/ui";
+import { Section, VStack, Article, Separator, Grid, Badge, Image } from "~/components/ui";
 import { cn } from "~/lib/cn";
-import { useQuery, image } from "~/lib/sanity/loader";
+import { useQuery } from "~/lib/sanity/loader";
 
 export function Hero() {
 	const { heroQuery } = useIndexRouteData();
@@ -24,10 +24,10 @@ export function Hero() {
 				<VStack stretch="width">
 					<Article.Root href={`/${hero.category._slug}/articles/${hero._slug}`}>
 						<Article.Image>
-							<img
-								className="aspect-[3/2] rounded-md"
-								src={image(hero.image.asset).format("webp").auto("format").url()}
+							<Image
+								asset={hero.image.asset}
 								alt={hero.title}
+								className="aspect-[3/2] rounded-md"
 							/>
 						</Article.Image>
 
@@ -75,10 +75,10 @@ export function Hero() {
 								key={`hero.second-col-${article._id}`}
 							>
 								<Article.Image>
-									<img
-										className="aspect-[3/2] rounded-md"
-										src={image(article.image.asset).format("webp").auto("format").url()}
+									<Image
+										asset={article.image.asset}
 										alt={article.title}
+										className="aspect-[3/2] rounded-md"
 									/>
 								</Article.Image>
 
@@ -103,13 +103,10 @@ export function Hero() {
 										href={`/${article.category._slug}/articles/${article._slug}`}
 									>
 										<Article.Image>
-											<img
-												className="aspect-[3/2] rounded-md"
-												src={image(article.image.asset)
-													.format("webp")
-													.auto("format")
-													.url()}
+											<Image
+												asset={article.image.asset}
 												alt={article.title}
+												className="aspect-[3/2] rounded-md"
 											/>
 										</Article.Image>
 

@@ -11,8 +11,8 @@ export default defineConfig({
 	plugins: [
 		remixDevTools(),
 		remix({
-			assetsBuildDirectory: "assets",
-			publicPath: "/assets/",
+			// assetsBuildDirectory: "assets",
+			// publicPath: "/assets/",
 			serverModuleFormat: "esm",
 
 			ignoredRouteFiles: ["**/*"],
@@ -21,5 +21,8 @@ export default defineConfig({
 		}),
 		tsconfigPaths(),
 	],
-	envPrefix: "S",
+	build: {
+		minify: "esbuild",
+		sourcemap: true,
+	},
 });

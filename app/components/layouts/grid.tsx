@@ -93,11 +93,6 @@ export const GridLayout = ({
 								alt={article.title}
 								className="aspect-[3/2] rounded-md"
 							/>
-							{/* <img
-								src={image(article.image.asset).format("webp").auto("format").url()}
-								alt={article.title}
-								className="aspect-[3/2] rounded-md"
-							/> */}
 						</Article.Image>
 
 						<Article.Content.Normal

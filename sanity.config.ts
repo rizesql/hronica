@@ -3,8 +3,7 @@ import { defineConfig } from "sanity";
 import { deskTool } from "sanity/desk";
 import { presentationTool } from "sanity/presentation";
 
-import { frontendUrl, sanityConfig } from "./app/lib/sanity/config";
-// import { locate } from "./app/lib/sanity/locate";
+import { sanityConfig } from "./app/lib/sanity/config";
 import { schemas } from "./app/lib/sanity/schemas";
 
 export default defineConfig({
@@ -14,7 +13,7 @@ export default defineConfig({
 	plugins: [
 		deskTool(),
 		presentationTool({
-			previewUrl: frontendUrl,
+			previewUrl: "/",
 			// locate,
 		}),
 		visionTool(),

@@ -14,8 +14,10 @@ export const member = z.object({
 	_id: z.string(),
 	_slug: z.string(),
 	name: z.string(),
-	occupation: z.enum(["author", "editor", "author-and-editor"]),
-	class: z.enum(["a", "b", "c", "d", "e", "f", "g", "h"]),
+	// occupation: z.enum(["author", "editor", "author-and-editor"]),
+	// class: z.enum(["a", "b", "c", "d", "e", "f", "g", "h"]),
+	occupation: z.string(),
+	class: z.string(),
 	promotion: z
 		.number()
 		.min(1980)

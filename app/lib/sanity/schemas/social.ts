@@ -1,11 +1,11 @@
-import { defineField, defineType } from "sanity";
+// import { defineField, defineType } from "sanity";
 
-export const social = defineType({
+export const social = {
 	name: "social",
 	title: "Social",
 	type: "document",
 	fields: [
-		defineField({ name: "platform", type: "string", title: "Platform" }),
-		defineField({ name: "url", type: "url", title: "URL" }),
+		{ name: "platform", type: "string", title: "Platform" },
+		{ name: "url", type: "url", title: "URL" },
 	],
-});
+};

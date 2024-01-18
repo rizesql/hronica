@@ -4,16 +4,13 @@ import { useLocation, useNavigate } from "@remix-run/react";
 import type { HistoryUpdate } from "@sanity/overlays";
 import { enableOverlays } from "@sanity/overlays";
 
+import { studioUrl } from "./config";
+
 import { client } from "~/lib/sanity/client";
 import { useLiveMode } from "~/lib/sanity/loader";
 
-type VisualEditingProps = {
-	studioUrl: string;
-};
-
-// Default export required for React Lazy loading
 // eslint-disable-next-line import/no-default-export
-export default function VisualEditing({ studioUrl }: VisualEditingProps) {
+export default function VisualEditing() {
 	const stegaClient = React.useMemo(
 		() =>
 			client.withConfig({
@@ -22,7 +19,7 @@ export default function VisualEditing({ studioUrl }: VisualEditingProps) {
 					studioUrl,
 				},
 			}),
-		[studioUrl],
+		[],
 	);
 
 	const navigateRemix = useNavigate();
@@ -31,7 +28,6 @@ export default function VisualEditing({ studioUrl }: VisualEditingProps) {
 	);
 
 	React.useEffect(() => {
-		// When displayed inside an iframe
 		if (window.parent !== window.self) {
 			const disable = enableOverlays({
 				zIndex: 999999,
@@ -52,14 +48,8 @@ export default function VisualEditing({ studioUrl }: VisualEditingProps) {
 				},
 			});
 			return () => disable();
-		} else {
-			if (typeof document !== "undefined") {
-				console.warn(
-					`Stega is enabled but Visual Editing is configured to only display in an iframe.`,
-				);
-			}
 		}
-	}, [navigateRemix, studioUrl]);
+	}, [navigateRemix]);
 
 	const location = useLocation();
 	React.useEffect(() => {
@@ -71,7 +61,6 @@ export default function VisualEditing({ studioUrl }: VisualEditingProps) {
 		}
 	}, [location.hash, location.pathname, location.search]);
 
-	// Enable live queries from the specified studio origin URL
 	useLiveMode({ client: stegaClient });
 
 	return null;

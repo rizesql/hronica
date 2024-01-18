@@ -10,6 +10,7 @@ import { api } from "~/lib/api";
 import { cn } from "~/lib/cn";
 import { useQuery } from "~/lib/sanity/loader";
 
+// TODO make a loader with only the metadata about the article, and a deferred loader with only the content
 export async function loader({ params, request }: LoaderFunctionArgs) {
 	const articleSlug = params.article;
 	if (!articleSlug) throw redirect("/404");
