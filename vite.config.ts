@@ -1,5 +1,6 @@
 import { unstable_vitePlugin as remix } from "@remix-run/dev";
 import { installGlobals } from "@remix-run/node";
+import million from "million/compiler";
 import { remixDevTools } from "remix-development-tools/vite";
 import { flatRoutes } from "remix-flat-routes";
 import { defineConfig } from "vite";
@@ -10,9 +11,8 @@ installGlobals();
 export default defineConfig({
 	plugins: [
 		remixDevTools(),
+		million.vite({ auto: { threshold: 0.05 }, server: true }),
 		remix({
-			// assetsBuildDirectory: "assets",
-			// publicPath: "/assets/",
 			serverModuleFormat: "esm",
 
 			ignoredRouteFiles: ["**/*"],
@@ -23,6 +23,5 @@ export default defineConfig({
 	],
 	build: {
 		minify: "esbuild",
-		sourcemap: true,
 	},
 });

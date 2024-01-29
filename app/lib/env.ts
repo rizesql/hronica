@@ -2,7 +2,9 @@ import { createEnv } from "@t3-oss/env-core";
 import { z } from "zod";
 
 export const env = createEnv({
-	server: {},
+	server: {
+		VITE_SANITY_WEBHOOK_REVALIDATE_SECRET: z.string(),
+	},
 	shared: {
 		VITE_SANITY_STUDIO_PROJECT_ID: z.string(),
 		VITE_SANITY_STUDIO_DATASET: z.string(),

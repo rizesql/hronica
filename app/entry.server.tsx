@@ -11,7 +11,7 @@ import { cacheHeader } from "pretty-cache-header";
 import ReactDOM from "react-dom/server.node";
 
 import { NonceContext } from "./lib/nonce";
-import { makeTimings } from "./lib/timings.server";
+import { makeTiming } from "./lib/timings.server";
 
 const ABORT_DELAY = 5000;
 
@@ -60,7 +60,7 @@ export default async function handleRequest(...args: DocRequestArgs) {
 
 	return new Promise((resolve, reject) => {
 		let didError = false;
-		const timings = makeTimings("render", "renderToPipeableStream");
+		const { timings } = makeTiming("render", "renderToPipeableStream");
 
 		const { pipe, abort } = ReactDOM.renderToPipeableStream(
 			<NonceContext.Provider value={nonce}>

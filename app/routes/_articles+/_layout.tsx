@@ -1,25 +1,23 @@
-import { redirect, type LoaderFunctionArgs, json } from "@remix-run/node";
-import { Outlet, useLoaderData } from "@remix-run/react";
+import { Outlet, UIMatch, useMatches } from "@remix-run/react";
 
 import { MobileNav } from "~/components/nav/mobile";
 import { Footer } from "~/components/root/footer";
 import { HStack, Link, Text } from "~/components/ui";
-import { api } from "~/lib/api";
+import { Category } from "~/lib/api/categories/helpers";
 import { useRootData } from "~/lib/root-data";
-import { useQuery } from "~/lib/sanity/loader";
+import { Query, useQuery } from "~/lib/sanity/loader";
 
-export async function loader({ request, params }: LoaderFunctionArgs) {
-	const category = params.category;
-	if (!category) throw redirect("/404");
+const useCategoryData = () => {
+	const match = useMatches().at(-1) as UIMatch<{ categoryQuery: Query<Category> }>;
 
-	const categoryQuery = await api.categories.getCategory(category, request.url);
-	if (!categoryQuery.initial.data) throw redirect("/404");
+	if (!match?.data) throw new Error("No data found");
+	if (!match.data.categoryQuery) throw new Error("categoryQuery not exported");
 
-	return json({ categoryQuery });
-}
+	return match.data as { categoryQuery: Query<Category> };
+};
 
 export default function ArticlesLayout() {
-	const { categoryQuery } = useLoaderData<typeof loader>();
+	const { categoryQuery } = useCategoryData();
 	const category = useQuery(categoryQuery);
 
 	const backgroundColor = category.data.color;
@@ -29,7 +27,7 @@ export default function ArticlesLayout() {
 			<Header backgroundColor={backgroundColor} />
 
 			<main className="mb-8 border-b border-b-foreground">
-				<Outlet />
+				<Outlet context={{ backgroundColor }} />
 			</main>
 
 			<Footer />

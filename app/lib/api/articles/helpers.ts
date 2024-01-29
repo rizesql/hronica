@@ -23,19 +23,21 @@ export const article = z.object({
 	}),
 });
 
-export const articleWithContent = article.extend({ content: z.any() });
-
 export const arrangedArticles = z.object({
 	firstCol: z.array(article).length(3),
 	secondCol: z.array(article).length(2),
 	thirdCol: z.array(article).length(5),
 });
 
+export const articleContent = z.object({
+	content: z.any(),
+});
+
 export const articles = z.array(article);
 
 export type Article = z.infer<typeof article>;
-
 export type ArrangedArticles = z.infer<typeof arrangedArticles>;
+export type ArticleContent = z.infer<typeof articleContent>;
 
 // export const getByCategory = async (category: string | undefined, url: string) => {
 // 	const params = { url, category };
@@ -97,6 +99,10 @@ export const queries = {
 		params: { article: slug, url },
 		query: GET_ARTICLE,
 	}),
+	content: (slug: string, url: string) => ({
+		params: { article: slug, url },
+		query: GET_ARTICLE_CONTENT,
+	}),
 } as const;
 
 export const ARTICLE_DATA = groq`
@@ -123,8 +129,12 @@ export const ARRANGE = (col: string) => groq`{
 const GET_ARTICLE = groq`
 *[_type == "article" && slug.current == $article] {
 	${ARTICLE_DATA}
-	'content': article
 } | order(date desc)[0]`;
+
+const GET_ARTICLE_CONTENT = groq`
+*[_type == "article" && slug.current == $article] {
+	"content": article
+}[0]`;
 
 const GET_ARTICLES_BY_CATEGORY = groq`{
 	"all": *[_type == "article" && category->slug.current == $category] {

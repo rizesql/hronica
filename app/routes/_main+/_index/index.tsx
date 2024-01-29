@@ -1,6 +1,6 @@
 import React from "react";
 
-import { defer, type LoaderFunctionArgs, type MetaFunction } from "@remix-run/node";
+import { defer, type LoaderFunctionArgs } from "@remix-run/node";
 import { Await, useLoaderData } from "@remix-run/react";
 import { promiseHash } from "remix-utils/promise";
 
@@ -11,36 +11,49 @@ import { Center, Section } from "~/components/ui";
 import { api } from "~/lib/api";
 import { useRootData } from "~/lib/root-data";
 import { useQuery } from "~/lib/sanity/loader";
+import { makeTiming, SERVER_TIMING, timingHeaders } from "~/lib/timings.server";
 
-// export const CACHE_CONTROL = {
-// 	doc: "max-age=300, stale-while-revalidate=604800",
-// };
+export const headers = timingHeaders;
 
 export async function loader({ request }: LoaderFunctionArgs) {
+	const { timings, time } = makeTiming("/ loader");
+
 	const categoriesArticlesQuery = promiseHash({
-		cultura: api.articles.getArrangedByCategory("cultura", request.url),
-		poezie: api.articles.getArrangedByCategory("cultura", request.url),
-		interviuri: api.articles.getArrangedByCategory("cultura", request.url),
-		"useuri-si-scriere-literara": api.articles.getArrangedByCategory(
-			"cultura",
-			request.url,
+		cultura: time(
+			() => api.articles.getArrangedByCategory("cultura", request.url),
+			"categoriesArticlesQuery[0]",
 		),
-		"despre-viata-si-lumea-inconjuratoare": api.articles.getArrangedByCategory(
-			"cultura",
-			request.url,
+		poezie: time(
+			() => api.articles.getArrangedByCategory("cultura", request.url),
+			"categoriesArticlesQuery[1]",
+		),
+		interviuri: time(
+			() => api.articles.getArrangedByCategory("cultura", request.url),
+			"categoriesArticlesQuery[2]",
+		),
+		"useuri-si-scriere-literara": time(
+			() => api.articles.getArrangedByCategory("cultura", request.url),
+			"categoriesArticlesQuery[3]",
+		),
+		"despre-viata-si-lumea-inconjuratoare": time(
+			() => api.articles.getArrangedByCategory("cultura", request.url),
+			"categoriesArticlesQuery[4]",
 		),
 	});
 
-	return defer({
-		categoriesArticlesQuery,
-		heroQuery: await api.articles.getHeroArticles(request.url),
-	});
+	const heroQuery = await time(
+		() => api.articles.getHeroArticles(request.url),
+		"heroQuery",
+	);
+
+	return defer(
+		{
+			categoriesArticlesQuery,
+			heroQuery,
+		},
+		{ headers: { [SERVER_TIMING]: timings.toString() } },
+	);
 }
-
-export const meta: MetaFunction = () => [
-	{ title: "New Remix App" },
-	{ name: "description", content: "Welcome to Remix!" },
-];
 
 export default function Index() {
 	const { categoriesQuery } = useRootData();

@@ -9,7 +9,6 @@ import { studioUrl } from "./config";
 import { client } from "~/lib/sanity/client";
 import { useLiveMode } from "~/lib/sanity/loader";
 
-// eslint-disable-next-line import/no-default-export
 export default function VisualEditing() {
 	const stegaClient = React.useMemo(
 		() =>

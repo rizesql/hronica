@@ -9,7 +9,15 @@ const clientWithToken = client.withConfig({
 });
 
 // We need to set the client used by `loadQuery` here, it only affects the server and ensures the browser bundle isn't bloated
-queryStore.setServerClient(clientWithToken);
+(() => {
+	let called = false;
+	return () => {
+		if (!called) {
+			called = true;
+			queryStore.setServerClient(clientWithToken);
+		}
+	};
+})()();
 
 export const loadQuery = <QueryResponseResult>(options: {
 	query: string;

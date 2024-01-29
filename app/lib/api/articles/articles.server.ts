@@ -22,8 +22,11 @@ export const getArrangedByCategory = async (
 
 export const getArticle = async (slug: string, url: string) => {
 	const options = h.queries.bySlug(slug, url);
+	return await loadQuery(options).then(parse(h.article)).then(asQuery(options));
+};
 
-	return await loadQuery(options)
-		.then(parse(h.articleWithContent))
-		.then(asQuery(options));
+export const getArticleContent = async (slug: string, url: string) => {
+	const options = h.queries.content(slug, url);
+
+	return await loadQuery(options).then(parse(h.articleContent)).then(asQuery(options));
 };

@@ -44,8 +44,9 @@ const lastPage = z.object({
 	rowsFetched: z.number(),
 });
 
-export type Page = z.infer<typeof page> | z.infer<typeof lastPage>;
+export type Page = z.infer<typeof page>;
 export type LastPage = z.infer<typeof lastPage>;
+export type AnyPage = Page | LastPage;
 
 export const loadNext = async (
 	filter: Filter,
@@ -65,7 +66,7 @@ export const loadNext = async (
 					: parse(lastPage)
 			)(d);
 		})
-		.then((x) => asQuery(options)(x) as Query<Page>);
+		.then((x) => asQuery(options)(x) as Query<AnyPage>);
 };
 
 export const normalizeLastPage = (articles: ArrangedArticles) => {

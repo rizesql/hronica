@@ -1,19 +1,107 @@
-// import { defineField, defineType } from "sanity";
-
 import { type Rule } from "sanity";
 
-// export const articles = defineType(
 export const articles = {
 	name: "article",
 	title: "Articles",
 	type: "document",
 
+	groups: [
+		{ name: "general", title: "General" },
+		{ name: "content", title: "Content" },
+	],
+
 	fields: [
-		// defineField(
+		{
+			name: "title",
+			title: "Title",
+			description:
+				"Every article should have a title that isn't too long or too short. We recommend page titles between 10 and 60 characters",
+			type: "string",
+			group: "general",
+			validation: (r: Rule) => r.required(),
+		},
+		{
+			name: "slug",
+			type: "slug",
+			title: "Slug",
+			options: { source: "title" },
+			group: "general",
+			validation: (r: Rule) => r.required(),
+		},
+		{
+			name: "category",
+			title: "Category",
+			type: "reference",
+			to: [{ type: "category" }],
+			group: "general",
+			validation: (r: Rule) => r.required(),
+		},
+		{
+			name: "author",
+			title: "Author",
+			type: "reference",
+			to: [{ type: "member" }],
+			group: "general",
+			options: {
+				filter: "occupation in $occupation",
+				filterParams: { occupation: ["author", "author-and-editor"] },
+			},
+			validation: (r: Rule) => r.required(),
+		},
+		{
+			name: "editors",
+			title: "Corectori",
+			type: "array",
+			group: "general",
+
+			of: [
+				{
+					type: "reference",
+					to: [{ type: "member" }],
+					options: {
+						filter: "occupation in $occupation",
+						filterParams: { occupation: ["editor", "author-and-editor"] },
+					},
+				},
+			],
+		},
+		{
+			name: "grafician",
+			title: "Grafician",
+			type: "string",
+			group: "general",
+		},
+		{
+			name: "image",
+			title: "Image",
+			description: "Cover image for the article",
+			type: "image",
+			group: "general",
+			options: {
+				hotspot: true,
+			},
+			fields: [
+				{
+					name: "subtitle",
+					title: "Image subtitle",
+					description: "(optional)",
+					type: "string",
+				},
+			],
+		},
+		{
+			name: "date",
+			title: "Published date",
+			type: "date",
+			group: "general",
+		},
+
 		{
 			name: "article",
 			title: "Article",
 			type: "array",
+			group: "content",
+
 			of: [
 				{
 					type: "block",
@@ -42,104 +130,5 @@ export const articles = {
 				{ type: "image" },
 			],
 		},
-		// ),
-
-		// defineField(
-		{
-			name: "title",
-			title: "Title",
-			type: "string",
-			validation: (r: Rule) => r.required(),
-		},
-		// ),
-		// defineField(
-		{
-			name: "slug",
-			type: "slug",
-			title: "Slug",
-			options: { source: "title" },
-			validation: (r: Rule) => r.required(),
-		},
-		// ),
-
-		// defineField(
-		{
-			name: "category",
-			title: "Category",
-			type: "reference",
-			to: [{ type: "category" }],
-			validation: (r: Rule) => r.required(),
-		},
-		// ),
-
-		// defineField(
-		{
-			name: "author",
-			title: "Author",
-			type: "reference",
-			to: [{ type: "member" }],
-			options: {
-				filter: "occupation in $occupation",
-				filterParams: { occupation: ["author", "author-and-editor"] },
-			},
-			validation: (r: Rule) => r.required(),
-		},
-		// ),
-
-		// defineField(
-		{
-			name: "editors",
-			title: "Corectori",
-			type: "array",
-
-			of: [
-				{
-					type: "reference",
-					to: [{ type: "member" }],
-					options: {
-						filter: "occupation in $occupation",
-						filterParams: { occupation: ["editor", "author-and-editor"] },
-					},
-				},
-			],
-		},
-		// ),
-
-		// defineField(
-		{
-			name: "grafician",
-			title: "Grafician",
-			type: "string",
-		},
-		// ),
-
-		// defineField(
-		{
-			name: "image",
-			title: "Image",
-			description: "Cover image for the article",
-			type: "image",
-			options: {
-				hotspot: true,
-			},
-			fields: [
-				{
-					name: "subtitle",
-					title: "Image subtitle",
-					description: "(optional)",
-					type: "string",
-				},
-			],
-		},
-		// ),
-
-		// defineField(
-		{
-			name: "date",
-			title: "Published date",
-			type: "date",
-		},
-		// ),
 	],
 };
-// );

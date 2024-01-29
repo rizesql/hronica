@@ -6,11 +6,21 @@ import { useFetcher, useLoaderData } from "@remix-run/react";
 import { InfiniteScroller } from "~/components/infinite-scroller";
 import { GridLayout } from "~/components/layouts/grid";
 import { Article, Grid, Image } from "~/components/ui";
-import { type ArrangedArticles } from "~/lib/api/articles/helpers";
-import { type Filter, loadNext, type LastPage } from "~/lib/api/articles/infinite";
+import type { ArrangedArticles } from "~/lib/api/articles/helpers";
+import {
+	type Filter,
+	type LastPage,
+	type Page,
+	loadNext,
+} from "~/lib/api/articles/infinite";
 import { useQuery } from "~/lib/sanity/loader";
+import { SERVER_TIMING, makeTiming, timingHeaders } from "~/lib/timings.server";
+import { asQuery } from "~/lib/api/helpers";
+import { api } from "~/lib/api";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
+	const { time, timings } = makeTiming("$category loader");
+
 	const filter = {
 		query: "category->slug.current == $category",
 		params: { category: params.category! },
@@ -26,11 +36,27 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 			? { cursor: null, lastId: null, count: null }
 			: { cursor, lastId, count: +rawCount };
 
-	console.log("MERGI!");
+	const pageQuery = await time(
+		() => loadNext(filter, { url: request.url, ...queryParams }),
+		"pageQuery",
+	);
 
-	const pageQuery = await loadNext(filter, { url: request.url, ...queryParams });
-	return json({ pageQuery });
+	// prettier-ignore
+	const category = pageQuery.initial.data.rowsFetched < 10
+		? (pageQuery.initial.data as LastPage).data[0].category
+		: (pageQuery.initial.data as Page).data.firstCol[0].category;
+
+	const categoryQuery = asQuery(
+		api.queries.categories.bySlug(category._slug, request.url),
+	)({ data: category });
+
+	return json(
+		{ pageQuery, categoryQuery },
+		{ headers: { [SERVER_TIMING]: timings.toString() } },
+	);
 }
+
+export const headers = timingHeaders;
 
 export default function AllArticles() {
 	const { pageQuery } = useLoaderData<typeof loader>();
@@ -83,7 +109,7 @@ const LastSection = ({ page }: { page: LastPage | null }) => {
 		<Grid className="grid-cols-1 lg:grid-cols-3">
 			{page.data.map((article) => (
 				<Article.Root
-					href={`${article.category._slug}/articles/${article._slug}`}
+					href={`/articles/${article._slug}`}
 					key={`articles.${article._slug}`}
 				>
 					<Article.Image>
