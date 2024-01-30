@@ -83,7 +83,7 @@ const NormalContent = ({
 				<Text.Small className="text-foreground underline underline-offset-4">
 					Citeste
 				</Text.Small>
-				<ArrowUpRight className="h-4 w-4" />
+				<ArrowUpRight className="size-4" />
 			</HStack>
 		</Card.Header>
 	);
@@ -113,7 +113,7 @@ const SmallContent = ({
 					<Text.Small className="text-foreground underline underline-offset-4">
 						Citeste
 					</Text.Small>
-					<ArrowUpRight className="h-4 w-4" />
+					<ArrowUpRight className="size-4" />
 				</HStack>
 			</HStack>
 		</Card.Content>

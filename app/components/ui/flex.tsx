@@ -66,7 +66,7 @@ const flexVariants = cva("", {
 			none: "",
 			width: "w-full",
 			height: "h-full",
-			all: "h-full w-full",
+			all: "size-full",
 		},
 		align: {
 			start: "items-start",
@@ -111,7 +111,7 @@ export const Flex: FlexComponent = React.forwardRef(function Flex<
 		...other
 	} = props;
 
-	const Element = as || "div";
+	const Element = as ?? "div";
 	const [align, justify] = alignment?.split("/") as [Align, Justify];
 
 	return (

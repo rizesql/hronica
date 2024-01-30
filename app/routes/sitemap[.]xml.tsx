@@ -1,4 +1,5 @@
 import groq from "groq";
+
 import { viewClient } from "~/lib/sanity/client.server";
 
 const slugsQuery = groq`*[defined(slug.current)] {
@@ -13,24 +14,29 @@ const slugsQuery = groq`*[defined(slug.current)] {
   }
 }`;
 
-const renderXML = (slugs: { slug?: string }[]) => {
+type Slugs = Array<{ slug?: string }>;
+
+const renderXML = (slugs: Slugs) => {
 	// TODO change with prod url
 	const url = "http://localhost:5173";
 
 	const sourceXML = `<?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    ${slugs.filter(Boolean).map(
-			(item) => `<url>
+    ${slugs
+			.filter(Boolean)
+			.map(
+				(item) => `<url>
       <loc>${url}/${item.slug}</loc>
     </url>`,
-		)}
+			)
+			.join("")}
   </urlset>`;
 
 	return sourceXML;
 };
 
 export const loader = async () => {
-	const slugs = await viewClient.fetch(slugsQuery);
+	const slugs = await viewClient.fetch<Slugs>(slugsQuery);
 
 	return new Response(renderXML(slugs), {
 		headers: {

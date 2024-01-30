@@ -1,4 +1,4 @@
-import { HeadersFunction } from "@remix-run/node";
+import { type HeadersFunction } from "@remix-run/node";
 
 export const SERVER_TIMING = "Server-Timing";
 
@@ -10,7 +10,7 @@ export type Timings = Record<
 			| { time?: never; start: number }
 		)
 	>
-> & { toString: () => string };
+>;
 
 function createTimer(type: string, desc?: string) {
 	const start = performance.now();
@@ -19,7 +19,6 @@ function createTimer(type: string, desc?: string) {
 			let timingType = timings[type];
 
 			if (!timingType) {
-				// eslint-disable-next-line no-multi-assign
 				timingType = timings[type] = [];
 			}
 			timingType.push({ desc, time: performance.now() - start });

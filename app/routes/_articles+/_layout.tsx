@@ -1,11 +1,11 @@
-import { Outlet, UIMatch, useMatches } from "@remix-run/react";
+import { Outlet, type UIMatch, useMatches } from "@remix-run/react";
 
 import { MobileNav } from "~/components/nav/mobile";
 import { Footer } from "~/components/root/footer";
 import { HStack, Link, Text } from "~/components/ui";
-import { Category } from "~/lib/api/categories/helpers";
+import { type Category } from "~/lib/api/categories/helpers";
 import { useRootData } from "~/lib/root-data";
-import { Query, useQuery } from "~/lib/sanity/loader";
+import { type Query, useQuery } from "~/lib/sanity/loader";
 
 const useCategoryData = () => {
 	const match = useMatches().at(-1) as UIMatch<{ categoryQuery: Query<Category> }>;

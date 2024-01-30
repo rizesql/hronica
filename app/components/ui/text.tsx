@@ -2,30 +2,36 @@ import { cn } from "~/lib/cn";
 
 type TextProps<C extends React.ElementType> = React.ComponentPropsWithoutRef<C>;
 
-const H1 = ({ className, ...props }: TextProps<"h1">) => {
+const H1 = ({ className, children, ...props }: TextProps<"h1">) => {
 	return (
 		<h1
 			className={cn("font-redaction text-5xl font-bold [text-wrap:balance]", className)}
 			{...props}
-		/>
+		>
+			{children}
+		</h1>
 	);
 };
 
-const H2 = ({ className, ...props }: TextProps<"h2">) => {
+const H2 = ({ className, children, ...props }: TextProps<"h2">) => {
 	return (
 		<h2
 			className={cn("font-redaction text-4xl [text-wrap:balance]", className)}
 			{...props}
-		/>
+		>
+			{children}
+		</h2>
 	);
 };
 
-const H3 = ({ className, ...props }: TextProps<"h3">) => {
+const H3 = ({ className, children, ...props }: TextProps<"h3">) => {
 	return (
 		<h3
 			className={cn("font-redaction text-xl [text-wrap:balance]", className)}
 			{...props}
-		/>
+		>
+			{children}
+		</h3>
 	);
 };
 

@@ -8,12 +8,11 @@ import { api } from "./lib/api";
 
 import { Head } from "~/components/root/head";
 import { env } from "~/lib/env";
-import { useNonce } from "~/lib/nonce";
+import { SERVER_TIMING, makeTiming } from "~/lib/timings.server";
 import "~/styles/libre-caslon-condensed.css";
 import "~/styles/pp-neue-montreal.css";
 import "~/styles/redaction.css";
 import "~/styles/tailwind.css";
-import { SERVER_TIMING, makeTiming } from "~/lib/timings.server";
 
 const VisualEditing = React.lazy(() => import("~/lib/sanity/visual-editing"));
 
@@ -41,21 +40,6 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => ({
 });
 
 export default function App() {
-	const nonce = useNonce();
-
-	return (
-		<Document nonce={nonce}>
-			<Outlet />
-		</Document>
-	);
-}
-
-function Document({
-	nonce,
-	children,
-}: React.PropsWithChildren<{
-	nonce: string;
-}>) {
 	return (
 		<html
 			lang="ro"
@@ -63,15 +47,16 @@ function Document({
 		>
 			<Head />
 			<body>
-				{children}
-				<ScrollRestoration nonce={nonce} />
+				<Outlet />
+
+				<ScrollRestoration />
 				<script
 					dangerouslySetInnerHTML={{
 						__html: `window.env = ${JSON.stringify(env)}`,
 					}}
 				/>
-				<Scripts nonce={nonce} />
-				<LiveReload nonce={nonce} />
+				<Scripts />
+				<LiveReload />
 
 				<React.Suspense>
 					<VisualEditing />

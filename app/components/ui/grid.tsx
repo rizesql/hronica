@@ -83,7 +83,7 @@ const gridVariants = cva("", {
 			none: "",
 			width: "w-full",
 			height: "h-full",
-			all: "h-full w-full",
+			all: "size-full",
 		},
 	},
 	defaultVariants: {
@@ -99,7 +99,7 @@ export const Grid: GridComponent = React.forwardRef(function Grid<
 >(props: GridProps<C>, ref?: PolymorphicRef<C>) {
 	const { children, as, className, cols, rows, inline, stretch, ...other } = props;
 
-	const Element = as || "div";
+	const Element = as ?? "div";
 
 	return (
 		<Element

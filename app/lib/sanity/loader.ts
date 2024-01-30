@@ -28,7 +28,7 @@ export const useQuery = <
 		initial: props.initial,
 	});
 
-	return { data: data as QueryResponseResult["data"], ...state };
+	return { data: data!, ...state };
 };
 
 export type Query<T> = Prettify<{

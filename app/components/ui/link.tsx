@@ -44,7 +44,7 @@ const SocialLink = React.forwardRef<HTMLAnchorElement, SocialLinkProps>(
 				{...props}
 			>
 				{children}
-				<ArrowUpRight className="h-4 w-4" />
+				<ArrowUpRight className="size-4" />
 			</Link_>
 		);
 	},

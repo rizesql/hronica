@@ -6,6 +6,7 @@ import { useFetcher, useLoaderData } from "@remix-run/react";
 import { InfiniteScroller } from "~/components/infinite-scroller";
 import { GridLayout } from "~/components/layouts/grid";
 import { Article, Grid, Image } from "~/components/ui";
+import { api } from "~/lib/api";
 import type { ArrangedArticles } from "~/lib/api/articles/helpers";
 import {
 	type Filter,
@@ -13,10 +14,9 @@ import {
 	type Page,
 	loadNext,
 } from "~/lib/api/articles/infinite";
+import { asQuery } from "~/lib/api/helpers";
 import { useQuery } from "~/lib/sanity/loader";
 import { SERVER_TIMING, makeTiming, timingHeaders } from "~/lib/timings.server";
-import { asQuery } from "~/lib/api/helpers";
-import { api } from "~/lib/api";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
 	const { time, timings } = makeTiming("$category loader");

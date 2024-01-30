@@ -51,7 +51,7 @@ type CardHeaderComponent = <C extends React.ElementType = "div">(
 const Header: CardHeaderComponent = React.forwardRef(function Header<
 	C extends React.ElementType = "div",
 >({ className, as, ...props }: CardHeaderProps<C>, ref: PolymorphicRef<C>) {
-	const Element = as || "div";
+	const Element = as ?? "div";
 
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	//@ts-ignore

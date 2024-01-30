@@ -1,6 +1,6 @@
-import { SanityDocument } from "sanity";
+import { type SanityDocument } from "sanity";
+import { type DefaultDocumentNodeResolver } from "sanity/desk";
 import { Iframe } from "sanity-plugin-iframe-pane";
-import { DefaultDocumentNodeResolver } from "sanity/desk";
 
 function getPreviewUrl(doc: SanityDocument) {
 	return `http://localhost:5173/articles/${doc.slug.current}`;

@@ -39,7 +39,7 @@ export function Hero() {
 							<Badge color={hero.category.color}>{hero.category.name}</Badge>
 							<Badge color="#22c55e">
 								Latest
-								<Star className="h-4 w-4 fill-current" />
+								<Star className="size-4 fill-current" />
 							</Badge>
 						</Article.Content.Hero>
 					</Article.Root>

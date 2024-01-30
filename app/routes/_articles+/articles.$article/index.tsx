@@ -1,13 +1,15 @@
+import React from "react";
+
 import { type LoaderFunctionArgs, redirect, defer } from "@remix-run/node";
 import { Await, useLoaderData } from "@remix-run/react";
-import React from "react";
+
+import { ArticleContent } from "./content";
 
 import { Section } from "~/components/ui";
 import { api } from "~/lib/api";
+import { asQuery } from "~/lib/api/helpers";
 import { useQuery } from "~/lib/sanity/loader";
 import { SERVER_TIMING, makeTiming, timingHeaders } from "~/lib/timings.server";
-import { ArticleContent } from "./content";
-import { asQuery } from "~/lib/api/helpers";
 
 export const headers = timingHeaders;
 

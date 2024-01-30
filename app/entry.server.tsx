@@ -1,16 +1,15 @@
 import { PassThrough } from "stream";
 
 import {
-	type HandleDocumentRequestFunction,
-	createReadableStreamFromReadable,
 	createCookie,
+	createReadableStreamFromReadable,
+	type HandleDocumentRequestFunction,
 } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
 import { cacheHeader } from "pretty-cache-header";
-import ReactDOM from "react-dom/server.node";
+import ReactDOM from "react-dom/server";
 
-import { NonceContext } from "./lib/nonce";
 import { makeTiming } from "./lib/timings.server";
 
 const ABORT_DELAY = 5000;
@@ -25,7 +24,7 @@ const versionCookie = createCookie("version", {
 });
 
 export default async function handleRequest(...args: DocRequestArgs) {
-	const [request, responseStatusCode, responseHeaders, remixContext, loadContext] = args;
+	const [request, responseStatusCode, responseHeaders, remixContext] = args;
 	responseHeaders.set("fly-region", process.env.FLY_REGION ?? "unknown");
 	responseHeaders.set("fly-app", process.env.FLY_APP_NAME ?? "unknown");
 
@@ -36,6 +35,7 @@ export default async function handleRequest(...args: DocRequestArgs) {
 			"cache-control",
 			cacheHeader({
 				public: true,
+				// @ts-expect-error it must be public
 				private: false,
 				maxAge: "60s", // cache time
 				staleWhileRevalidate: "1y", // enables ISR
@@ -51,25 +51,17 @@ export default async function handleRequest(...args: DocRequestArgs) {
 		? "onAllReady"
 		: "onShellReady";
 
-	// prettier-ignore
-	const nonce = "";
-	// process.env.NODE_ENV === "production" ?
-	// // @ts-expect-error the value is there 100%
-	// loadContext._var.nonce as string :
-	// "";
-
 	return new Promise((resolve, reject) => {
 		let didError = false;
 		const { timings } = makeTiming("render", "renderToPipeableStream");
 
 		const { pipe, abort } = ReactDOM.renderToPipeableStream(
-			<NonceContext.Provider value={nonce}>
-				<RemixServer context={remixContext} url={request.url} />
-			</NonceContext.Provider>,
+			<RemixServer context={remixContext} url={request.url} />,
 			{
 				[callbackName]: () => {
 					const body = new PassThrough();
 					responseHeaders.set("Content-Type", "text/html");
+					// eslint-disable-next-line @typescript-eslint/no-base-to-string
 					responseHeaders.append("Server-Timing", timings.toString());
 					resolve(
 						new Response(createReadableStreamFromReadable(body), {
@@ -87,7 +79,6 @@ export default async function handleRequest(...args: DocRequestArgs) {
 
 					console.error(error);
 				},
-				nonce,
 			},
 		);
 
