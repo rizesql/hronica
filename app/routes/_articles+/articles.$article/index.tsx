@@ -1,7 +1,9 @@
 import React from "react";
 
-import { type LoaderFunctionArgs, redirect, defer } from "@remix-run/node";
+import { type SEOHandle } from "@nasa-gcn/remix-seo";
+import { defer, redirect, type LoaderFunctionArgs } from "@remix-run/node";
 import { Await, useLoaderData } from "@remix-run/react";
+import groq from "groq";
 
 import { ArticleContent } from "./content";
 
@@ -9,7 +11,21 @@ import { Section } from "~/components/ui";
 import { api } from "~/lib/api";
 import { asQuery } from "~/lib/api/helpers";
 import { useQuery } from "~/lib/sanity/loader";
+import { getSitemapEntries } from "~/lib/sitemap";
 import { SERVER_TIMING, makeTiming, timingHeaders } from "~/lib/timings.server";
+
+const sitemapQuery = groq`
+	*[defined(slug.current) && _type == "article"] {
+		"route": "/articles/" + slug.current 
+	}`;
+
+export const handle: SEOHandle = {
+	getSitemapEntries: getSitemapEntries(sitemapQuery, 0.5),
+	// getSitemapEntries: async () => {
+	// 	const slugs = await viewClient.fetch<Array<{ route: string }>>(sitemapQuery);
+	// 	return slugs.map(({ route }) => ({ route, priority: 0.5 }));
+	// },
+};
 
 export const headers = timingHeaders;
 

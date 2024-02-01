@@ -1,7 +1,9 @@
 import React from "react";
 
-import { type LoaderFunctionArgs, json } from "@remix-run/node";
+import { type SEOHandle } from "@nasa-gcn/remix-seo";
+import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
+import groq from "groq";
 
 import { InfiniteScroller } from "~/components/infinite-scroller";
 import { GridLayout } from "~/components/layouts/grid";
@@ -9,14 +11,28 @@ import { Article, Grid, Image } from "~/components/ui";
 import { api } from "~/lib/api";
 import type { ArrangedArticles } from "~/lib/api/articles/helpers";
 import {
+	loadNext,
 	type Filter,
 	type LastPage,
 	type Page,
-	loadNext,
 } from "~/lib/api/articles/infinite";
 import { asQuery } from "~/lib/api/helpers";
 import { useQuery } from "~/lib/sanity/loader";
-import { SERVER_TIMING, makeTiming, timingHeaders } from "~/lib/timings.server";
+import { getSitemapEntries } from "~/lib/sitemap";
+import { makeTiming, SERVER_TIMING, timingHeaders } from "~/lib/timings.server";
+
+const sitemapQuery = groq`
+	*[defined(slug.current) && _type == "category"] {
+		"route": "/" + slug.current 
+	}`;
+
+export const handle: SEOHandle = {
+	getSitemapEntries: getSitemapEntries(sitemapQuery, 0.5),
+	// getSitemapEntries: async () => {
+	// 	const slugs = await viewClient.fetch<Array<{ route: string }>>(sitemapQuery);
+	// 	return slugs.map(({ route }) => ({ route, priority: 0.5 }));
+	// },
+};
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
 	const { time, timings } = makeTiming("$category loader");

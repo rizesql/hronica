@@ -19,6 +19,7 @@ const VisualEditing = React.lazy(() => import("~/lib/sanity/visual-editing"));
 export const links: LinksFunction = () => [
 	{ rel: "icon", type: "image/svg+xml", href: "/favicon.ico" },
 	{ rel: "preconnect", href: "https://cdn.sanity.io" },
+	{ rel: "sitemap", type: "application/xml", href: "/sitemap.xml" },
 ];
 
 export async function loader({ request }: LoaderFunctionArgs) {

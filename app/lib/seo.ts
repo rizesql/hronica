@@ -1,4 +1,6 @@
-import type { SocialLink, NavLink } from "~/lib/links";
+import type { NavLink, SocialLink } from "~/lib/links";
+
+export const siteUrl = "http://localhost:5173";
 
 export type Image = {
 	src: string;
