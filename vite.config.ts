@@ -3,6 +3,7 @@ import { installGlobals } from "@remix-run/node";
 import { vite as million } from "million/compiler";
 import { remixDevTools } from "remix-development-tools/vite";
 import { flatRoutes } from "remix-flat-routes";
+import turboConsole from "unplugin-turbo-console/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
@@ -10,6 +11,7 @@ installGlobals();
 
 export default defineConfig({
 	plugins: [
+		turboConsole(),
 		remixDevTools(),
 		million({ auto: { threshold: 0.05 }, server: true }),
 		remix({
