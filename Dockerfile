@@ -41,6 +41,8 @@ RUN pnpm prune --prod
 # Final stage for app image
 FROM base
 
+WORKDIR /app
+
 # Copy built application
 COPY --from=build /app /app
 

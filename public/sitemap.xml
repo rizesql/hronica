@@ -5,112 +5,112 @@
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
   >
     <url>
-    <loc>https://dummy.local/interviuri</loc>
+    <loc>http://localhost:5173/interviuri</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.local/cultura</loc>
+    <loc>http://localhost:5173/cultura</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.local/poezie</loc>
+    <loc>http://localhost:5173/poezie</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.local/eseu-si-scriere-literara</loc>
+    <loc>http://localhost:5173/eseu-si-scriere-literara</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.local/despre-viata-si-lumea-inconjuratoare</loc>
+    <loc>http://localhost:5173/despre-viata-si-lumea-inconjuratoare</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.local/articles/hello-world-5</loc>
+    <loc>http://localhost:5173/articles/hello-world-5</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.local/articles/hello-world-3</loc>
+    <loc>http://localhost:5173/articles/hello-world-3</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.local/articles/hello-world-10</loc>
+    <loc>http://localhost:5173/articles/hello-world-10</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.local/articles/hello-world-2</loc>
+    <loc>http://localhost:5173/articles/hello-world-2</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.local/articles/hello-world-copy</loc>
+    <loc>http://localhost:5173/articles/hello-world-copy</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.local/articles/hello-world-6</loc>
+    <loc>http://localhost:5173/articles/hello-world-6</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.local/articles/hello-world-9</loc>
+    <loc>http://localhost:5173/articles/hello-world-9</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.local/articles/hello-world</loc>
+    <loc>http://localhost:5173/articles/hello-world</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.local/articles/hello-world-8</loc>
+    <loc>http://localhost:5173/articles/hello-world-8</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.local/articles/hello-world-7</loc>
+    <loc>http://localhost:5173/articles/hello-world-7</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.local/articles/new-article</loc>
+    <loc>http://localhost:5173/articles/new-article</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.local/articles/hello-world-9-clone</loc>
+    <loc>http://localhost:5173/articles/hello-world-9-clone</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.local/articles/hello-world-4</loc>
+    <loc>http://localhost:5173/articles/hello-world-4</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.local/</loc>
+    <loc>http://localhost:5173/</loc>
     
     
     <priority>0.7</priority>
   </url><url>
-    <loc>https://dummy.localmembers/rizesql-editor/editor</loc>
+    <loc>http://localhost:5173members/rizesql-editor/editor</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.localmembers/rizesql-autor-editor/author-and-editor</loc>
+    <loc>http://localhost:5173members/rizesql-autor-editor/author-and-editor</loc>
     
     
     <priority>0.5</priority>
   </url><url>
-    <loc>https://dummy.localmembers/rizesql/author</loc>
+    <loc>http://localhost:5173members/rizesql/author</loc>
     
     
     <priority>0.5</priority>

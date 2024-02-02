@@ -8,16 +8,19 @@ const clientWithToken = client.withConfig({
 	token: env.VITE_SANITY_READ_TOKEN,
 });
 
+// const called = false;
+
+try {
+	queryStore.setServerClient(clientWithToken);
+} catch (e) {
+	console.error(e);
+}
 // We need to set the client used by `loadQuery` here, it only affects the server and ensures the browser bundle isn't bloated
-(() => {
-	let called = false;
-	return () => {
-		if (!called) {
-			called = true;
-			queryStore.setServerClient(clientWithToken);
-		}
-	};
-})()();
+// (() => {
+// 	if (!called) {
+// 		called = true;
+// 	}
+// })();
 
 export const loadQuery = <QueryResponseResult>(options: {
 	query: string;
