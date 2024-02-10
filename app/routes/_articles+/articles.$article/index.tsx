@@ -2,7 +2,7 @@ import React from "react";
 
 import { type SEOHandle } from "@nasa-gcn/remix-seo";
 import { defer, redirect, type LoaderFunctionArgs } from "@remix-run/node";
-import { Await, useLoaderData } from "@remix-run/react";
+import { Await, useLoaderData, type MetaFunction } from "@remix-run/react";
 import groq from "groq";
 
 import { ArticleContent } from "./content";
@@ -11,8 +11,12 @@ import { Section } from "~/components/ui";
 import { api } from "~/lib/api";
 import { asQuery } from "~/lib/api/helpers";
 import { useQuery } from "~/lib/sanity/loader";
+import { _seo } from "~/lib/seo";
 import { getSitemapEntries } from "~/lib/sitemap";
 import { SERVER_TIMING, makeTiming, timingHeaders } from "~/lib/timings.server";
+
+export const meta: MetaFunction<typeof loader> = ({ data }) =>
+	_seo({ title: data?.articleQuery.initial.data.title });
 
 const sitemapQuery = groq`
 	*[defined(slug.current) && _type == "article"] {
@@ -21,10 +25,6 @@ const sitemapQuery = groq`
 
 export const handle: SEOHandle = {
 	getSitemapEntries: getSitemapEntries(sitemapQuery, 0.5),
-	// getSitemapEntries: async () => {
-	// 	const slugs = await viewClient.fetch<Array<{ route: string }>>(sitemapQuery);
-	// 	return slugs.map(({ route }) => ({ route, priority: 0.5 }));
-	// },
 };
 
 export const headers = timingHeaders;
@@ -64,12 +64,12 @@ export default function Article() {
 
 	return (
 		<Section className="h-auto font-pp-neue-montreal lg:h-auto">
-			<div className="prose prose-quoteless mx-8 max-w-[90ch]">
+			<div className="prose prose-quoteless mx-8 max-w-[70ch]">
 				<Section>
 					<div>{JSON.stringify(article, null, 2)}</div>
 				</Section>
 
-				<React.Suspense>
+				<React.Suspense fallback={null}>
 					<Await resolve={articleContentQuery}>
 						{(query) => <ArticleContent articleContentQuery={query} />}
 					</Await>

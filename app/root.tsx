@@ -1,12 +1,11 @@
 import React from "react";
 
 import type { HeadersFunction, LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { LiveReload, Outlet, Scripts, ScrollRestoration, json } from "@remix-run/react";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, json } from "@remix-run/react";
 import { promiseHash } from "remix-utils/promise";
 
 import { api } from "./lib/api";
 
-import { Head } from "~/components/root/head";
 import { env } from "~/lib/env";
 import { SERVER_TIMING, makeTiming } from "~/lib/timings.server";
 import "~/styles/libre-caslon-condensed.css";
@@ -17,9 +16,15 @@ import "~/styles/tailwind.css";
 const VisualEditing = React.lazy(() => import("~/lib/sanity/visual-editing"));
 
 export const links: LinksFunction = () => [
-	{ rel: "icon", type: "image/svg+xml", href: "/favicon.ico" },
 	{ rel: "preconnect", href: "https://cdn.sanity.io" },
+
 	{ rel: "sitemap", type: "application/xml", href: "/sitemap.xml" },
+	{ rel: "manifest", href: "/site.webmanifest", color: "hsl(0 0% 98%)" },
+
+	{ rel: "apple-touch-icon", sizes: "180x180", href: "/favicons/apple-touch-icon.png" },
+	{ rel: "icon", sizes: "32x32", href: "/favicons/favicon-32x32.png" },
+	{ rel: "icon", sizes: "16x16", href: "/favicons/favicon-16x16.png" },
+	{ rel: "icon", href: "/favicon.ico" },
 ];
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -40,13 +45,20 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => ({
 	[SERVER_TIMING]: loaderHeaders.get(SERVER_TIMING) ?? "",
 });
 
-export default function App() {
+const Root = () => {
 	return (
 		<html
 			lang="ro"
 			className="font-pp-neue-montreal text-foreground [word-break:break-word]"
 		>
-			<Head />
+			<head>
+				<meta charSet="utf-8" />
+				<meta name="viewport" content="width=device-width" />
+				<meta name="theme-color" content="hsl(0 0% 98%)" />
+				<Meta />
+				<Links />
+			</head>
+
 			<body>
 				<Outlet />
 
@@ -57,7 +69,6 @@ export default function App() {
 					}}
 				/>
 				<Scripts />
-				<LiveReload />
 
 				<React.Suspense>
 					<VisualEditing />
@@ -65,4 +76,6 @@ export default function App() {
 			</body>
 		</html>
 	);
-}
+};
+
+export default Root;

@@ -1,12 +1,12 @@
 import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
-import { type ServerBuild } from "@remix-run/node";
 import { Hono } from "hono";
+import { compress } from "hono/compress";
 import { logger } from "hono/logger";
-import { remix } from "remix-hono/handler";
+import { secureHeaders } from "hono/secure-headers";
 
-import { devBuild } from "./dev";
 import { cache } from "./middlewares/cache";
+import { remix } from "./middlewares/remix";
 
 const mode = process.env.NODE_ENV === "test" ? "development" : process.env.NODE_ENV;
 const productionMode = mode === "production";
@@ -14,6 +14,10 @@ const productionMode = mode === "production";
 const port = +(process.env.PORT ?? 3000);
 
 const app = new Hono();
+
+app.use(secureHeaders());
+
+app.use(compress({ encoding: "gzip" }));
 
 app.use(
 	"/assets/*",
@@ -28,18 +32,7 @@ app.use(
 
 app.use("*", logger());
 
-app.use(async (c, next) => {
-	const build = (productionMode
-		? // eslint-disable-next-line import/no-unresolved -- this expected until you build the app
-			await import("../build/server/remix.js")
-		: await devBuild()) as unknown as ServerBuild;
-
-	return remix({
-		build,
-		mode,
-		getLoadContext: () => ({ appVersion: productionMode ? build.assets.version : "dev" }),
-	})(c, next);
-});
+app.use(remix(mode));
 
 if (productionMode) {
 	serve({ ...app, port }, (info) => {

@@ -1,24 +1,25 @@
 import { visionTool } from "@sanity/vision";
 import { defineConfig } from "sanity";
-import { deskTool } from "sanity/desk";
 import { presentationTool } from "sanity/presentation";
+import { structureTool } from "sanity/structure";
 
 import { sanityConfig } from "./app/lib/sanity/config";
 import { schemas } from "./app/lib/sanity/schemas";
-import { defaultDocumentNode } from "./app/lib/sanity/ui/default-document-node";
+
+import { locate } from "~/lib/sanity/locate";
 
 export default defineConfig({
 	...sanityConfig,
 	name: "revista-ronica",
 	title: "Revista Hronica",
 	plugins: [
-		deskTool({
+		structureTool({
 			title: "Content",
-			defaultDocumentNode,
 		}),
 		presentationTool({
 			previewUrl: "/",
 			title: "Live Preview",
+			locate,
 		}),
 		...(import.meta.env.DEV ? [visionTool()] : []),
 	],

@@ -1,5 +1,5 @@
 import { type SEOHandle } from "@nasa-gcn/remix-seo";
-import type { MetaFunction } from "@remix-run/node";
+import { type MetaFunction } from "@remix-run/react";
 import { ClientOnly } from "remix-utils/client-only";
 import { Studio } from "sanity";
 
@@ -17,5 +17,5 @@ export const meta: MetaFunction = () => [
 ];
 
 export default function StudioPage() {
-	return <ClientOnly>{() => <Studio config={config} />}</ClientOnly>;
+	return <ClientOnly fallback={null}>{() => <Studio config={config} />}</ClientOnly>;
 }

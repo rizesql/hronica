@@ -2,7 +2,7 @@ import React from "react";
 
 import { type SEOHandle } from "@nasa-gcn/remix-seo";
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import { useFetcher, useLoaderData, type MetaFunction } from "@remix-run/react";
 import groq from "groq";
 
 import { InfiniteScroller } from "~/components/infinite-scroller";
@@ -18,8 +18,12 @@ import {
 } from "~/lib/api/articles/infinite";
 import { asQuery } from "~/lib/api/helpers";
 import { useQuery } from "~/lib/sanity/loader";
+import { _seo } from "~/lib/seo";
 import { getSitemapEntries } from "~/lib/sitemap";
 import { makeTiming, SERVER_TIMING, timingHeaders } from "~/lib/timings.server";
+
+export const meta: MetaFunction<typeof loader> = ({ data }) =>
+	_seo({ title: data?.categoryQuery.initial.data.name });
 
 const sitemapQuery = groq`
 	*[defined(slug.current) && _type == "category"] {
@@ -27,11 +31,7 @@ const sitemapQuery = groq`
 	}`;
 
 export const handle: SEOHandle = {
-	getSitemapEntries: getSitemapEntries(sitemapQuery, 0.5),
-	// getSitemapEntries: async () => {
-	// 	const slugs = await viewClient.fetch<Array<{ route: string }>>(sitemapQuery);
-	// 	return slugs.map(({ route }) => ({ route, priority: 0.5 }));
-	// },
+	getSitemapEntries: getSitemapEntries(sitemapQuery),
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {

@@ -2,6 +2,7 @@ import { getImageDimensions } from "@sanity/asset-utils";
 
 import { image } from "~/lib/sanity/loader";
 
+// million-ignore
 export const Image = ({
 	asset,
 	isInline = false,
@@ -17,9 +18,10 @@ export const Image = ({
 
 	return (
 		<img
+			key={asset._ref}
 			src={image(asset).fit("max").format("webp").auto("format").url()}
 			alt={alt}
-			loading="lazy"
+			// loading="lazy"
 			style={{
 				display: isInline ? "inline-block" : "block",
 				aspectRatio: width / height,

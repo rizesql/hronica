@@ -25,7 +25,7 @@ const components = {
 			h4: <h4 className={cn(baseStyle, "text-2xl font-bold")} {...props} />,
 			h5: <h5 className={cn(baseStyle, "text-xl font-bold")} {...props} />,
 			h6: <h6 className={cn(baseStyle, "text-lg font-bold")} {...props} />,
-			normal: <p className="mt-8 text-sm [text-wrap:balance]" {...props} />,
+			normal: <p className="mt-8 text-sm" {...props} />,
 			default: <span {...props} />,
 		};
 

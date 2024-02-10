@@ -1,6 +1,5 @@
 import devServer, { defaultOptions } from "@hono/vite-dev-server";
 import { unstable_vitePlugin as remix } from "@remix-run/dev";
-import { vite as million } from "million/compiler";
 import { remixDevTools } from "remix-development-tools/vite";
 import { flatRoutes } from "remix-flat-routes";
 import turboConsole from "unplugin-turbo-console/vite";
@@ -20,8 +19,7 @@ const devPlugins = [
 
 export default defineConfig({
 	plugins: [
-		...devPlugins,
-		million({ auto: { threshold: 0.05 }, server: true }),
+		// million.vite({ auto: { threshold: 0.05 }, server: true }),
 		remix({
 			serverModuleFormat: "esm",
 			serverBuildFile: "remix.js",
@@ -32,6 +30,7 @@ export default defineConfig({
 		}),
 
 		tsconfigPaths(),
+		...devPlugins,
 	],
 	build: {
 		minify: "esbuild",

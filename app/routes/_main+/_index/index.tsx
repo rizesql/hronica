@@ -1,7 +1,7 @@
 import React from "react";
 
 import { defer, type LoaderFunctionArgs } from "@remix-run/node";
-import { Await, useLoaderData } from "@remix-run/react";
+import { Await, useLoaderData, type MetaFunction } from "@remix-run/react";
 import { promiseHash } from "remix-utils/promise";
 
 import { CategorySection } from "./category-section";
@@ -11,7 +11,10 @@ import { Center, Section } from "~/components/ui";
 import { api } from "~/lib/api";
 import { useRootData } from "~/lib/root-data";
 import { useQuery } from "~/lib/sanity/loader";
+import { _seo } from "~/lib/seo";
 import { makeTiming, SERVER_TIMING, timingHeaders } from "~/lib/timings.server";
+
+export const meta: MetaFunction = () => _seo({ title: "Acasă" });
 
 export const headers = timingHeaders;
 

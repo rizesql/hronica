@@ -1,9 +1,11 @@
 import { type SanityDocument } from "sanity";
-import { type DefaultDocumentNodeResolver } from "sanity/desk";
 import { Iframe } from "sanity-plugin-iframe-pane";
+import { type DefaultDocumentNodeResolver } from "sanity/structure";
+
+import { siteUrl } from "~/lib/seo";
 
 function getPreviewUrl(doc: SanityDocument) {
-	return `http://localhost:5173/articles/${doc.slug.current}`;
+	return `${siteUrl}/articles/${doc.slug.current}`;
 }
 
 export const defaultDocumentNode: DefaultDocumentNodeResolver = (S, { schemaType }) => {
