@@ -2,7 +2,7 @@ import React from "react";
 
 import { Star } from "lucide-react";
 
-import { Grid, VStack, Article, Separator, Badge, Image } from "~/components/ui";
+import { Article, Badge, Grid, Image, Separator, VStack } from "~/components/ui";
 import type { ArrangedArticles } from "~/lib/api/articles/helpers";
 import { cn } from "~/lib/cn";
 

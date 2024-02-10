@@ -1,24 +1,27 @@
-import { Outlet, type UIMatch, useMatches } from "@remix-run/react";
+import { Outlet, useMatches, type UIMatch } from "@remix-run/react";
 
 import { MobileNav } from "~/components/nav/mobile";
 import { Footer } from "~/components/root/footer";
 import { HStack, Link, Text } from "~/components/ui";
 import { type Category } from "~/lib/api/categories/helpers";
 import { useRootData } from "~/lib/root-data";
-import { type Query, useQuery } from "~/lib/sanity/loader";
+import { useQuery, type Query } from "~/lib/sanity/loader";
+
+type CategoryQuery = { category: Query<Category> };
+type Queries = { queries: CategoryQuery };
 
 const useCategoryData = () => {
-	const match = useMatches().at(-1) as UIMatch<{ categoryQuery: Query<Category> }>;
+	const match = useMatches().at(-1) as UIMatch<Queries>;
 
 	if (!match?.data) throw new Error("No data found");
-	if (!match.data.categoryQuery) throw new Error("categoryQuery not exported");
+	if (!match.data.queries.category) throw new Error("`queries.category` not exported");
 
-	return match.data as { categoryQuery: Query<Category> };
+	return match.data.queries as { category: Query<Category> };
 };
 
 export default function ArticlesLayout() {
-	const { categoryQuery } = useCategoryData();
-	const category = useQuery(categoryQuery);
+	const query = useCategoryData();
+	const category = useQuery(query.category);
 
 	const backgroundColor = category.data.color;
 

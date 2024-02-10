@@ -41,6 +41,7 @@ export const member = z.object({
 });
 
 export const members = z.array(member);
+export type Members = z.infer<typeof members>;
 
 type _Member = z.infer<typeof member>;
 

@@ -23,7 +23,7 @@ import { getSitemapEntries } from "~/lib/sitemap";
 import { makeTiming, SERVER_TIMING, timingHeaders } from "~/lib/timings.server";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) =>
-	_seo({ title: data?.categoryQuery.initial.data.name });
+	_seo({ title: data?.queries.category.initial.data.name });
 
 const sitemapQuery = groq`
 	*[defined(slug.current) && _type == "category"] {
@@ -52,22 +52,22 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 			? { cursor: null, lastId: null, count: null }
 			: { cursor, lastId, count: +rawCount };
 
-	const pageQuery = await time(
+	const page = await time(
 		() => loadNext(filter, { url: request.url, ...queryParams }),
 		"pageQuery",
 	);
 
 	// prettier-ignore
-	const category = pageQuery.initial.data.rowsFetched < 10
-		? (pageQuery.initial.data as LastPage).data[0].category
-		: (pageQuery.initial.data as Page).data.firstCol[0].category;
+	const categoryData = page.initial.data.rowsFetched < 10
+		? (page.initial.data as LastPage).data[0].category
+		: (page.initial.data as Page).data.firstCol[0].category;
 
-	const categoryQuery = asQuery(
-		api.queries.categories.bySlug(category._slug, request.url),
-	)({ data: category });
+	const category = asQuery(
+		api.queries.categories.bySlug(categoryData._slug, request.url),
+	)({ data: categoryData });
 
 	return json(
-		{ pageQuery, categoryQuery },
+		{ queries: { category, page } },
 		{ headers: { [SERVER_TIMING]: timings.toString() } },
 	);
 }
@@ -75,8 +75,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 export const headers = timingHeaders;
 
 export default function AllArticles() {
-	const { pageQuery } = useLoaderData<typeof loader>();
-	const page = useQuery(pageQuery);
+	const { queries } = useLoaderData<typeof loader>();
+	const page = useQuery(queries.page);
 	const [pages, setPages] = React.useState([page.data]);
 	const [lastPage, setLastPage] = React.useState<LastPage | null>(null);
 
@@ -86,7 +86,7 @@ export default function AllArticles() {
 		if (!fetcher.data || fetcher.state === "loading") return;
 
 		if (fetcher.data) {
-			const newPage = fetcher.data.pageQuery.initial.data;
+			const newPage = fetcher.data.queries.page.initial.data;
 
 			if (newPage.rowsFetched < 10) setLastPage(newPage as LastPage);
 			else setPages((prev) => [...prev, newPage]);
@@ -97,7 +97,7 @@ export default function AllArticles() {
 		if (lastPage) return;
 
 		const pagination = fetcher.data
-			? fetcher.data.pageQuery.initial.data.pagination
+			? fetcher.data.queries.page.initial.data.pagination
 			: pages.at(-1)!.pagination;
 
 		// @ts-expect-error to much time to type this properly

@@ -39,6 +39,17 @@ export type Article = z.infer<typeof article>;
 export type ArrangedArticles = z.infer<typeof arrangedArticles>;
 export type ArticleContent = z.infer<typeof articleContent>;
 
+export const readingTime = z.object({
+	readingTime: z.number().nonnegative(),
+});
+
+export type ReadingTime = z.infer<typeof readingTime>;
+
+const READING_TIME_OPTIONS = {
+	wpm: 180,
+	meanWordLen: 5,
+} as const;
+
 // export const getByCategory = async (category: string | undefined, url: string) => {
 // 	const params = { url, category };
 // 	const initial = await loadQuery(GET_ARTICLES_BY_CATEGORY, params).then(parse(articles));
@@ -103,6 +114,10 @@ export const queries = {
 		params: { article: slug, url },
 		query: GET_ARTICLE_CONTENT,
 	}),
+	readingTime: (slug: string, url: string) => ({
+		params: { article: slug, url, ...READING_TIME_OPTIONS },
+		query: GET_READING_TIME,
+	}),
 } as const;
 
 export const ARTICLE_DATA = groq`
@@ -147,3 +162,10 @@ const GET_HERO_ARTICLES = groq`{
   	${ARTICLE_DATA}
 	} | order(date desc)[0..9]
 } | ${ARRANGE("all")}`;
+
+const GET_READING_TIME = groq`
+*[_type == "article" && slug.current == $article] {
+	"characters": length(pt::text(article))
+} | {
+  "readingTime": round(characters / $meanWordLen / $wpm)
+}[0]`;
