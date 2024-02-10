@@ -1,21 +1,14 @@
 import { Logo } from "~/components/logo";
-import { Center, Flex, HStack, Link, VStack, Text } from "~/components/ui";
-import { type NavLink, type SocialLink, isNavLink } from "~/lib/links";
+import { Center, Flex, HStack, Link, Text, VStack } from "~/components/ui";
+import { isNavLink, type NavLink, type SocialLink } from "~/lib/links";
 import { useRootData } from "~/lib/root-data";
 import { useQuery } from "~/lib/sanity/loader";
 import { seo } from "~/lib/seo";
 
 export function Footer() {
-	// 	{
-	// 	social,
-	// 	categories,
-	// }: {
-	// 	social: readonly SocialLink[];
-	// 	categories: Categories;
-	// 	}
-	const { categoriesQuery, socialQuery } = useRootData();
-	const categories = useQuery(categoriesQuery);
-	const social = useQuery(socialQuery);
+	const { queries } = useRootData();
+	const categories = useQuery(queries.categories);
+	const social = useQuery(queries.social);
 
 	const categoriesLinks = categories.data.map(
 		(c) => ({ label: c.name, href: c._slug }) satisfies NavLink,

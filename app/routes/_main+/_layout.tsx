@@ -23,9 +23,9 @@ export default function MainLayout() {
 }
 
 function Header() {
-	const { categoriesQuery, socialQuery } = useRootData();
-	const categories = useQuery(categoriesQuery);
-	const social = useQuery(socialQuery);
+	const { queries } = useRootData();
+	const categories = useQuery(queries.categories);
+	const social = useQuery(queries.social);
 
 	return (
 		<header className="sticky inset-0 z-20 bg-background">

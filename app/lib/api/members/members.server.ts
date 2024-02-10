@@ -14,19 +14,10 @@ export const getMembersData = async (url: string) => {
 		.then(asQuery(options));
 };
 
-export const getMember = async (id: string, url: string) => {
-	const options = h.queries.byId(id, url);
+export const getMember = async (slug: string, url: string) => {
+	const options = h.queries.bySlug(slug, url);
 	return loadQuery(options)
 		.then(parse(h.member))
 		.then(({ data }) => ({ data: h.getMemberData(data) }))
 		.then(asQuery(options));
-	// const _member = await loadQuery(GET_MEMBER_QUERY, params)
-	// 	.then(parse(h.member))
-	// 	.then((m) => h.getMemberData(m.data));
-
-	// return {
-	// 	initial: { data: _member },
-	// 	query: GET_MEMBER_QUERY,
-	// 	params,
-	// };
 };

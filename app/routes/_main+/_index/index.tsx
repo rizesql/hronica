@@ -7,7 +7,6 @@ import { promiseHash } from "remix-utils/promise";
 import { CategorySection } from "./category-section";
 import { Hero } from "./hero";
 
-import { Center, Section } from "~/components/ui";
 import { api } from "~/lib/api";
 import { useRootData } from "~/lib/root-data";
 import { useQuery } from "~/lib/sanity/loader";
@@ -21,7 +20,8 @@ export const headers = timingHeaders;
 export async function loader({ request }: LoaderFunctionArgs) {
 	const { timings, time } = makeTiming("/ loader");
 
-	const categoriesArticlesQuery = promiseHash({
+	const deferredArticlesByCategory = promiseHash({
+		// todo change this
 		cultura: time(
 			() => api.articles.getArrangedByCategory("cultura", request.url),
 			"categoriesArticlesQuery[0]",
@@ -44,36 +44,32 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		),
 	});
 
-	const heroQuery = await time(
+	const hero = await time(
 		() => api.articles.getHeroArticles(request.url),
-		"heroQuery",
+		"queries.hero",
 	);
 
 	return defer(
 		{
-			categoriesArticlesQuery,
-			heroQuery,
+			deferredArticlesByCategory,
+			queries: { hero },
 		},
 		{ headers: { [SERVER_TIMING]: timings.toString() } },
 	);
 }
 
 export default function Index() {
-	const { categoriesQuery } = useRootData();
-	const { categoriesArticlesQuery } = useLoaderData<typeof loader>();
-	const categories = useQuery(categoriesQuery);
+	const { queries } = useRootData();
+	const { deferredArticlesByCategory } = useLoaderData<typeof loader>();
+	const categories = useQuery(queries.categories);
 
 	return (
 		<>
 			<Hero />
 
-			<Section className="border-y border-border bg-[#DDEFD5]">
-				<Center stretch="all">2</Center>
-			</Section>
-
 			{/* these are under the fold so it's alright to fetch them in the background */}
 			<React.Suspense>
-				<Await resolve={categoriesArticlesQuery}>
+				<Await resolve={deferredArticlesByCategory}>
 					{(queries) =>
 						Object.values(queries).map((query, idx) => (
 							<CategorySection

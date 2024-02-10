@@ -2,15 +2,15 @@ import React from "react";
 
 import { Star } from "lucide-react";
 
-import { useIndexRouteData } from "./helpers";
+import { useIndexRouteData } from "./index-data";
 
-import { Section, VStack, Article, Separator, Grid, Badge, Image } from "~/components/ui";
+import { Article, Badge, Grid, Image, Section, Separator, VStack } from "~/components/ui";
 import { cn } from "~/lib/cn";
 import { useQuery } from "~/lib/sanity/loader";
 
 export function Hero() {
-	const { heroQuery } = useIndexRouteData();
-	const query = useQuery(heroQuery);
+	const { queries } = useIndexRouteData();
+	const query = useQuery(queries.hero);
 
 	const {
 		firstCol: [hero, ...first],

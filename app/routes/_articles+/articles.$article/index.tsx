@@ -9,7 +9,6 @@ import { Hero } from "./hero";
 import { Section } from "~/components/ui";
 import { api } from "~/lib/api";
 import { asQuery } from "~/lib/api/helpers";
-import { useQuery } from "~/lib/sanity/loader";
 import { _seo } from "~/lib/seo";
 import { getSitemapEntries } from "~/lib/sitemap";
 import { SERVER_TIMING, makeTiming, timingHeaders } from "~/lib/timings.server";
@@ -38,13 +37,13 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
 	const article = await time(
 		() => api.articles.getArticle(articleSlug, request.url),
-		"articleQuery",
+		"queries.article",
 	);
 	if (!article.initial) throw redirect("/404");
 
 	const readingTime = await time(
 		() => api.articles.getReadingTime(articleSlug, request.url),
-		"readingTimeQuery",
+		"queries.readingTime",
 	);
 
 	const categoryData = article.initial.data.category;
@@ -66,12 +65,11 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 }
 
 export default function Article() {
-	const { queries, deferredArticleContent } = useLoaderData<typeof loader>();
-	const article = useQuery(queries.article);
+	const { deferredArticleContent } = useLoaderData<typeof loader>();
 
 	return (
 		<Section className="h-auto gap-16 font-pp-neue-montreal lg:h-auto">
-			<Hero readingTimeQuery={queries.readingTime} article={article.data} />
+			<Hero />
 
 			<div className="prose prose-quoteless mx-8 mb-24 flex max-w-none flex-col items-center prose-p:max-w-[75ch] lg:prose-headings:max-w-[19ch]">
 				<Await resolve={deferredArticleContent}>

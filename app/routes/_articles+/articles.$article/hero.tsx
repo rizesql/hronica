@@ -1,31 +1,29 @@
 import { format } from "date-fns";
 
-import { HStack, Image, Link, Section, Text, VStack } from "~/components/ui";
-import { type Article, type ReadingTime } from "~/lib/api/articles/helpers";
-import { type Members } from "~/lib/api/members/helpers";
-import { useQuery, type Query } from "~/lib/sanity/loader";
+import { useArticleRouteData } from "./article-data";
 
-export function Hero({
-	article,
-	readingTimeQuery,
-}: {
-	article: Article;
-	readingTimeQuery: Query<ReadingTime>;
-}) {
-	const readingTime = useQuery(readingTimeQuery);
+import { HStack, Image, Link, Section, Text, VStack } from "~/components/ui";
+import { type ReadingTime } from "~/lib/api/articles/helpers";
+import { type Members } from "~/lib/api/members/helpers";
+import { useQuery } from "~/lib/sanity/loader";
+
+export function Hero() {
+	const { queries } = useArticleRouteData();
+	const readingTime = useQuery(queries.readingTime);
+	const article = useQuery(queries.article);
 
 	return (
 		<Section className="mx-8 my-10 h-auto gap-8 lg:h-auto">
 			<Image
-				asset={article.image.asset}
+				asset={article.data.image.asset}
 				alt=""
 				className="my-8 rounded-sm xl:max-w-6xl"
 			/>
 
 			<VStack className="max-w-[90ch] gap-4" alignment="start/between">
 				<HStack className="gap-4">
-					<time dateTime={article.date}>
-						<Text.Small>{format(article.date, "MMM d, yyyy")}</Text.Small>
+					<time dateTime={article.data.date}>
+						<Text.Small>{format(article.data.date, "MMM d, yyyy")}</Text.Small>
 					</time>
 
 					<Text.Small>-</Text.Small>
@@ -33,10 +31,10 @@ export function Hero({
 					<Text.Small>
 						Scris de{" "}
 						<Link.Nav
-							to={`/members/${article.author._slug}/author`}
+							to={`/members/${article.data.author._slug}/author`}
 							className="font-semibold underline"
 						>
-							{article.author.name}
+							{article.data.author.name}
 						</Link.Nav>
 					</Text.Small>
 
@@ -44,8 +42,10 @@ export function Hero({
 
 					<ReadingTimeLabel readingTime={readingTime.data} />
 				</HStack>
-				<Text.H1 className="[text-wrap:none]">{article.title}</Text.H1>
-				<Editors editors={article.editors} />
+
+				<Text.H1>{article.data.title}</Text.H1>
+
+				<Editors editors={article.data.editors} />
 			</VStack>
 		</Section>
 	);

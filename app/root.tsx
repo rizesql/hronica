@@ -31,14 +31,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 	const { time, timings } = makeTiming("root loader");
 
 	const queries = await promiseHash({
-		socialQuery: time(() => api.social.getLinks(request.url), "socialQuery"),
-		categoriesQuery: time(
-			() => api.categories.getCategories(request.url),
-			"categoriesQuery",
-		),
+		social: time(() => api.social.getLinks(request.url), "queries.social"),
+		categories: time(() => api.categories.getCategories(request.url), "queries.categories"),
 	});
 
-	return json(queries, { headers: { [SERVER_TIMING]: timings.toString() } });
+	return json({ queries }, { headers: { [SERVER_TIMING]: timings.toString() } });
 }
 
 export const headers: HeadersFunction = ({ loaderHeaders }) => ({

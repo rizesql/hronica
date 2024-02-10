@@ -6,9 +6,9 @@ import { asQuery, parse } from "../helpers";
 import {
 	ARRANGE,
 	ARTICLE_DATA,
-	type Article,
 	arrangedArticles,
 	article,
+	type Article,
 } from "./helpers";
 import { type ArrangedArticles } from "./types";
 
@@ -23,6 +23,20 @@ export type FeedParams = { articlesCount: number };
 
 export type FilterFn = (article: Article) => boolean;
 export type Filter = { query: string; params: Record<string, string> };
+
+export const parseQueryParams = (request: Request) => {
+	const searchParams = new URL(request.url).searchParams;
+	const cursor = searchParams.get("cursor");
+	const lastId = searchParams.get("lastId");
+	const rawCount = searchParams.get("count");
+
+	const queryParams =
+		!cursor || !lastId || !rawCount
+			? { cursor: null, lastId: null, count: null }
+			: { cursor, lastId, count: +rawCount };
+
+	return queryParams;
+};
 
 const page = z.object({
 	data: arrangedArticles,

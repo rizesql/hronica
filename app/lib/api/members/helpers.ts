@@ -61,8 +61,8 @@ export const queries = {
 		params: { url },
 		query: GET_MEMBERS,
 	}),
-	byId: (id: string, url: string) => ({
-		params: { id, url },
+	bySlug: (slug: string, url: string) => ({
+		params: { member: slug, url },
 		query: GET_MEMBER,
 	}),
 } as const;
@@ -123,4 +123,4 @@ export const MEMBER_DATA = groq`
 
 const GET_MEMBERS = groq`*[_type == "member"] {${MEMBER_DATA}}`;
 
-const GET_MEMBER = groq`*[_type == "member" && _id == $id] {${MEMBER_DATA}}`;
+const GET_MEMBER = groq`*[_type == "member" && slug.current == $member] {${MEMBER_DATA}}[0]`;
