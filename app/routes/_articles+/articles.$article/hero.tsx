@@ -60,5 +60,23 @@ function ReadingTimeLabel({ readingTime }: { readingTime: ReadingTime }) {
 function Editors({ editors }: { editors: Members | null }) {
 	if (!editors) return null;
 
-	return <Text.Small>Editat de {editors.map((x) => x.name).join(", ")}</Text.Small>;
+	return (
+		<Text.Small className="flex gap-2">
+			<span>Editat de</span>
+			<HStack>
+				{editors.map((x, idx) => (
+					<>
+						<Link.Nav
+							key={x._id}
+							to={`/members/${x._slug}/editor`}
+							className="font-semibold underline"
+						>
+							{x.name}
+						</Link.Nav>
+						{idx !== editors.length - 1 && <span className="mr-2">, </span>}
+					</>
+				))}
+			</HStack>
+		</Text.Small>
+	);
 }
