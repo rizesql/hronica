@@ -51,6 +51,20 @@ const components = {
 		}: PortableTextComponentProps<{ asset: { _ref: string } }>) => (
 			<Image asset={value.asset} isInline={isInline} alt="" />
 		),
+		embed: ({ value }: PortableTextComponentProps<{ url: string }>) => (
+			<iframe
+				className="aspect-video w-full rounded-md"
+				src={value.url}
+				title="Embeded link"
+				allow="accelerometer;
+				autoplay;
+				clipboard-write;
+				encrypted-media;
+				gyroscope;
+				picture-in-picture;
+				web-share"
+			/>
+		),
 	},
 } satisfies Partial<PortableTextReactComponents>;
 

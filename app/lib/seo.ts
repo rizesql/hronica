@@ -39,7 +39,7 @@ export const seo = {
 	title: "",
 	description: "",
 	imageSrc: "",
-	trademark: "2023 Revista hronica ©",
+	trademark: "Revista hronica ©",
 	socialLinks: [
 		{
 			platform: "facebook",

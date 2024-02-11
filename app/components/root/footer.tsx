@@ -10,6 +10,8 @@ export function Footer() {
 	const categories = useQuery(queries.categories);
 	const social = useQuery(queries.social);
 
+	const currentYear = new Date(Date.now()).getFullYear();
+
 	const categoriesLinks = categories.data.map(
 		(c) => ({ label: c.name, href: c._slug }) satisfies NavLink,
 	);
@@ -26,7 +28,9 @@ export function Footer() {
 						<HStack alignment="center/between" stretch="width">
 							<Flex className="flex-col items-start gap-4 lg:flex-row lg:items-center">
 								<Logo />
-								<Text.Tiny>{seo.trademark}</Text.Tiny>
+								<Text.Tiny>
+									{currentYear} {seo.trademark}
+								</Text.Tiny>
 							</Flex>
 
 							<Text.Tiny className="self-end lg:self-center">

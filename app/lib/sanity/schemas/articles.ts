@@ -128,6 +128,7 @@ export const articles = {
 					},
 				},
 				{ type: "image" },
+				{ type: "embed" },
 			],
 		},
 	],
