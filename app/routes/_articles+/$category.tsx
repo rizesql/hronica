@@ -14,12 +14,13 @@ import {
 } from "~/lib/api/articles/infinite";
 import { asQuery } from "~/lib/api/helpers";
 import { useQuery } from "~/lib/sanity/loader";
-import { _seo } from "~/lib/seo";
+import { seo, type WithOGImage } from "~/lib/seo";
+import { routeOGImageUrl } from "~/lib/seo/og-images/route";
 import { getSitemapEntries } from "~/lib/sitemap";
 import { makeTiming, SERVER_TIMING, timingHeaders } from "~/lib/timings.server";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) =>
-	_seo({ title: data?.queries.category.initial.data.name });
+	seo({ title: data?.queries.category.initial.data.name, data });
 
 const sitemapQuery = groq`
 	*[defined(slug.current) && _type == "category"] {
@@ -54,9 +55,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 		api.queries.categories.bySlug(categoryData._slug, request.url),
 	)({ data: categoryData });
 
-	return json({ queries: { category, page } } satisfies FeedQuery, {
-		headers: { [SERVER_TIMING]: timings.toString() },
-	});
+	return json(
+		{
+			queries: { category, page },
+			ogImageUrl: routeOGImageUrl(request, category.initial.data._slug),
+		} satisfies FeedQuery & WithOGImage,
+		{ headers: { [SERVER_TIMING]: timings.toString() } },
+	);
 }
 
 export const headers = timingHeaders;

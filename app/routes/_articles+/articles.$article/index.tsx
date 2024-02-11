@@ -9,12 +9,13 @@ import { Hero } from "./hero";
 import { Section } from "~/components/ui";
 import { api } from "~/lib/api";
 import { asQuery } from "~/lib/api/helpers";
-import { _seo } from "~/lib/seo";
+import { seo, type WithOGImage } from "~/lib/seo";
+import { articleOGImageURL } from "~/lib/seo/og-images/article";
 import { getSitemapEntries } from "~/lib/sitemap";
-import { SERVER_TIMING, makeTiming, timingHeaders } from "~/lib/timings.server";
+import { makeTiming, SERVER_TIMING, timingHeaders } from "~/lib/timings.server";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) =>
-	_seo({ title: data?.queries.article.initial.data.title });
+	seo({ title: data?.queries.article.initial.data.title, data });
 
 const sitemapQuery = groq`
 	*[defined(slug.current) && _type == "article"] {
@@ -59,7 +60,8 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 				article,
 				readingTime,
 			},
-		},
+			ogImageUrl: articleOGImageURL(request, article.initial.data._id),
+		} satisfies WithOGImage,
 		{ headers: { [SERVER_TIMING]: timings.toString() } },
 	);
 }

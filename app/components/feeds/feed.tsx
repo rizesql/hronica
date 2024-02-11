@@ -9,7 +9,9 @@ import { type ArrangedArticles } from "~/lib/api/articles/helpers";
 import { type AnyPage, type LastPage, type Page } from "~/lib/api/articles/infinite";
 import { type Query } from "~/lib/sanity/loader";
 
-export type FeedQuery = { queries: { page: Query<AnyPage> } & Record<string, unknown> };
+export type FeedQuery = {
+	queries: { page: Query<AnyPage> } & Record<string, unknown>;
+} & Record<string, unknown>;
 
 export function Feed({
 	firstPage,

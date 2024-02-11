@@ -3,7 +3,7 @@ import { type ServerBuild } from "@remix-run/node";
 
 import * as build from "../build/server/remix.js";
 
-import { siteUrl } from "~/lib/seo";
+import { siteUrl } from "~/lib/app-info.js";
 
 const sitemap = await getSitemapXml(
 	new Request(siteUrl),

@@ -1,9 +1,9 @@
 import { Logo } from "~/components/logo";
 import { Center, Flex, HStack, Link, Text, VStack } from "~/components/ui";
+import { appInfo } from "~/lib/app-info";
 import { isNavLink, type NavLink, type SocialLink } from "~/lib/links";
 import { useRootData } from "~/lib/root-data";
 import { useQuery } from "~/lib/sanity/loader";
-import { seo } from "~/lib/seo";
 
 export function Footer() {
 	const { queries } = useRootData();
@@ -29,13 +29,13 @@ export function Footer() {
 							<Flex className="flex-col items-start gap-4 lg:flex-row lg:items-center">
 								<Logo />
 								<Text.Tiny>
-									{currentYear} {seo.trademark}
+									{currentYear} {appInfo.trademark}
 								</Text.Tiny>
 							</Flex>
 
 							<Text.Tiny className="self-end lg:self-center">
-								<Link.Social href={seo.rizesqlLink.url}>
-									Creat de {seo.rizesqlLink.platform}
+								<Link.Social href={appInfo.rizesqlLink.url}>
+									Creat de {appInfo.rizesqlLink.platform}
 								</Link.Social>
 							</Text.Tiny>
 						</HStack>

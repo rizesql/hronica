@@ -1,6 +1,6 @@
 import { type SEOHandle } from "@nasa-gcn/remix-seo";
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import { useFetcher, useLoaderData, type MetaFunction } from "@remix-run/react";
 import groq from "groq";
 import { z } from "zod";
 
@@ -12,8 +12,13 @@ import { Flex, Grid } from "~/components/ui";
 import { api } from "~/lib/api";
 import { loadNext, parseQueryParams } from "~/lib/api/articles/infinite";
 import { useQuery } from "~/lib/sanity/loader";
+import { seo, type WithOGImage } from "~/lib/seo";
+import { memberOGImageUrl } from "~/lib/seo/og-images/member";
 import { getSitemapEntries } from "~/lib/sitemap";
 import { makeTiming, SERVER_TIMING, timingHeaders } from "~/lib/timings.server";
+
+export const meta: MetaFunction<typeof loader> = ({ data }) =>
+	seo({ title: data?.queries.member.initial.data.name, data });
 
 const sitemapQuery = groq`
 	*[defined(slug.current) && _type == "member"] {
@@ -53,9 +58,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 		"queries.page",
 	);
 
-	return json({ queries: { page, member } } satisfies FeedQuery, {
-		headers: { [SERVER_TIMING]: timings.toString() },
-	});
+	return json(
+		{
+			queries: { page, member },
+			ogImageUrl: memberOGImageUrl(request, member.initial.data._id),
+		} satisfies FeedQuery & WithOGImage,
+		{ headers: { [SERVER_TIMING]: timings.toString() } },
+	);
 }
 
 export const headers = timingHeaders;

@@ -10,10 +10,12 @@ import { Hero } from "./hero";
 import { api } from "~/lib/api";
 import { useRootData } from "~/lib/root-data";
 import { useQuery } from "~/lib/sanity/loader";
-import { _seo } from "~/lib/seo";
+import { seo, type WithOGImage } from "~/lib/seo";
+import { routeOGImageUrl } from "~/lib/seo/og-images/route";
 import { makeTiming, SERVER_TIMING, timingHeaders } from "~/lib/timings.server";
 
-export const meta: MetaFunction = () => _seo({ title: "Acasă" });
+export const meta: MetaFunction<typeof loader> = ({ data }) =>
+	seo({ title: "Acasă", data });
 
 export const headers = timingHeaders;
 
@@ -53,7 +55,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		{
 			deferredArticlesByCategory,
 			queries: { hero },
-		},
+			ogImageUrl: routeOGImageUrl(request, "index"),
+		} satisfies WithOGImage,
 		{ headers: { [SERVER_TIMING]: timings.toString() } },
 	);
 }

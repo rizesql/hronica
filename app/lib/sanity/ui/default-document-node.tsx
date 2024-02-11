@@ -2,7 +2,7 @@ import { type SanityDocument } from "sanity";
 import { Iframe } from "sanity-plugin-iframe-pane";
 import { type DefaultDocumentNodeResolver } from "sanity/structure";
 
-import { siteUrl } from "~/lib/seo";
+import { siteUrl } from "~/lib/app-info";
 
 function getPreviewUrl(doc: SanityDocument) {
 	return `${siteUrl}/articles/${doc.slug.current}`;

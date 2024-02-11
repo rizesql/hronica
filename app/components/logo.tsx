@@ -1,10 +1,10 @@
 import { Flex, Link, Text } from "~/components/ui";
-import { seo } from "~/lib/seo";
+import { appInfo } from "~/lib/app-info";
 
 export function Logo() {
 	return (
 		<Flex as={Link.Nav} to="/" inline alignment="center/between">
-			<Text.H3 className="font-redaction">{seo.name}</Text.H3>
+			<Text.H3 className="font-redaction">{appInfo.name}</Text.H3>
 		</Flex>
 	);
 }
