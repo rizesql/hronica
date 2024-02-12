@@ -9,7 +9,7 @@ import { Text } from "./text";
 const Root = ({ children, href }: React.PropsWithChildren<{ href: string }>) => {
 	return (
 		<Link.Nav to={href} className="w-full">
-			<Card.Root as={VStack} stretch="width">
+			<Card.Root as={VStack} stretch="width" className="md:px-1">
 				{children}
 			</Card.Root>
 		</Link.Nav>
@@ -103,7 +103,7 @@ const SmallContent = ({
 			<Text.H3>{title}</Text.H3>
 
 			<HStack alignment="baseline/between" stretch="width" className="gap-4">
-				<HStack className="gap-4">
+				<HStack className="gap-2 lg:gap-4">
 					<time dateTime={publishedAt}>
 						<Text.Small>{format(publishedAt, "MMM d, yyyy")}</Text.Small>
 					</time>

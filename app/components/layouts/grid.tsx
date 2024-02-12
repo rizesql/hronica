@@ -35,7 +35,7 @@ export const GridLayout = ({
 			stretch="all"
 			className="mb-4 grid-cols-1 gap-8 lg:grid-flow-col lg:grid-cols-4 lg:p-4 lg:px-8"
 		>
-			<VStack stretch="width" className={cn(layouts[layout]?.[0])}>
+			<VStack stretch="width" className={cn(layouts[layout % layouts.length]?.[0])}>
 				<Article.Root href={`/articles/${hero._slug}`}>
 					<Article.Image>
 						<Image asset={hero.image.asset} alt={hero.title} className="rounded-md" />
@@ -113,13 +113,15 @@ export const GridLayout = ({
 
 						{idx === 2 ? (
 							<Article.Root href={`/articles/${article._slug}`}>
-								<Article.Image>
-									<Image
-										asset={article.image.asset}
-										alt={article.title}
-										className="aspect-[3/2] rounded-md"
-									/>
-								</Article.Image>
+								<div className="hidden xl:block">
+									<Article.Image>
+										<Image
+											asset={article.image.asset}
+											alt={article.title}
+											className="aspect-[3/2] rounded-md"
+										/>
+									</Article.Image>
+								</div>
 
 								<Article.Content.Normal
 									title={article.title}

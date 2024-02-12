@@ -5,13 +5,13 @@ import groq from "groq";
 
 import { Feed, type FeedQuery } from "~/components/feeds/feed";
 import { api } from "~/lib/api";
+import { PAGE_SIZE } from "~/lib/api/articles/infinite";
 import {
-	loadNext,
-	parseQueryParams,
+	feed,
 	type Filter,
 	type LastPage,
 	type Page,
-} from "~/lib/api/articles/infinite";
+} from "~/lib/api/articles/infinite.server";
 import { asQuery } from "~/lib/api/helpers";
 import { useQuery } from "~/lib/sanity/loader";
 import { seo, type WithOGImage } from "~/lib/seo";
@@ -39,15 +39,15 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 		params: { category: params.category! },
 	} satisfies Filter;
 
-	const queryParams = parseQueryParams(request);
+	const queryParams = feed.parseQueryParams(request);
 
 	const page = await time(
-		() => loadNext(filter, { url: request.url, ...queryParams }),
+		() => feed.loadNext(filter, { url: request.url, ...queryParams }),
 		"queries.page",
 	);
 
 	// prettier-ignore
-	const categoryData = page.initial.data.rowsFetched < 10
+	const categoryData = page.initial.data.rowsFetched < PAGE_SIZE
 		? (page.initial.data as LastPage).data[0].category
 		: (page.initial.data as Page).data.firstCol[0].category;
 

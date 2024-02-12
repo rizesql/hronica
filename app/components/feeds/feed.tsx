@@ -6,7 +6,8 @@ import { InfiniteScroller } from "~/components/feeds/infinite-scroller";
 import { GridLayout } from "~/components/layouts/grid";
 import { Article, Grid, Image } from "~/components/ui";
 import { type ArrangedArticles } from "~/lib/api/articles/helpers";
-import { type AnyPage, type LastPage, type Page } from "~/lib/api/articles/infinite";
+import { PAGE_SIZE } from "~/lib/api/articles/infinite";
+import type { AnyPage, LastPage, Page } from "~/lib/api/articles/infinite.server";
 import { type Query } from "~/lib/sanity/loader";
 
 export type FeedQuery = {
@@ -20,9 +21,11 @@ export function Feed({
 	firstPage: AnyPage;
 	fetcher: FetcherWithComponents<FeedQuery>;
 }) {
-	const [pages, setPages] = React.useState(firstPage.rowsFetched < 10 ? [] : [firstPage]);
+	const [pages, setPages] = React.useState(
+		firstPage.rowsFetched < PAGE_SIZE ? [] : [firstPage],
+	);
 	const [lastPage, setLastPage] = React.useState(
-		firstPage.rowsFetched >= 10 ? null : (firstPage as LastPage),
+		firstPage.rowsFetched >= PAGE_SIZE ? null : (firstPage as LastPage),
 	);
 
 	React.useEffect(() => {
@@ -31,7 +34,7 @@ export function Feed({
 		if (fetcher.data) {
 			const newPage = fetcher.data.queries.page.initial.data;
 
-			if (newPage.rowsFetched < 10) setLastPage(newPage as LastPage);
+			if (newPage.rowsFetched < PAGE_SIZE) setLastPage(newPage as LastPage);
 			else setPages((prev) => [...prev, newPage as Page]);
 		}
 	}, [fetcher.data, fetcher.state]);
@@ -52,7 +55,7 @@ export function Feed({
 		<>
 			<InfiniteScroller loadNext={loadNext} loading={fetcher.state === "loading"}>
 				{pages.map((p, idx) => (
-					<div key={idx}>
+					<div key={idx} className="mx-6">
 						<GridLayout articles={p.data as ArrangedArticles} layout={idx} />
 					</div>
 				))}
@@ -67,7 +70,7 @@ const LastSection = ({ page }: { page: LastPage | null }) => {
 	if (!page) return null;
 
 	return (
-		<Grid className="grid-cols-1 lg:grid-cols-3">
+		<Grid className="mx-6 grid-cols-1 gap-6 lg:grid-cols-3 lg:px-8">
 			{page.data.map((article) => (
 				<Article.Root
 					href={`/articles/${article._slug}`}

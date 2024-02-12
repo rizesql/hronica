@@ -79,6 +79,11 @@ export async function time<ReturnType>(
 	return result;
 }
 
+export type TimeFn = <ReturnType>(
+	fn: () => ReturnType | Promise<ReturnType>,
+	type: string,
+) => Promise<ReturnType>;
+
 export function makeTiming(type: string, desc?: string) {
 	const timings: Timings = {
 		[type]: [{ desc, start: performance.now() }],
@@ -91,10 +96,9 @@ export function makeTiming(type: string, desc?: string) {
 	});
 
 	return {
-		time: <ReturnType>(fn: () => ReturnType | Promise<ReturnType>, type: string) =>
-			time<ReturnType>(fn, { timings, type }),
+		time: (fn, type) => time(fn, { timings, type }),
 		timings,
-	};
+	} satisfies { time: TimeFn; timings: Timings };
 }
 
 export const timingHeaders: HeadersFunction = ({ loaderHeaders, parentHeaders }) => ({

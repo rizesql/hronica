@@ -22,5 +22,4 @@ export const embed = {
 		component: EmbedPreview,
 	},
 	icon: EmbedIcon,
-	// components: { preview: EmbedPreview },
 };
