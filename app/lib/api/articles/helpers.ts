@@ -101,7 +101,12 @@ const GET_ARTICLE = groq`
 
 const GET_ARTICLE_CONTENT = groq`
 *[_type == "article" && slug.current == $article] {
-	"content": article
+	"content": article[] {
+		...,
+		_type == "magazine" => {
+			"url": asset->url
+		}
+	}
 }[0]`;
 
 const GET_ARTICLES_BY_CATEGORY = groq`{
