@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://www.github.com/rizesql/hronica/blob/main/public/favicons/android-chrome-512x512.png?raw=true" />
+  <img src="https://github.com/rizesql/hronica/blob/main/public/favicons/android-chrome-512x512.png?raw=true" width="150" />
   <h1>Hronica Magazine</h1>
   <br />
 </div>
