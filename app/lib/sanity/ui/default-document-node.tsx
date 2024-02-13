@@ -1,6 +1,6 @@
 import { type SanityDocument } from "sanity";
-import { Iframe } from "sanity-plugin-iframe-pane";
 import { type DefaultDocumentNodeResolver } from "sanity/structure";
+import { Iframe } from "sanity-plugin-iframe-pane";
 
 import { siteUrl } from "~/lib/app-info";
 

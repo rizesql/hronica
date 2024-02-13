@@ -1,22 +1,60 @@
-# fly.toml app configuration file generated for hronica-sanity-2 on 2024-01-17T19:24:00+02:00
+# fly.toml app configuration file generated for hronica-sanity-2 on 2024-02-12T15:48:31+02:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "hronica-sanity-2"
-primary_region = "ams"
+app = 'hronica-sanity-2'
+primary_region = 'ams'
+kill_signal = 'SIGINT'
+kill_timeout = '5s'
 
 [build]
 
 [http_service]
-  internal_port = 3000
-  force_https = true
-  auto_stop_machines = true
-  auto_start_machines = true
-  min_machines_running = 0
-  processes = ["app"]
+internal_port = 3000
+force_https = true
+auto_stop_machines = true
+auto_start_machines = true
+min_machines_running = 0
+processes = ['app']
+
+[[services]]
+protocol = 'tcp'
+internal_port = 3000
+auto_stop_machines = true
+auto_start_machines = true
+min_machines_running = 0
+processes = ['app']
+
+[[services.ports]]
+port = 80
+handlers = ['http']
+force_https = true
+
+[[services.ports]]
+port = 443
+handlers = ['tls', 'http']
+
+[services.concurrency]
+type = 'connections'
+hard_limit = 50
+soft_limit = 40
+
+[[services.tcp_checks]]
+interval = '15s'
+timeout = '2s'
+grace_period = '1m'
+
+[[services.http_checks]]
+interval = '10s'
+timeout = '2s'
+grace_period = '5s'
+method = 'get'
+path = '/healthcheck'
+protocol = 'http'
+tls_skip_verify = false
 
 [[vm]]
-  cpu_kind = "shared"
-  cpus = 1
-  memory_mb = 1024
+cpu_kind = 'shared'
+cpus = 1
+memory_mb = 1024

@@ -77,6 +77,7 @@ export function Hero() {
 										asset={article.image.asset}
 										alt={article.title}
 										className="aspect-[3/2] rounded-md"
+										loading="lazy"
 									/>
 								</Article.Image>
 

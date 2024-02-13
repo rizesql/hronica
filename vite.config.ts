@@ -3,7 +3,7 @@ import { unstable_vitePlugin as remix } from "@remix-run/dev";
 import { remixDevTools } from "remix-development-tools/vite";
 import { flatRoutes } from "remix-flat-routes";
 import turboConsole from "unplugin-turbo-console/vite";
-import { defineConfig } from "vite";
+import { defineConfig, splitVendorChunkPlugin } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 const devPlugins = [
@@ -19,7 +19,7 @@ const devPlugins = [
 
 export default defineConfig({
 	plugins: [
-		// million.vite({ auto: { threshold: 0.05 }, server: true }),
+		splitVendorChunkPlugin(),
 		remix({
 			serverModuleFormat: "esm",
 			serverBuildFile: "remix.js",
@@ -34,5 +34,6 @@ export default defineConfig({
 	],
 	build: {
 		minify: "esbuild",
+		cssMinify: "esbuild",
 	},
 });

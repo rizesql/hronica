@@ -1,10 +1,10 @@
 import { type SEOHandle } from "@nasa-gcn/remix-seo";
 import { type MetaFunction } from "@remix-run/react";
-import { ClientOnly } from "remix-utils/client-only";
 import { Studio } from "sanity";
 
 import config from "../../sanity.config";
 
+import { Hydrated } from "~/components/hydrated";
 import "~/styles/studio.css";
 
 export const handle: SEOHandle = {
@@ -17,5 +17,9 @@ export const meta: MetaFunction = () => [
 ];
 
 export default function StudioPage() {
-	return <ClientOnly fallback={null}>{() => <Studio config={config} />}</ClientOnly>;
+	return (
+		<Hydrated>
+			<Studio config={config} />
+		</Hydrated>
+	);
 }

@@ -1,7 +1,5 @@
-import React from "react";
-
-import { defer, type LoaderFunctionArgs } from "@remix-run/node";
-import { Await, useLoaderData, type MetaFunction } from "@remix-run/react";
+import { json, type LoaderFunctionArgs } from "@remix-run/node";
+import { useLoaderData, type MetaFunction } from "@remix-run/react";
 
 import { CategorySection } from "./category-section";
 import { Hero } from "./hero";
@@ -37,7 +35,7 @@ const getArticles = (url: string, time: TimeFn) => (categories: Query<Categories
 export async function loader({ request }: LoaderFunctionArgs) {
 	const { timings, time } = makeTiming("/ loader");
 
-	const deferredArticlesByCategory = api.categories
+	const articlesByCategory = await api.categories
 		.getCategories(request.url)
 		.then(getArticles(request.url, time));
 
@@ -46,9 +44,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		"queries.hero",
 	);
 
-	return defer(
+	return json(
 		{
-			deferredArticlesByCategory,
+			articlesByCategory,
 			queries: { hero },
 			ogImageUrl: routeOGImageUrl(request, "index"),
 		} satisfies WithOGImage,
@@ -58,28 +56,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Index() {
 	const { queries } = useRootData();
-	const { deferredArticlesByCategory } = useLoaderData<typeof loader>();
+	const { articlesByCategory } = useLoaderData<typeof loader>();
 	const categories = useQuery(queries.categories);
 
 	return (
 		<>
 			<Hero />
 
-			{/* these are under the fold so it's alright to fetch them in the background */}
-			<React.Suspense>
-				<Await resolve={deferredArticlesByCategory}>
-					{(queries) =>
-						Object.values(queries).map((query, idx) => (
-							<CategorySection
-								layout={idx}
-								category={categories.data[idx]}
-								articlesQuery={query}
-								key={categories.data[idx]._id}
-							/>
-						))
-					}
-				</Await>
-			</React.Suspense>
+			{Object.values(articlesByCategory).map((query, idx) => (
+				<CategorySection
+					layout={idx}
+					category={categories.data[idx]}
+					articlesQuery={query}
+					key={categories.data[idx]._id}
+				/>
+			))}
 		</>
 	);
 }
