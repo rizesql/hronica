@@ -10,14 +10,20 @@ export const getMembersData = async (url: string) => {
 	const options = h.queries.all(url);
 	return await loadQuery(options)
 		.then(parse(h.members))
-		.then(({ data }) => ({ data: data.map(h.getMemberData) }))
-		.then(asQuery(options));
+		.then(asQuery(options))
+		.then((q) => {
+			if (!q.success) return q;
+			return { ...q, initial: { data: q.initial.data.map(h.getMemberData) } };
+		});
 };
 
 export const getMember = async (slug: string, url: string) => {
 	const options = h.queries.bySlug(slug, url);
 	return loadQuery(options)
 		.then(parse(h.member))
-		.then(({ data }) => ({ data: h.getMemberData(data) }))
-		.then(asQuery(options));
+		.then(asQuery(options))
+		.then((q) => {
+			if (!q.success) return q;
+			return { ...q, initial: { data: h.getMemberData(q.initial.data) } };
+		});
 };

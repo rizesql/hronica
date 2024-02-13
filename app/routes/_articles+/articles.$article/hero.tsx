@@ -1,3 +1,5 @@
+import React from "react";
+
 import { format } from "date-fns";
 
 import { useArticleRouteData } from "./article-data";
@@ -65,16 +67,15 @@ function Editors({ editors }: { editors: Members | null }) {
 			<span>Editat de</span>
 			<HStack>
 				{editors.map((x, idx) => (
-					<>
+					<React.Fragment key={x._id}>
 						<Link.Nav
-							key={x._id}
 							to={`/members/${x._slug}/editor`}
 							className="font-semibold underline"
 						>
 							{x.name}
 						</Link.Nav>
 						{idx !== editors.length - 1 && <span className="mr-2">, </span>}
-					</>
+					</React.Fragment>
 				))}
 			</HStack>
 		</Text.Small>

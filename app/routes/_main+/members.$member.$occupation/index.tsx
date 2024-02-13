@@ -1,5 +1,5 @@
 import { type SEOHandle } from "@nasa-gcn/remix-seo";
-import { json, type LoaderFunctionArgs } from "@remix-run/node";
+import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
 import { useFetcher, useLoaderData, type MetaFunction } from "@remix-run/react";
 import groq from "groq";
 import { z } from "zod";
@@ -15,7 +15,7 @@ import { useQuery } from "~/lib/sanity/loader";
 import { seo, type WithOGImage } from "~/lib/seo";
 import { memberOGImageUrl } from "~/lib/seo/og-images/member";
 import { getSitemapEntries } from "~/lib/sitemap";
-import { makeTiming, SERVER_TIMING, timingHeaders } from "~/lib/timings.server";
+import { SERVER_TIMING, makeTiming, timingHeaders } from "~/lib/timings.server";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) =>
 	seo({ title: data?.queries.member.initial.data.name, data });
@@ -44,7 +44,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 	const { time, timings } = makeTiming("$member loader");
 
 	const author = z.string().parse(params.member);
-	const occupation = z.enum(["author", "editor"]).parse(params.occupation);
+
+	const rawOccupation = z.enum(["author", "editor"]).safeParse(params.occupation);
+	if (!rawOccupation.success) throw redirect("/404");
+	const occupation = rawOccupation.data;
 
 	const queryParams = feed.parseQueryParams(request);
 
@@ -52,12 +55,14 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 		() => api.members.getMember(author, request.url),
 		"queries.member",
 	);
+	if (!member.success) throw redirect("/404");
 
 	const page = await time(
 		() =>
 			feed.loadNext(filters[occupation](author), { url: request.url, ...queryParams }),
 		"queries.page",
 	);
+	if (!page.success) throw redirect("/404");
 
 	return json(
 		{

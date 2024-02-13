@@ -68,7 +68,11 @@ function Header({ backgroundColor }: { backgroundColor: string }) {
 							className="font-pp-neue-montreal text-foreground"
 							key={category._id}
 						>
-							<Link.Nav reloadDocument prefetch="intent" to={`/${category._slug}`}>
+							<Link.Nav
+								reloadDocument
+								prefetch="intent"
+								to={`/categories/${category._slug}`}
+							>
 								{category.name}
 							</Link.Nav>
 						</Text.Small>

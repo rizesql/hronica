@@ -18,6 +18,10 @@ export const env = createEnv({
 	skipValidation: true,
 });
 
+export const canUseDOM = !!(
+	// eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+	(typeof window !== "undefined" && window.document && window.document.createElement)
+);
 export type Env = typeof env;
 
 declare global {

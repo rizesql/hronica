@@ -47,7 +47,7 @@ const page = z.object({
 });
 
 const lastPage = z.object({
-	data: z.array(article),
+	data: z.array(article).min(1).max(9),
 	pagination: z.object({
 		cursor: z.string().nullable(),
 		lastId: z.string().nullable(),

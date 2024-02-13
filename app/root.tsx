@@ -7,14 +7,19 @@ import {
 	Outlet,
 	Scripts,
 	ScrollRestoration,
+	isRouteErrorResponse,
 	json,
 	useLoaderData,
+	useRouteError,
 } from "@remix-run/react";
+import { ArrowLeft } from "lucide-react";
 import { promiseHash } from "remix-utils/promise";
 
+import { MainLayout } from "./components/layouts/main";
+import { Center, HStack, Link, Section, Text, VStack } from "./components/ui";
 import { api } from "./lib/api";
 
-import { env } from "~/lib/env";
+import { canUseDOM, env } from "~/lib/env";
 import { SERVER_TIMING, makeTiming } from "~/lib/timings.server";
 import "~/styles/libre-caslon-condensed.css";
 import "~/styles/pp-neue-montreal.css";
@@ -75,6 +80,20 @@ const Root = () => {
 	const { requestPath } = useLoaderData<typeof loader>();
 
 	return (
+		<Document>
+			<Outlet />
+
+			{!requestPath.startsWith("/studio") && env.VITE_SANITY_STEGA_ENABLED ? (
+				<React.Suspense>
+					<VisualEditing />
+				</React.Suspense>
+			) : null}
+		</Document>
+	);
+};
+
+function Document({ children, title }: { children: React.ReactNode; title?: string }) {
+	return (
 		<html
 			lang="ro"
 			className="font-pp-neue-montreal text-foreground [word-break:break-word]"
@@ -85,10 +104,11 @@ const Root = () => {
 				<meta name="theme-color" content="hsl(0 0% 98%)" />
 				<Meta />
 				<Links />
+				{title && <title data-title-override="">{title}</title>}
 			</head>
 
 			<body>
-				<Outlet />
+				{children}
 
 				<ScrollRestoration />
 				<script
@@ -97,15 +117,61 @@ const Root = () => {
 					}}
 				/>
 				<Scripts />
-
-				{!requestPath.startsWith("/studio") && env.VITE_SANITY_STEGA_ENABLED ? (
-					<React.Suspense>
-						<VisualEditing />
-					</React.Suspense>
-				) : null}
 			</body>
 		</html>
 	);
-};
+}
+
+export function ErrorBoundary() {
+	const err = useRouteError();
+
+	if (!canUseDOM) console.error(err);
+
+	if (isRouteErrorResponse(err)) {
+		return (
+			<Document title={err.statusText}>
+				<MainLayout>
+					<Section>
+						<Center>
+							<VStack alignment="center/center" className="text-center leading-none">
+								<Text.H1 className="text-[15vw]">{err.status}</Text.H1>
+								<Link.Nav to="/" className="underline">
+									<HStack alignment="center/center" className="gap-2">
+										<ArrowLeft />
+										<Text.H3 className="inline-block font-pp-neue-montreal">
+											întoarce-te acasă
+										</Text.H3>
+									</HStack>
+								</Link.Nav>
+							</VStack>
+						</Center>
+					</Section>
+				</MainLayout>
+			</Document>
+		);
+	}
+
+	return (
+		<Document>
+			<MainLayout>
+				<Section>
+					<Center>
+						<VStack alignment="center/center" className="text-center leading-none">
+							<Text.H1 className="text-[15vw]">Error</Text.H1>
+							<Link.Nav to="/" className="underline">
+								<HStack alignment="center/center" className="gap-2">
+									<ArrowLeft />
+									<Text.H3 className="inline-block font-pp-neue-montreal">
+										întoarce-te acasă
+									</Text.H3>
+								</HStack>
+							</Link.Nav>
+						</VStack>
+					</Center>
+				</Section>
+			</MainLayout>
+		</Document>
+	);
+}
 
 export default Root;

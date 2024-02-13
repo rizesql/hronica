@@ -8,14 +8,15 @@ import { Hero } from "./hero";
 
 import { Section } from "~/components/ui";
 import { api } from "~/lib/api";
-import { asQuery } from "~/lib/api/helpers";
+import { type Category } from "~/lib/api/categories/helpers";
+import { type Query } from "~/lib/sanity/loader";
 import { seo, type WithOGImage } from "~/lib/seo";
 import { articleOGImageURL } from "~/lib/seo/og-images/article";
 import { getSitemapEntries } from "~/lib/sitemap";
 import { makeTiming, SERVER_TIMING, timingHeaders } from "~/lib/timings.server";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) =>
-	seo({ title: data?.queries.article.initial.data.title, data });
+	seo({ title: data?.queries.article.initial.data?.title, data });
 
 const sitemapQuery = groq`
 	*[defined(slug.current) && _type == "article"] {
@@ -34,13 +35,18 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
 	const { timings, time } = makeTiming("articles/$article loader");
 
-	const deferredArticleContent = api.articles.getArticleContent(articleSlug, request.url);
+	const deferredArticleContent = api.articles
+		.getArticleContent(articleSlug, request.url)
+		.then((q) => {
+			if (!q.success) throw redirect("/404");
+			return q;
+		});
 
 	const article = await time(
 		() => api.articles.getArticle(articleSlug, request.url),
 		"queries.article",
 	);
-	if (!article.initial) throw redirect("/404");
+	if (!article.success) throw redirect("/404");
 
 	const readingTime = await time(
 		() => api.articles.getReadingTime(articleSlug, request.url),
@@ -48,9 +54,11 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 	);
 
 	const categoryData = article.initial.data.category;
-	const category = asQuery(
-		api.queries.categories.bySlug(categoryData._slug, request.url),
-	)({ data: categoryData });
+	const category = {
+		...api.queries.categories.bySlug(categoryData._slug, request.url),
+		initial: { data: categoryData },
+		success: true,
+	} satisfies Query<Category>;
 
 	return defer(
 		{

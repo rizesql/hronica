@@ -1,18 +1,19 @@
-import { json, type LoaderFunctionArgs } from "@remix-run/node";
+import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, type MetaFunction } from "@remix-run/react";
 
 import { CategorySection } from "./category-section";
 import { Hero } from "./hero";
 
 import { api } from "~/lib/api";
+import { type ArrangedArticles } from "~/lib/api/articles/helpers";
 import { type Categories } from "~/lib/api/categories/helpers";
 import { useRootData } from "~/lib/root-data";
-import { useQuery, type Query } from "~/lib/sanity/loader";
+import { useQuery, type Query, type SuccessfullQuery } from "~/lib/sanity/loader";
 import { seo, type WithOGImage } from "~/lib/seo";
 import { routeOGImageUrl } from "~/lib/seo/og-images/route";
 import {
-	makeTiming,
 	SERVER_TIMING,
+	makeTiming,
 	timingHeaders,
 	type TimeFn,
 } from "~/lib/timings.server";
@@ -22,15 +23,21 @@ export const meta: MetaFunction<typeof loader> = ({ data }) =>
 
 export const headers = timingHeaders;
 
-const getArticles = (url: string, time: TimeFn) => (categories: Query<Categories>) =>
-	Promise.all(
+const getArticles = (url: string, time: TimeFn) => (categories: Query<Categories>) => {
+	if (!categories.success) throw redirect("/404");
+
+	return Promise.all(
 		categories.initial.data.map((category) =>
 			time(
 				() => api.articles.getArrangedByCategory(category._slug, url),
 				`queries.deferredArticlesByCategory-${category._slug}`,
 			),
 		),
-	);
+	).then((queries) => {
+		if (queries.some((q) => !q.success)) throw redirect("/404");
+		return queries as Array<SuccessfullQuery<ArrangedArticles>>;
+	});
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	const { timings, time } = makeTiming("/ loader");
