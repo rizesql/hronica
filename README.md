@@ -1,38 +1,23 @@
-# Welcome to Remix!
+<div align="center">
+<img src="https://www.github.com/rizesql/hronica/blob/main/public/favicons/android-chrome-512x512.png?raw=true" />
+  <h1>Hronica Magazine</h1>
+  <br />
+</div>
 
-- [Remix Docs](https://remix.run/docs)
+## 👋 Welcome to Hronica Magazine repository!
 
-## Development
+### About us
 
-From your terminal:
+This is the official website of Hronica Șincai Magazine, founded in 1968 at
+📍 National College „Gheorghe Șincai”, Bucharest.
+We are very proud of our heritage, and now we can pride ourselves with this brand
+new website.
 
-```sh
-npm run dev
-```
+This repository hosts the source code for our interactive web application designed specifically for our high school magazine. This web application serves as a digital platform where students and faculty can access the latest articles, essays, creative writing, artwork, and more, all curated and created by our talented high school community.
 
-This starts your app in development mode, rebuilding assets on file changes.
+### Features
 
-## Deployment
-
-First, build your app for production:
-
-```sh
-npm run build
-```
-
-Then run the app in production mode:
-
-```sh
-npm start
-```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `remix build`
-
-- `build/`
-- `public/build/`
+- 📝 Articles repository -> Browse through a collection of articles covering various topics such as culture, literature or high-school life
+- 🧑‍🎨 Creative showcase -> Explore the artistic talents of our students with a dedicated section for showcasing original artwork, poetry, and creative writing pieces.
+- 📲 Responsive Design -> Enjoy seamless access to the magazine on any device, from desktop computers to smartphones, with our responsive and user-friendly design.
+- 🗄️ Publications Archive -> Read all editions of our award-winning publication
