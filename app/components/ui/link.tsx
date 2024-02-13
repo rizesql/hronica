@@ -30,10 +30,13 @@ const NavLink = React.forwardRef<HTMLAnchorElement, NavLinkProps>(function NavLi
 });
 
 // TODO should be named ExternalLink?
-type SocialLinkProps = { href: string } & React.ComponentPropsWithRef<"a">;
+type SocialLinkProps = {
+	href: string;
+	noIcon?: boolean;
+} & React.ComponentPropsWithRef<"a">;
 
 const SocialLink = React.forwardRef<HTMLAnchorElement, SocialLinkProps>(
-	function SocialLink({ href, className, children, ...props }, ref?) {
+	function SocialLink({ href, className, children, noIcon = false, ...props }, ref?) {
 		return (
 			<Link_
 				ref={ref}
@@ -44,7 +47,7 @@ const SocialLink = React.forwardRef<HTMLAnchorElement, SocialLinkProps>(
 				{...props}
 			>
 				{children}
-				<ArrowUpRight className="h-4 w-4" />
+				{!noIcon && <ArrowUpRight className="size-4" />}
 			</Link_>
 		);
 	},

@@ -8,8 +8,8 @@ import { Text } from "./text";
 
 const Root = ({ children, href }: React.PropsWithChildren<{ href: string }>) => {
 	return (
-		<Link.Nav to={href}>
-			<Card.Root as={VStack} stretch="width">
+		<Link.Nav to={href} className="w-full">
+			<Card.Root as={VStack} stretch="width" className="md:px-1">
 				{children}
 			</Card.Root>
 		</Link.Nav>
@@ -45,10 +45,10 @@ const HeroContent = ({
 				</VStack>
 
 				<HStack alignment="center/between" className="gap-2 lg:flex">
-					<Text.P className="uppercase tracking-wider underline underline-offset-4">
+					<Text.Small className="uppercase tracking-wider underline underline-offset-4">
 						Citeste
-					</Text.P>
-					<ArrowUpRight />
+					</Text.Small>
+					<ArrowUpRight className="size-4" />
 				</HStack>
 			</HStack>
 		</Card.Header>
@@ -83,7 +83,7 @@ const NormalContent = ({
 				<Text.Small className="text-foreground underline underline-offset-4">
 					Citeste
 				</Text.Small>
-				<ArrowUpRight className="h-4 w-4" />
+				<ArrowUpRight className="size-4" />
 			</HStack>
 		</Card.Header>
 	);
@@ -99,21 +99,23 @@ const SmallContent = ({
 	publishedAt: string;
 }) => {
 	return (
-		<Card.Content>
+		<Card.Content className="w-full">
 			<Text.H3>{title}</Text.H3>
 
 			<HStack alignment="baseline/between" stretch="width" className="gap-4">
-				<time dateTime={publishedAt}>
-					<Text.Small>{format(publishedAt, "MMM d, yyyy")}</Text.Small>
-				</time>
+				<HStack className="gap-2 lg:gap-4">
+					<time dateTime={publishedAt}>
+						<Text.Small>{format(publishedAt, "MMM d, yyyy")}</Text.Small>
+					</time>
 
-				<Text.Small>Scris de {author}</Text.Small>
+					<Text.Small>Scris de {author}</Text.Small>
+				</HStack>
 
 				<HStack alignment="center/between" className="gap-2 lg:flex">
 					<Text.Small className="text-foreground underline underline-offset-4">
 						Citeste
 					</Text.Small>
-					<ArrowUpRight className="h-4 w-4" />
+					<ArrowUpRight className="size-4" />
 				</HStack>
 			</HStack>
 		</Card.Content>

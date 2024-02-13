@@ -1,26 +1,27 @@
-import { redirect, type LoaderFunctionArgs, json } from "@remix-run/node";
-import { Outlet, useLoaderData } from "@remix-run/react";
+import { Outlet, useMatches, type UIMatch } from "@remix-run/react";
 
 import { MobileNav } from "~/components/nav/mobile";
 import { Footer } from "~/components/root/footer";
 import { HStack, Link, Text } from "~/components/ui";
-import { api } from "~/lib/api";
+import { type Category } from "~/lib/api/categories/helpers";
 import { useRootData } from "~/lib/root-data";
-import { useQuery } from "~/lib/sanity/loader";
+import { useQuery, type Query } from "~/lib/sanity/loader";
 
-export async function loader({ request, params }: LoaderFunctionArgs) {
-	const category = params.category;
-	if (!category) throw redirect("/404");
+type CategoryQuery = { category: Query<Category> };
+type Queries = { queries: CategoryQuery };
 
-	const categoryQuery = await api.categories.getCategory(category, request.url);
-	if (!categoryQuery.initial.data) throw redirect("/404");
+const useCategoryData = () => {
+	const match = useMatches().at(-1) as UIMatch<Queries>;
 
-	return json({ categoryQuery });
-}
+	if (!match?.data) throw new Error("No data found");
+	if (!match.data.queries.category) throw new Error("`queries.category` not exported");
+
+	return match.data.queries as { category: Query<Category> };
+};
 
 export default function ArticlesLayout() {
-	const { categoryQuery } = useLoaderData<typeof loader>();
-	const category = useQuery(categoryQuery);
+	const query = useCategoryData();
+	const category = useQuery(query.category);
 
 	const backgroundColor = category.data.color;
 
@@ -29,7 +30,7 @@ export default function ArticlesLayout() {
 			<Header backgroundColor={backgroundColor} />
 
 			<main className="mb-8 border-b border-b-foreground">
-				<Outlet />
+				<Outlet context={{ backgroundColor }} />
 			</main>
 
 			<Footer />
@@ -38,9 +39,9 @@ export default function ArticlesLayout() {
 }
 
 function Header({ backgroundColor }: { backgroundColor: string }) {
-	const { categoriesQuery, socialQuery } = useRootData();
-	const categories = useQuery(categoriesQuery);
-	const social = useQuery(socialQuery);
+	const { queries } = useRootData();
+	const categories = useQuery(queries.categories);
+	const social = useQuery(queries.social);
 
 	return (
 		<header className="sticky inset-0 z-20" style={{ backgroundColor }}>
@@ -67,7 +68,11 @@ function Header({ backgroundColor }: { backgroundColor: string }) {
 							className="font-pp-neue-montreal text-foreground"
 							key={category._id}
 						>
-							<Link.Nav reloadDocument prefetch="intent" to={`/${category._slug}`}>
+							<Link.Nav
+								reloadDocument
+								prefetch="intent"
+								to={`/categories/${category._slug}`}
+							>
 								{category.name}
 							</Link.Nav>
 						</Text.Small>

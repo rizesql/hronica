@@ -1,75 +1,83 @@
-import React from "react";
-
-import { defer, type LoaderFunctionArgs, type MetaFunction } from "@remix-run/node";
-import { Await, useLoaderData } from "@remix-run/react";
-import { promiseHash } from "remix-utils/promise";
+import { json, redirect, type LoaderFunctionArgs } from "@remix-run/node";
+import { useLoaderData, type MetaFunction } from "@remix-run/react";
 
 import { CategorySection } from "./category-section";
 import { Hero } from "./hero";
 
-import { Center, Section } from "~/components/ui";
 import { api } from "~/lib/api";
+import { type ArrangedArticles } from "~/lib/api/articles/helpers";
+import { type Categories } from "~/lib/api/categories/helpers";
 import { useRootData } from "~/lib/root-data";
-import { useQuery } from "~/lib/sanity/loader";
+import { useQuery, type Query, type SuccessfullQuery } from "~/lib/sanity/loader";
+import { seo, type WithOGImage } from "~/lib/seo";
+import { routeOGImageUrl } from "~/lib/seo/og-images/route";
+import {
+	SERVER_TIMING,
+	makeTiming,
+	timingHeaders,
+	type TimeFn,
+} from "~/lib/timings.server";
 
-// export const CACHE_CONTROL = {
-// 	doc: "max-age=300, stale-while-revalidate=604800",
-// };
+export const meta: MetaFunction<typeof loader> = ({ data }) =>
+	seo({ title: "Acasă", data });
+
+export const headers = timingHeaders;
+
+const getArticles = (url: string, time: TimeFn) => (categories: Query<Categories>) => {
+	if (!categories.success) throw redirect("/404");
+
+	return Promise.all(
+		categories.initial.data.map((category) =>
+			time(
+				() => api.articles.getArrangedByCategory(category._slug, url),
+				`queries.deferredArticlesByCategory-${category._slug}`,
+			),
+		),
+	).then((queries) => {
+		if (queries.some((q) => !q.success)) throw redirect("/404");
+		return queries as Array<SuccessfullQuery<ArrangedArticles>>;
+	});
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
-	const categoriesArticlesQuery = promiseHash({
-		cultura: api.articles.getArrangedByCategory("cultura", request.url),
-		poezie: api.articles.getArrangedByCategory("cultura", request.url),
-		interviuri: api.articles.getArrangedByCategory("cultura", request.url),
-		"useuri-si-scriere-literara": api.articles.getArrangedByCategory(
-			"cultura",
-			request.url,
-		),
-		"despre-viata-si-lumea-inconjuratoare": api.articles.getArrangedByCategory(
-			"cultura",
-			request.url,
-		),
-	});
+	const { timings, time } = makeTiming("/ loader");
 
-	return defer({
-		categoriesArticlesQuery,
-		heroQuery: await api.articles.getHeroArticles(request.url),
-	});
+	const articlesByCategory = await api.categories
+		.getCategories(request.url)
+		.then(getArticles(request.url, time));
+
+	const hero = await time(
+		() => api.articles.getHeroArticles(request.url),
+		"queries.hero",
+	);
+
+	return json(
+		{
+			articlesByCategory,
+			queries: { hero },
+			ogImageUrl: routeOGImageUrl(request, "index"),
+		} satisfies WithOGImage,
+		{ headers: { [SERVER_TIMING]: timings.toString() } },
+	);
 }
 
-export const meta: MetaFunction = () => [
-	{ title: "New Remix App" },
-	{ name: "description", content: "Welcome to Remix!" },
-];
-
 export default function Index() {
-	const { categoriesQuery } = useRootData();
-	const { categoriesArticlesQuery } = useLoaderData<typeof loader>();
-	const categories = useQuery(categoriesQuery);
+	const { queries } = useRootData();
+	const { articlesByCategory } = useLoaderData<typeof loader>();
+	const categories = useQuery(queries.categories);
 
 	return (
 		<>
 			<Hero />
 
-			<Section className="border-y border-border bg-[#DDEFD5]">
-				<Center stretch="all">2</Center>
-			</Section>
-
-			{/* these are under the fold so it's alright to fetch them in the background */}
-			<React.Suspense>
-				<Await resolve={categoriesArticlesQuery}>
-					{(queries) =>
-						Object.values(queries).map((query, idx) => (
-							<CategorySection
-								layout={idx}
-								category={categories.data[idx]}
-								articlesQuery={query}
-								key={categories.data[idx]._id}
-							/>
-						))
-					}
-				</Await>
-			</React.Suspense>
+			{Object.values(articlesByCategory).map((query, idx) => (
+				<CategorySection
+					layout={idx}
+					category={categories.data[idx]}
+					articlesQuery={query}
+					key={categories.data[idx]._id}
+				/>
+			))}
 		</>
 	);
 }

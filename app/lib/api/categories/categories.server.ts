@@ -1,6 +1,6 @@
 export * as categories from "./categories.server";
 
-import { parse, asQuery } from "../helpers";
+import { asQuery, parse } from "../helpers";
 
 import { helpers as h } from "./helpers";
 
@@ -13,5 +13,6 @@ export const getCategory = async (slug: string, url: string) => {
 
 export const getCategories = async (url: string) => {
 	const options = h.queries.all(url);
+
 	return await loadQuery(options).then(parse(h.categories)).then(asQuery(options));
 };

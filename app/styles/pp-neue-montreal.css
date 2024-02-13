@@ -3,6 +3,7 @@
 	src: url("/fonts/pp-neue-montreal/PPNeueMontreal-Bold.woff2") format("woff2");
 	font-weight: 700;
 	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
@@ -10,6 +11,7 @@
 	src: url("/fonts/pp-neue-montreal/PPNeueMontreal-Book.woff2") format("woff2");
 	font-weight: 300;
 	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
@@ -17,6 +19,7 @@
 	src: url("/fonts/pp-neue-montreal/PPNeueMontreal-Italic.woff2") format("woff2");
 	font-weight: 400;
 	font-style: italic;
+	font-display: swap;
 }
 
 @font-face {
@@ -24,6 +27,7 @@
 	src: url("/fonts/pp-neue-montreal/PPNeueMontreal-Medium.woff2") format("woff2");
 	font-weight: 500;
 	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
@@ -31,10 +35,12 @@
 	src: url("/fonts/pp-neue-montreal/PPNeueMontreal-SemiBolditalic.woff2") format("woff2");
 	font-weight: 600;
 	font-style: italic;
+	font-display: swap;
 }
 
 @font-face {
 	font-family: "PP Neue Montreal";
 	src: url("/fonts/pp-neue-montreal/PPNeueMontreal-Thin.woff2") format("woff2");
 	font-weight: 100;
+	font-display: swap;
 }

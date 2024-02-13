@@ -1,25 +1,39 @@
+import devServer, { defaultOptions } from "@hono/vite-dev-server";
 import { unstable_vitePlugin as remix } from "@remix-run/dev";
-import { installGlobals } from "@remix-run/node";
 import { remixDevTools } from "remix-development-tools/vite";
 import { flatRoutes } from "remix-flat-routes";
-import { defineConfig } from "vite";
+import turboConsole from "unplugin-turbo-console/vite";
+import { defineConfig, splitVendorChunkPlugin } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
-installGlobals();
+const devPlugins = [
+	turboConsole(),
+	remixDevTools(),
+
+	devServer({
+		injectClientScript: false,
+		entry: "./server/index.ts",
+		exclude: [/^\/(app)\/.+/, ...defaultOptions.exclude],
+	}),
+] as const;
 
 export default defineConfig({
 	plugins: [
-		remixDevTools(),
+		splitVendorChunkPlugin(),
 		remix({
-			assetsBuildDirectory: "assets",
-			publicPath: "/assets/",
 			serverModuleFormat: "esm",
+			serverBuildFile: "remix.js",
 
 			ignoredRouteFiles: ["**/*"],
 			// eslint-disable-next-line @typescript-eslint/require-await
 			routes: async (defineRoutes) => flatRoutes("routes", defineRoutes),
 		}),
+
 		tsconfigPaths(),
+		...devPlugins,
 	],
-	envPrefix: "S",
+	build: {
+		minify: "esbuild",
+		cssMinify: "esbuild",
+	},
 });

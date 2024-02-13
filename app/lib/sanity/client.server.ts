@@ -6,11 +6,11 @@ import { sanityConfig } from "~/lib/sanity/config";
 export const writeClient = createClient({
 	...sanityConfig,
 	useCdn: false,
-	token: env.SANITY_WRITE_TOKEN,
+	token: env.VITE_SANITY_WRITE_TOKEN,
 });
 
 export const viewClient = createClient({
 	...sanityConfig,
 	useCdn: false,
-	token: env.SANITY_READ_TOKEN,
+	token: env.VITE_SANITY_READ_TOKEN,
 });

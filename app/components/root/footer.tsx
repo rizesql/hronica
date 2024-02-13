@@ -1,21 +1,16 @@
 import { Logo } from "~/components/logo";
-import { Center, Flex, HStack, Link, VStack, Text } from "~/components/ui";
-import { type NavLink, type SocialLink, isNavLink } from "~/lib/links";
+import { Center, Flex, HStack, Link, Text, VStack } from "~/components/ui";
+import { appInfo } from "~/lib/app-info";
+import { isNavLink, type NavLink, type SocialLink } from "~/lib/links";
 import { useRootData } from "~/lib/root-data";
 import { useQuery } from "~/lib/sanity/loader";
-import { seo } from "~/lib/seo";
 
 export function Footer() {
-	// 	{
-	// 	social,
-	// 	categories,
-	// }: {
-	// 	social: readonly SocialLink[];
-	// 	categories: Categories;
-	// 	}
-	const { categoriesQuery, socialQuery } = useRootData();
-	const categories = useQuery(categoriesQuery);
-	const social = useQuery(socialQuery);
+	const { queries } = useRootData();
+	const categories = useQuery(queries.categories);
+	const social = useQuery(queries.social);
+
+	const currentYear = new Date(Date.now()).getFullYear();
 
 	const categoriesLinks = categories.data.map(
 		(c) => ({ label: c.name, href: c._slug }) satisfies NavLink,
@@ -33,12 +28,14 @@ export function Footer() {
 						<HStack alignment="center/between" stretch="width">
 							<Flex className="flex-col items-start gap-4 lg:flex-row lg:items-center">
 								<Logo />
-								<Text.Tiny>{seo.trademark}</Text.Tiny>
+								<Text.Tiny>
+									{currentYear} {appInfo.trademark}
+								</Text.Tiny>
 							</Flex>
 
 							<Text.Tiny className="self-end lg:self-center">
-								<Link.Social href={seo.rizesqlLink.url}>
-									Creat de {seo.rizesqlLink.platform}
+								<Link.Social href={appInfo.rizesqlLink.url}>
+									Creat de {appInfo.rizesqlLink.platform}
 								</Link.Social>
 							</Text.Tiny>
 						</HStack>

@@ -2,7 +2,7 @@ import React from "react";
 
 import { Star } from "lucide-react";
 
-import { Grid, VStack, Article, Separator, Badge, Image } from "~/components/ui";
+import { Article, Badge, Grid, Image, Separator, VStack } from "~/components/ui";
 import type { ArrangedArticles } from "~/lib/api/articles/helpers";
 import { cn } from "~/lib/cn";
 
@@ -35,8 +35,8 @@ export const GridLayout = ({
 			stretch="all"
 			className="mb-4 grid-cols-1 gap-8 lg:grid-flow-col lg:grid-cols-4 lg:p-4 lg:px-8"
 		>
-			<VStack stretch="width" className={cn(layouts[layout]?.[0])}>
-				<Article.Root href={`/${hero.category._slug}/articles/${hero._slug}`}>
+			<VStack stretch="width" className={cn(layouts[layout % layouts.length]?.[0])}>
+				<Article.Root href={`/articles/${hero._slug}`}>
 					<Article.Image>
 						<Image asset={hero.image.asset} alt={hero.title} className="rounded-md" />
 					</Article.Image>
@@ -51,7 +51,7 @@ export const GridLayout = ({
 								<Badge color={hero.category.color}>{hero.category.name}</Badge>
 								<Badge color="#22c55e">
 									Latest
-									<Star className="h-4 w-4 fill-current" />
+									<Star className="size-4 fill-current" />
 								</Badge>
 							</>
 						) : null}
@@ -66,9 +66,7 @@ export const GridLayout = ({
 							<React.Fragment key={`articles.${article._slug}`}>
 								<Separator />
 
-								<Article.Root
-									href={`/${article.category._slug}/articles/${article._slug}`}
-								>
+								<Article.Root href={`/articles/${article._slug}`}>
 									<Article.Content.Small
 										title={article.title}
 										author={article.author.name}
@@ -84,7 +82,7 @@ export const GridLayout = ({
 			<VStack className={cn(layouts[layout]?.[1], "gap-4")}>
 				{secondCol.map((article) => (
 					<Article.Root
-						href={`/${article.category._slug}/articles/${article._slug}`}
+						href={`/articles/${article._slug}`}
 						key={`articles.${article._slug}`}
 					>
 						<Article.Image>
@@ -93,11 +91,6 @@ export const GridLayout = ({
 								alt={article.title}
 								className="aspect-[3/2] rounded-md"
 							/>
-							{/* <img
-								src={image(article.image.asset).format("webp").auto("format").url()}
-								alt={article.title}
-								className="aspect-[3/2] rounded-md"
-							/> */}
 						</Article.Image>
 
 						<Article.Content.Normal
@@ -119,16 +112,16 @@ export const GridLayout = ({
 						<Separator />
 
 						{idx === 2 ? (
-							<Article.Root href={`/${article.category._slug}/articles/${article._slug}`}>
-								{/* <div className="hidden"> */}
-								<Article.Image>
-									<Image
-										asset={article.image.asset}
-										alt={article.title}
-										className="aspect-[3/2] rounded-md"
-									/>
-								</Article.Image>
-								{/* </div> */}
+							<Article.Root href={`/articles/${article._slug}`}>
+								<div className="hidden xl:block">
+									<Article.Image>
+										<Image
+											asset={article.image.asset}
+											alt={article.title}
+											className="aspect-[3/2] rounded-md"
+										/>
+									</Article.Image>
+								</div>
 
 								<Article.Content.Normal
 									title={article.title}
@@ -141,7 +134,7 @@ export const GridLayout = ({
 								</Article.Content.Normal>
 							</Article.Root>
 						) : (
-							<Article.Root href={`/${article.category._slug}/articles/${article._slug}`}>
+							<Article.Root href={`/articles/${article._slug}`}>
 								<Article.Content.Small
 									title={article.title}
 									author={article.author.name}

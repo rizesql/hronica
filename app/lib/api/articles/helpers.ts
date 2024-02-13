@@ -6,7 +6,7 @@ import { z } from "zod";
 import { category, CATEGORY_DATA } from "../categories/helpers";
 import { helpers as memberH } from "../members/helpers";
 
-import type { Tuple10 } from "~/lib/types";
+import { COL_SIZES, PAGE_SIZE } from "./infinite";
 
 export const article = z.object({
 	_id: z.string(),
@@ -23,66 +23,32 @@ export const article = z.object({
 	}),
 });
 
-export const articleWithContent = article.extend({ content: z.any() });
-
 export const arrangedArticles = z.object({
-	firstCol: z.array(article).length(3),
-	secondCol: z.array(article).length(2),
-	thirdCol: z.array(article).length(5),
+	firstCol: z.array(article).length(COL_SIZES.first),
+	secondCol: z.array(article).length(COL_SIZES.second),
+	thirdCol: z.array(article).length(COL_SIZES.third),
+});
+
+export const articleContent = z.object({
+	content: z.any(),
 });
 
 export const articles = z.array(article);
 
 export type Article = z.infer<typeof article>;
-
 export type ArrangedArticles = z.infer<typeof arrangedArticles>;
+export type ArticleContent = z.infer<typeof articleContent>;
 
-// export const getByCategory = async (category: string | undefined, url: string) => {
-// 	const params = { url, category };
-// 	const initial = await loadQuery(GET_ARTICLES_BY_CATEGORY, params).then(parse(articles));
+export const readingTime = z.object({
+	readingTime: z.number().nonnegative(),
+});
 
-// 	return { initial, params, query: GET_ARTICLES_BY_CATEGORY };
-// };
+export type ReadingTime = z.infer<typeof readingTime>;
 
-// export const sortByDate = (articles: Array<CollectionEntry<"articles">>) =>
-// 	articles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-
-// export const filterByCategory =
-// 	(category: string | undefined) => (article: CollectionEntry<"articles">) =>
-// 		article.data.category.id === category;
-
-// export const filterByAuthor =
-// 	(author: string | undefined) => (article: CollectionEntry<"articles">) =>
-// 		article.data.author.id === author;
-
-// export const filterByEditor =
-// 	(id: string | undefined) => (article: CollectionEntry<"articles">) =>
-// 		article.data.editors.length === 0
-// 			? false
-// 			: article.data.editors.filter((e) => e.id === id).length === 1;
-
-// export const filterByOccupation = (
-// 	occupation: "author" | "editor",
-// 	id: string | undefined,
-// ) => (occupation === "author" ? filterByAuthor(id) : filterByEditor(id));
-
-// export const getWhithinRange =
-// 	(left: number, right: number) => (articles: Array<CollectionEntry<"articles">>) =>
-// 		articles.filter((_, idx) => idx >= left && idx <= right);
-
-export const arrangeArticles = (articles: readonly Article[]) => {
-	const heroArticles = articles.slice(0, 10) as Tuple10<Article>;
-
-	const [first, second, third, fourth, fifth, ...rest] = heroArticles;
-
-	return {
-		data: {
-			firstCol: [first, second, third],
-			secondCol: [fourth, fifth],
-			thirdCol: rest,
-		} satisfies ArrangedArticles,
-	};
-};
+const READING_TIME_OPTIONS = {
+	wpm: 180,
+	meanWordLen: 5,
+} as const;
 
 export const queries = {
 	hero: (url: string) => ({
@@ -96,6 +62,14 @@ export const queries = {
 	bySlug: (slug: string, url: string) => ({
 		params: { article: slug, url },
 		query: GET_ARTICLE,
+	}),
+	content: (slug: string, url: string) => ({
+		params: { article: slug, url },
+		query: GET_ARTICLE_CONTENT,
+	}),
+	readingTime: (slug: string, url: string) => ({
+		params: { article: slug, url, ...READING_TIME_OPTIONS },
+		query: GET_READING_TIME,
 	}),
 } as const;
 
@@ -115,16 +89,25 @@ export const ARTICLE_DATA = groq`
 `;
 
 export const ARRANGE = (col: string) => groq`{
-	"firstCol": ${col}[0..2],
-  "secondCol": ${col}[3..4],
-  "thirdCol": ${col}[5..9] 
+	"firstCol": ${col}[0..${COL_SIZES.first - 1}],
+  "secondCol": ${col}[${COL_SIZES.first}..${COL_SIZES.first + COL_SIZES.second - 1}],
+  "thirdCol": ${col}[${COL_SIZES.first + COL_SIZES.second}..${COL_SIZES.first + COL_SIZES.second + COL_SIZES.third - 1}] 
 }`;
 
 const GET_ARTICLE = groq`
 *[_type == "article" && slug.current == $article] {
 	${ARTICLE_DATA}
-	'content': article
 } | order(date desc)[0]`;
+
+const GET_ARTICLE_CONTENT = groq`
+*[_type == "article" && slug.current == $article] {
+	"content": article[] {
+		...,
+		_type == "magazine" => {
+			"url": asset->url
+		}
+	}
+}[0]`;
 
 const GET_ARTICLES_BY_CATEGORY = groq`{
 	"all": *[_type == "article" && category->slug.current == $category] {
@@ -135,5 +118,12 @@ const GET_ARTICLES_BY_CATEGORY = groq`{
 const GET_HERO_ARTICLES = groq`{
 	"all": *[_type == "article"] {
   	${ARTICLE_DATA}
-	} | order(date desc)[0..9]
+	} | order(date desc)[0..${PAGE_SIZE - 1}]
 } | ${ARRANGE("all")}`;
+
+const GET_READING_TIME = groq`
+*[_type == "article" && slug.current == $article] {
+	"characters": length(pt::text(article))
+} | {
+  "readingTime": round(characters / $meanWordLen / $wpm)
+}[0]`;

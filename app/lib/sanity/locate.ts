@@ -4,7 +4,7 @@ import type { DocumentLocationResolver } from "sanity/presentation";
 
 // See: https://www.sanity.io/docs/configuring-the-presentation-tool#7dce82cbe90b
 export const locate: DocumentLocationResolver = (params, context) => {
-	if (params.type === "articles") {
+	if (params.type === "article") {
 		const doc$ = context.documentStore.listenQuery(
 			groq`*[_id == $id][0]{slug,title}`,
 			params,
@@ -14,14 +14,14 @@ export const locate: DocumentLocationResolver = (params, context) => {
 		// Return a streaming list of locations
 		return doc$.pipe(
 			map((doc) => {
-				if (!doc || !doc.slug?.current) {
+				if (!doc?.slug?.current) {
 					return null;
 				}
 				return {
 					locations: [
 						{
 							title: doc.title || "Untitled",
-							href: `/${doc.slug.current}`,
+							href: `/articles/${doc.slug.current}`,
 						},
 						{
 							title: "Home",

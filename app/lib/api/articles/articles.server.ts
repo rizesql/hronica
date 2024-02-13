@@ -1,6 +1,6 @@
 export * as articles from "./articles.server";
 
-import { parse, asQuery } from "../helpers";
+import { asQuery, parse } from "../helpers";
 
 import { helpers as h } from "./helpers";
 
@@ -22,8 +22,17 @@ export const getArrangedByCategory = async (
 
 export const getArticle = async (slug: string, url: string) => {
 	const options = h.queries.bySlug(slug, url);
+	return await loadQuery(options).then(parse(h.article)).then(asQuery(options));
+};
 
-	return await loadQuery(options)
-		.then(parse(h.articleWithContent))
-		.then(asQuery(options));
+export const getArticleContent = async (slug: string, url: string) => {
+	const options = h.queries.content(slug, url);
+
+	return await loadQuery(options).then(parse(h.articleContent)).then(asQuery(options));
+};
+
+export const getReadingTime = async (slug: string, url: string) => {
+	const options = h.queries.readingTime(slug, url);
+
+	return await loadQuery(options).then(parse(h.readingTime)).then(asQuery(options));
 };

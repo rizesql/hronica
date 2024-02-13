@@ -1,9 +1,9 @@
 import { MenuSquare, X } from "lucide-react";
 
-import { Flex, Sheet, Link, VStack, HStack, Text } from "~/components/ui";
+import { Flex, HStack, Link, Sheet, Text, VStack } from "~/components/ui";
 import { type Category } from "~/lib/api/categories/helpers";
+import { appInfo } from "~/lib/app-info";
 import { type SocialLink } from "~/lib/links";
-import { seo } from "~/lib/seo";
 
 export const MobileNav = ({
 	categories,
@@ -61,11 +61,11 @@ export const MobileNav = ({
 				</VStack>
 
 				<HStack alignment="baseline/between">
-					<Text.Tiny>{seo.trademark}</Text.Tiny>
+					<Text.Tiny>{appInfo.trademark}</Text.Tiny>
 
 					<Text.Tiny>
-						<Link.Social href={seo.rizesqlLink.url}>
-							Creat de {seo.rizesqlLink.platform}
+						<Link.Social href={appInfo.rizesqlLink.url}>
+							Creat de {appInfo.rizesqlLink.platform}
 						</Link.Social>
 					</Text.Tiny>
 				</HStack>

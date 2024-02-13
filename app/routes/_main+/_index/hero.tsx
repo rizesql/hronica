@@ -2,15 +2,15 @@ import React from "react";
 
 import { Star } from "lucide-react";
 
-import { useIndexRouteData } from "./helpers";
+import { useIndexRouteData } from "./index-data";
 
-import { Section, VStack, Article, Separator, Grid, Badge } from "~/components/ui";
+import { Article, Badge, Grid, Image, Section, Separator, VStack } from "~/components/ui";
 import { cn } from "~/lib/cn";
-import { useQuery, image } from "~/lib/sanity/loader";
+import { useQuery } from "~/lib/sanity/loader";
 
 export function Hero() {
-	const { heroQuery } = useIndexRouteData();
-	const query = useQuery(heroQuery);
+	const { queries } = useIndexRouteData();
+	const query = useQuery(queries.hero);
 
 	const {
 		firstCol: [hero, ...first],
@@ -22,12 +22,12 @@ export function Hero() {
 		<Section className="mb-4 h-auto lg:mx-8 lg:h-auto">
 			<Grid stretch="all" className="grid-cols-1 gap-8 lg:grid-cols-2 lg:p-4 lg:px-8">
 				<VStack stretch="width">
-					<Article.Root href={`/${hero.category._slug}/articles/${hero._slug}`}>
+					<Article.Root href={`/articles/${hero._slug}`}>
 						<Article.Image>
-							<img
-								className="aspect-[3/2] rounded-md"
-								src={image(hero.image.asset).format("webp").auto("format").url()}
+							<Image
+								asset={hero.image.asset}
 								alt={hero.title}
+								className="aspect-[3/2] rounded-md"
 							/>
 						</Article.Image>
 
@@ -39,7 +39,7 @@ export function Hero() {
 							<Badge color={hero.category.color}>{hero.category.name}</Badge>
 							<Badge color="#22c55e">
 								Latest
-								<Star className="h-4 w-4 fill-current" />
+								<Star className="size-4 fill-current" />
 							</Badge>
 						</Article.Content.Hero>
 					</Article.Root>
@@ -52,9 +52,7 @@ export function Hero() {
 								<React.Fragment key={`hero.first-col-${article._id}`}>
 									<Separator />
 
-									<Article.Root
-										href={`/${article.category._slug}/articles/${article._slug}`}
-									>
+									<Article.Root href={`/articles/${article._slug}`}>
 										<Article.Content.Small
 											title={article.title}
 											author={article.author.name}
@@ -71,14 +69,15 @@ export function Hero() {
 					<VStack className="gap-4">
 						{secondCol.map((article) => (
 							<Article.Root
-								href={`/${article.category._slug}/articles/${article._slug}`}
+								href={`/articles/${article._slug}`}
 								key={`hero.second-col-${article._id}`}
 							>
 								<Article.Image>
-									<img
-										className="aspect-[3/2] rounded-md"
-										src={image(article.image.asset).format("webp").auto("format").url()}
+									<Image
+										asset={article.image.asset}
 										alt={article.title}
+										className="aspect-[3/2] rounded-md"
+										loading="lazy"
 									/>
 								</Article.Image>
 
@@ -99,17 +98,12 @@ export function Hero() {
 								<Separator />
 
 								{idx === 2 ? (
-									<Article.Root
-										href={`/${article.category._slug}/articles/${article._slug}`}
-									>
+									<Article.Root href={`/articles/${article._slug}`}>
 										<Article.Image>
-											<img
-												className="aspect-[3/2] rounded-md"
-												src={image(article.image.asset)
-													.format("webp")
-													.auto("format")
-													.url()}
+											<Image
+												asset={article.image.asset}
 												alt={article.title}
+												className="aspect-[3/2] rounded-md"
 											/>
 										</Article.Image>
 
@@ -124,9 +118,7 @@ export function Hero() {
 										</Article.Content.Normal>
 									</Article.Root>
 								) : (
-									<Article.Root
-										href={`/${article.category._slug}/articles/${article._slug}`}
-									>
+									<Article.Root href={`/articles/${article._slug}`}>
 										<Article.Content.Small
 											title={article.title}
 											author={article.author.name}
